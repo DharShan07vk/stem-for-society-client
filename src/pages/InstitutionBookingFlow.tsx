@@ -98,7 +98,10 @@ function useSendEmailOTP() {
   return useMutation<
     SendOTPResponse,
     AxiosError<GenericError>,
-    { email: string },
+    { email: string,
+      institutionName : string,
+      mobile : string;
+     },
     unknown
   >({
     mutationFn: async (data) => {
@@ -297,7 +300,9 @@ const InstitutionBookingFlow = () => {
 
     try {
       const response = await sendOTP({
-        email: formData.contactEmail
+        email: formData.contactEmail,
+        institutionName : formData.schoolName,
+        mobile: formData.contactMobile
       });
 
       if (response.message) {

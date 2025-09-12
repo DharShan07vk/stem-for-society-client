@@ -44,6 +44,7 @@ import PartnerTrainings from "./pages/partner/PartnerTrainings";
 import PartnerSignUp from "./pages/partner/PartnerWithUs";
 import StudentDetails from "./pages/partner/StudentDetails";
 // import PricingPage from "./pages/Pricing";
+import ForgotPassword from "./pages/forgotPassword"
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PsychologyTraining from "./pages/PsychologyTraining";
 import RefundPolicy from "./pages/RefundPolicy";
@@ -123,6 +124,7 @@ function App() {
                 <Route path="/career-counselling" element={<CareerCounselling />} />
                 <Route path="/mental-wellbeing-counselling" element={<PsychologyBookingFlow />} />
                 <Route path="/institution-booking" element={<InstitutionBookingFlow />} />
+                <Route path = "/forgot-password" element = {<ForgotPassword />} />
                 <Route
                   path="/institution-pricing"
                   element={<InstitutionPricing />}
