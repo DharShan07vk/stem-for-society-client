@@ -4,6 +4,7 @@ import Footer from '@/components1/Footer';
 import { Button } from '@/components1/ui/button';
 import { ArrowLeft, Share2, Calendar, Clock, Award, User, BookOpen, CheckCircle, ChevronDown, ChevronUp, Play, ExternalLink } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Badge } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { useShare } from '@/hooks/useShare';
 import { SharePopup } from '@/components1/ui/SharePopup';
@@ -61,25 +62,6 @@ function useEnroll(id?: string) {
   })
 }
 
-// Custom Badge component to replace Mantine Badge
-const Badge = ({ children, color, variant, size }: { 
-  children: React.ReactNode; 
-  color?: string; 
-  variant?: string; 
-  size?: string; 
-}) => {
-  const colorClasses = {
-    green: 'bg-green-100 text-green-800 border-green-200',
-    red: 'bg-red-100 text-red-800 border-red-200',
-    blue: 'bg-blue-100 text-blue-800 border-blue-200',
-  };
-  
-  return (
-    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border ${colorClasses[color as keyof typeof colorClasses] || colorClasses.blue}`}>
-      {children}
-    </span>
-  );
-};
 
 const CourseDetail = () => {
   const { id } = useParams();
