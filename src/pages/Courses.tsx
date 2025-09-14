@@ -800,7 +800,7 @@ const Courses = () => {
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                         whileHover={{ scale: 1.01 }}
                       >
-                        <Link to={`/training/${training.id}`}>
+                        <Link to={`/course-detail/${training.id}`}>
                           <Card className="bg-white border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer overflow-hidden">
                             {/* ...existing card content... */}
                             <CardContent className="p-0">
@@ -904,7 +904,7 @@ const Courses = () => {
                                             className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white"
                                             onClick={(e) => {
                                               e.preventDefault();
-                                              navigate(`/training/${training.id}`);
+                                              navigate(`/course-detail/${training.id}`);
                                             }}
                                           >
                                             {isUserEnrolled(training) ? 'VIEW COURSE' : 'REGISTER NOW'}
