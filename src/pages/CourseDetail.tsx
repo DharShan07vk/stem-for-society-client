@@ -30,13 +30,24 @@ import {
   mutationErrorHandler,
 } from "../lib/utils";
 import { StudentTraining } from "./Courses";
+import { Rating, Textarea, Alert } from "@mantine/core";
+import { FaLinkedin } from "react-icons/fa";
 
+// In CourseDetail.tsx - Update the useTraining hook to handle unauthenticated access
 function useTraining(id?: string) {
   return useQuery<
     GenericResponse<StudentTraining>, AxiosError<GenericError>
   >({
     queryKey: ["trainings", id],
-    queryFn: async () => (await api().get(`/trainings/${id}`)).data,
+    queryFn: async () => {
+      try {
+        const response = await api().get(`/trainings/${id}`);
+        return response.data;
+      } catch (error) {
+        toast.error(error)
+        throw error;
+      }
+    },
     staleTime: 1000 * 60 * 10,
   });
 }
@@ -62,6 +73,80 @@ function useEnroll(id?: string) {
   })
 }
 
+function useSubmitFeedback(id: string) {
+  const navigate = useNavigate();
+  return useMutation<
+    GenericResponse,
+    AxiosError<GenericError>,
+    FeedbackResponse
+  >({
+    mutationFn: async ({ rating, feedback }: FeedbackResponse) => {
+      const response = await api().post(`/trainings/${id}/feedback`, {
+        rating,
+        feedback,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["trainings", id] });
+      toast.success(data.message);
+    },
+    onError: (err) => mutationErrorHandler(err, navigate, "/login"),
+  });
+}
+
+type FeedbackResponse = {
+  rating: number;
+  feedback: string;
+};
+
+function RatingAndFeedback({
+  id,
+  data,
+  disabled,
+}: {
+  id: string;
+  data: StudentTraining;
+  disabled?: boolean;
+}) {
+  const [rating, setRating] = useState<number>(
+    data.ratings ? data.ratings[0]?.rating : 0,
+  );
+  const [feedback, setFeedback] = useState<string>(
+    data.ratings ? data.ratings[0]?.feedback : "",
+  );
+  const mutation = useSubmitFeedback(id as string);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({ rating, feedback });
+  };
+
+  return (
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold text-gray-900">Rate & Review</h4>
+      <Rating
+        value={rating}
+        onChange={setRating}
+        className={disabled ? "opacity-80 pointer-events-none" : ""}
+      />
+      <Textarea
+        rows={5}
+        value={feedback}
+        className={disabled ? "opacity-80 pointer-events-none" : ""}
+        onChange={(event) => setFeedback(event.currentTarget.value)}
+        placeholder="Enter feedback to apply for certificate"
+      />
+      <Button
+        onClick={handleSubmit}
+        disabled={data.ratings?.length > 0 || mutation.isPending}
+        className="bg-blue-600 hover:bg-blue-700 text-white"
+      >
+        {data.ratings?.length > 0 ? "Already submitted" : "Submit feedback"}
+      </Button>
+    </div>
+  );
+}
 
 const CourseDetail = () => {
   const { id } = useParams();
@@ -356,9 +441,116 @@ const CourseDetail = () => {
                   {isPending ? "Processing..." : "Enroll Now"}
                 </Button>
               ) : (
-                <Button className="w-full bg-green-600 text-white py-4 text-lg" disabled>
-                  Already Enrolled
-                </Button>
+                <div className="space-y-4">
+                  <Button className="w-full bg-green-600 text-white py-4 text-lg" disabled>
+                    ✓ Already Enrolled
+                  </Button>
+                  
+                  {/* Enrollment Details */}
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="flex items-center mb-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                      <span className="font-semibold text-green-800">You're Enrolled!</span>
+                    </div>
+                    
+                    {/* Enrollment Date */}
+                    {course.enrolments?.length > 0 && (
+                      <div className="mb-2">
+                        <span className="text-green-700 text-sm">
+                          Enrolled on:{" "}
+                          <span className="font-semibold text-green-900">
+                            {formatDate(course.enrolments[0]?.createdAt)}
+                          </span>
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Course Link */}
+                    {course.link && (
+                      <div className="mb-3">
+                        <span className="text-green-700 text-sm">
+                          Course Link:{" "}
+                          <a
+                            href={course.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 underline font-semibold"
+                          >
+                            Access Course
+                          </a>
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Course Access Button */}
+                    {course.link && (
+                      <Button
+                        variant="outline"
+                        className="w-full border-green-600 text-green-600 hover:bg-green-50 mb-3"
+                      >
+                        <a 
+                          href={course.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center space-x-2 w-full"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                          <span>Access Course</span>
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Certificate Section */}
+                  {course.enrolments?.[0]?.certificate && (
+                    <Alert className="bg-green-50 border-green-200">
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-green-800 text-lg">
+                          🎉 Congratulations!
+                        </h4>
+                        <p className="text-green-700 text-sm">
+                          You have successfully completed the training and earned a certificate!
+                        </p>
+                        <div className="flex flex-col gap-2">
+                          <Button className="bg-green-600 hover:bg-green-700 text-white">
+                            <Link
+                              target="_blank"
+                              to={course.enrolments[0].certificate}
+                              className="flex items-center space-x-2"
+                            >
+                              <Award className="h-4 w-4" />
+                              <span>Download Certificate</span>
+                            </Link>
+                          </Button>
+                          <Button 
+                            variant="outline"
+                            className="border-green-600 text-green-600 hover:bg-green-50"
+                          >
+                            <Link
+                              target="_blank"
+                              to={`https://www.linkedin.com/shareArticle?mini=true&url=${course.enrolments[0].certificate}&text=Hello connections! I have completed a course with STEM for society website and have earned a certificate on ${course.title}`}
+                              className="flex items-center space-x-2"
+                            >
+                              <FaLinkedin className="h-4 w-4" />
+                              <span>Share on LinkedIn</span>
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </Alert>
+                  )}
+
+                  {/* Feedback Section - Show only if course allows feedback and user is enrolled */}
+                  {course.displayFeedback && (
+                    <div className="bg-white border border-gray-200 rounded-lg p-4">
+                      <RatingAndFeedback
+                        data={course}
+                        id={id!}
+                        disabled={course.ratings?.length > 0}
+                      />
+                    </div>
+                  )}
+                </div>
               )}
             </motion.div>
           </motion.div>
@@ -413,16 +605,23 @@ const CourseDetail = () => {
                 <div className="space-y-4">
                   {lessonsToShow.map((lesson, index) => (
                     <div key={lesson.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                      {/* Lesson Header */}
+                      {/* Lesson Header - Always clickable */}
                       <div 
                         className="flex items-center justify-between p-4 bg-gray-50 cursor-pointer hover:bg-gray-100 transition-colors"
-                        onClick={() => toggleLessonExpansion(lesson.id)}
+                        onClick={() => {
+                          if (course.isEnrolled) {
+                            toggleLessonExpansion(lesson.id);
+                          } else {
+                            // For non-enrolled users, toggle to show enrollment message
+                            toggleLessonExpansion(lesson.id);
+                          }
+                        }}
                       >
                         <div className="flex items-center space-x-4">
                           <div className="bg-blue-100 text-blue-600 rounded-full w-10 h-10 flex items-center justify-center text-sm font-medium">
                             Day {index + 1}
                           </div>
-                          <div>
+                          <div className="flex-1">
                             <h3 className="font-medium text-gray-900">{lesson.title}</h3>
                             {lesson.lastDate && (
                               <p className="text-gray-600 text-sm">
@@ -432,6 +631,8 @@ const CourseDetail = () => {
                             )}
                           </div>
                         </div>
+                        
+                        {/* Show expand/collapse icon for all users */}
                         <motion.div
                           animate={{ rotate: isLessonExpanded(lesson.id) ? 180 : 0 }}
                           transition={{ duration: 0.2 }}
@@ -440,49 +641,134 @@ const CourseDetail = () => {
                         </motion.div>
                       </div>
 
-                      {/* Lesson Content - Expandable */}
+                      {/* Lesson Content - Different content based on enrollment status */}
                       {isLessonExpanded(lesson.id) && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: 'auto' }}
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.3 }}
-                          className="p-4 border-t border-gray-200"
+                          className="border-t border-gray-200"
                         >
-                          {/* Lesson Content */}
-                          {lesson.content && (
-                            <div className="mb-4">
-                              <h4 className="font-medium text-gray-900 mb-2">Content:</h4>
-                              <div
-                                className="text-gray-600 text-sm prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: lesson.content }}
-                              />
+                          {course.isEnrolled ? (
+                            // Content for enrolled users
+                            <div className="p-4">
+                              {/* Lesson Content */}
+                              {lesson.content && (
+                                <div className="mb-4">
+                                  <h4 className="font-medium text-gray-900 mb-2">Content:</h4>
+                                  <div
+                                    className="text-gray-600 text-sm prose prose-sm max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: lesson.content }}
+                                  />
+                                </div>
+                              )}
+
+                              {/* Video Link - Only for enrolled users */}
+                              {lesson.video && renderVideoLink(lesson.video)}
+
+                              {/* Location for offline lessons */}
+                              {lesson.location && (
+                                <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                                  <div className="flex items-center space-x-2">
+                                    <FaLocationDot className="h-4 w-4 text-gray-600" />
+                                    <span className="text-sm font-medium text-gray-700">Location:</span>
+                                    <span className="text-sm text-gray-600">{lesson.location}</span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Lesson Type Badge */}
+                              <div className="mt-3">
+                                <Badge 
+                                  color={lesson.type === "ONLINE" ? "green" : "red"}
+                                  size="sm"
+                                >
+                                  {lesson.type}
+                                </Badge>
+                              </div>
                             </div>
-                          )}
+                          ) : (
+                            // Enrollment required message for non-enrolled users
+                            <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-50">
+                              <div className="text-center">
+                                <div className="mb-4">
+                                  <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
+                                    <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                  </div>
+                                  <h4 className="font-semibold text-gray-900 text-lg mb-2">
+                                    🔒 Enroll to Access Day {index + 1} Content
+                                  </h4>
+                                  <p className="text-gray-600 text-sm mb-4 max-w-md mx-auto">
+                                    Unlock this lesson's video content, materials, and detailed curriculum by enrolling in the course.
+                                  </p>
+                                </div>
 
-                          {/* Video Link */}
-                          {lesson.video && renderVideoLink(lesson.video)}
+                                {/* Preview of what's included */}
+                                <div className="bg-white rounded-lg p-4 mb-4 text-left">
+                                  <h5 className="font-medium text-gray-900 mb-3 text-center">What you'll get:</h5>
+                                  <div className="space-y-2">
+                                    <div className="flex items-center text-sm text-gray-600">
+                                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                      </svg>
+                                      <span>Full video lesson content</span>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-600">
+                                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                      </svg>
+                                      <span>Downloadable resources & materials</span>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-600">
+                                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                      </svg>
+                                      <span>Interactive assignments & quizzes</span>
+                                    </div>
+                                    <div className="flex items-center text-sm text-gray-600">
+                                      <svg className="w-4 h-4 text-green-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                      </svg>
+                                      <span>Instructor support & feedback</span>
+                                    </div>
+                                  </div>
+                                </div>
 
-                          {/* Location for offline lessons */}
-                          {lesson.location && (
-                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                              <div className="flex items-center space-x-2">
-                                <FaLocationDot className="h-4 w-4 text-gray-600" />
-                                <span className="text-sm font-medium text-gray-700">Location:</span>
-                                <span className="text-sm text-gray-600">{lesson.location}</span>
+                                {/* Enrollment CTA buttons */}
+                                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                                  <Button 
+                                    className="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      document.getElementById('enroll')?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                  >
+                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <Button
+                  onClick={handlePayment}
+                  disabled={isPending}
+                >
+                  {isPending ? "Processing..." : "Enroll Now"}
+                </Button>                                  </Button>
+                                  <Button 
+                                    variant="outline"
+                                    className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      document.getElementById('course-overview')?.scrollIntoView({ behavior: 'smooth' });
+                                    }}
+                                  >
+                                    Learn More About Course
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           )}
-
-                          {/* Lesson Type Badge */}
-                          <div className="mt-3">
-                            <Badge 
-                              color={lesson.type === "ONLINE" ? "green" : "red"}
-                              size="sm"
-                            >
-                              {lesson.type}
-                            </Badge>
-                          </div>
                         </motion.div>
                       )}
                     </div>
@@ -549,36 +835,86 @@ const CourseDetail = () => {
                   <BookOpen className="h-6 w-6 mr-3 text-blue-500" />
                   Course Syllabus
                 </h2>
+
+                {/* Enrollment Required Message for Non-Enrolled Users */}
+                {!course.isEnrolled && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <div className="flex items-center">
+                      <div className="bg-blue-100 rounded-full p-2 mr-3">
+                        <BookOpen className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-blue-800">Enroll to Access Full Content</h4>
+                        <p className="text-blue-700 text-sm">
+                          Detailed course content, materials, and resources will be available after enrollment.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-4">
                   {lessons.map((lesson, index) => (
-                    <div key={lesson.id} className="flex items-start border-b border-gray-100 pb-4">
-                      <div className="bg-blue-100 text-blue-600 rounded-full w-12 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0 text-sm font-medium">
-                        Week {index + 1}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium text-gray-900 mb-1">{lesson.title}</h3>
-                        {lesson.lastDate && (
-                          <p className="text-gray-600 text-sm mb-2">
-                            <Calendar className="h-4 w-4 inline mr-1" />
-                            {formatDate(lesson.lastDate)}
-                          </p>
-                        )}
-                        {lesson.content && (
-                          <div
-                            className="text-gray-600 text-sm prose prose-sm max-w-none"
-                            dangerouslySetInnerHTML={{ __html: lesson.content }}
-                          />
-                        )}
-                        {lesson.location && (
-                          <p className="text-gray-600 text-sm mt-2">
-                            <FaLocationDot className="h-4 w-4 inline mr-1" />
-                            {lesson.location}
-                          </p>
-                        )}
+                    <div key={lesson.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-start">
+                        <div className="bg-blue-100 text-blue-600 rounded-full w-12 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0 text-sm font-medium">
+                          Week {index + 1}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium text-gray-900 mb-1">{lesson.title}</h3>
+                          {lesson.lastDate && (
+                            <p className="text-gray-600 text-sm mb-2">
+                              <Calendar className="h-4 w-4 inline mr-1" />
+                              {formatDate(lesson.lastDate)}
+                            </p>
+                          )}
+
+                          {/* Show content only for enrolled users */}
+                          {course.isEnrolled ? (
+                            <>
+                              {lesson.content && (
+                                <div
+                                  className="text-gray-600 text-sm prose prose-sm max-w-none mb-2"
+                                  dangerouslySetInnerHTML={{ __html: lesson.content }}
+                                />
+                              )}
+                              {lesson.location && (
+                                <p className="text-gray-600 text-sm mt-2">
+                                  <FaLocationDot className="h-4 w-4 inline mr-1" />
+                                  {lesson.location}
+                                </p>
+                              )}
+                            </>
+                          ) : (
+                            <div className="bg-gray-50 rounded-lg p-3 mt-2">
+                              <div className="flex items-center text-gray-500 text-sm">
+                                <span className="text-lg mr-2">🔒</span>
+                                <span>Detailed content available after enrollment</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
+
+                {/* CTA for non-enrolled users */}
+                {!course.isEnrolled && (
+                  <div className="mt-6 text-center">
+                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-6">
+                      <h4 className="font-semibold text-blue-800 mb-2">Ready to Start Learning?</h4>
+                      <p className="text-blue-700 text-sm mb-4">
+                        Enroll now to access all course materials, detailed content, and instructor support.
+                      </p>
+                      <Link to="#enroll">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                          Enroll Now for ₹{course.cost}
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
           </div>

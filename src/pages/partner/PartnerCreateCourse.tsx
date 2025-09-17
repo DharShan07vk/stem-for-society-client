@@ -170,7 +170,6 @@ async function uploadToCloudinary(
   const uploadResponse = await uploadRequest.json();
   return uploadResponse;
 }
-
 const VideoUpload = ({
   day,
   type,
@@ -197,6 +196,18 @@ const VideoUpload = ({
     title: "",
   });
   const [isOnline, setIsOnline] = useState(true);
+
+  // Helper function to update lesson
+  const updateLesson = (updates: any) => {
+    setState((prev) => ({
+      ...prev,
+      lessons: prev.lessons.map((lesson) =>
+        lesson.id === day
+          ? { ...lesson, ...updates }
+          : lesson,
+      ),
+    }));
+  };
 
   return (
     <div className="flex flex-col gap-2 w-full my-5">
@@ -234,27 +245,9 @@ const VideoUpload = ({
         name="title"
         value={description?.title}
         onChange={(e) => {
-          setDescription((prev) => ({ ...prev, title: e.target.value }));
-          setState((prev) => ({
-            ...prev,
-            lessons: prev.lessons.map((lesson) =>
-              lesson.id === day
-                ? {
-                    ...lesson,
-                    title: e.target.value,
-                    // // @ts-expect-error chi
-                    // content: isOnline ? description.content : undefined,
-                    // // @ts-expect-error thu
-                    // location: isOnline ? undefined : description.location,
-                    // video: isOnline
-                    //   ? // @ts-expect-error pae
-                    //     uploadResponse?.secure_url || lesson.video
-                    //   : undefined,
-                    // type: isOnline ? "ONLINE" : "OFFLINE",
-                  }
-                : lesson,
-            ),
-          }));
+          const newTitle = e.target.value;
+          setDescription((prev) => ({ ...prev, title: newTitle }));
+          updateLesson({ title: newTitle });
         }}
       />
       {isOnline ? (
@@ -302,30 +295,10 @@ const VideoUpload = ({
           </div>
           <RichTextEditorNew
             // @ts-expect-error mas
-            value={description?.content}
+            value={description?.content || ""}
             onChange={(val) => {
               setDescription((prev) => ({ ...prev, content: val }));
-              setState((prev) => ({
-                ...prev,
-                lessons: prev.lessons.map((lesson) =>
-                  lesson.id === day
-                    ? {
-                        ...lesson,
-                        // title: description.title,
-                        // // @ts-expect-error chi
-                        // content: isOnline ? description.content : undefined,
-                        content: val,
-                        // // @ts-expect-error thu
-                        // location: isOnline ? undefined : description.location,
-                        // video: isOnline
-                        //   ? uploadResponse?.secure_url
-                        //   : // @ts-expect-error thu
-                        //     lesson.video,
-                        // type: isOnline ? "ONLINE" : "OFFLINE",
-                      }
-                    : lesson,
-                ),
-              }));
+              updateLesson({ content: val });
             }}
           />
         </>
@@ -337,29 +310,11 @@ const VideoUpload = ({
           className="w-full"
           name="location"
           // @ts-expect-error ma3
-          value={description.location}
+          value={description.location || ""}
           onChange={(e) => {
-            setDescription((prev) => ({ ...prev, location: e.target.value }));
-            setState((prev) => ({
-              ...prev,
-              lessons: prev.lessons.map((lesson) =>
-                lesson.id === day
-                  ? {
-                      ...lesson,
-                      // title: description.title,
-                      // // @ts-expect-error chi
-                      // content: isOnline ? description.content : undefined,
-                      location: e.target.value,
-                      // // @ts-expect-error thu
-                      // location: isOnline ? undefined : description.location,
-                      // video: isOnline
-                      //   ? uploadResponse?.secure_url
-                      //   : // @ts-expect-error thu
-                      //     lesson.video,
-                    }
-                  : lesson,
-              ),
-            }));
+            const newLocation = e.target.value;
+            setDescription((prev) => ({ ...prev, location: newLocation }));
+            updateLesson({ location: newLocation });
           }}
         />
       )}
@@ -380,37 +335,30 @@ const VideoUpload = ({
             if (!file && uploadResponse?.public_id) {
               await deleteAsset(uploadResponse.public_id);
               setUploadStatus("waiting");
+              setUploadResponse(null);
+              updateLesson({ video: "" });
               return;
             }
             if (!file) {
               return;
             }
-            const signature = await generateUploadSignature();
-            const upload = await uploadToCloudinary(file, signature.data.data);
-            console.log("🚀 ~ onChange={ ~ upload:", upload);
-            if ("error" in upload) {
+            try {
+              const signature = await generateUploadSignature();
+              const upload = await uploadToCloudinary(file, signature.data.data);
+              console.log("🚀 ~ onChange={ ~ upload:", upload);
+              if ("error" in upload) {
+                setUploadStatus("failed");
+                toast.error(upload.error.message);
+                return;
+              }
+              setUploadStatus("uploaded");
+              const response = { ...upload, source: "cloudinary" as const };
+              setUploadResponse(response);
+              updateLesson({ video: upload.secure_url });
+            } catch (error) {
               setUploadStatus("failed");
-              toast.error(upload.error.message);
-              return;
+              toast.error("Upload failed. Please try again.");
             }
-            setUploadStatus("uploaded");
-            setUploadResponse({ ...upload, source: "cloudinary" });
-            setState((prev) => ({
-              ...prev,
-              lessons: prev.lessons.map((lesson) =>
-                lesson.id === day
-                  ? {
-                      ...lesson,
-                      // title: description.title,
-                      // // @ts-expect-error chi
-                      // content: description.content,
-                      // location: undefined,
-                      video: upload.secure_url,
-                      // type: "ONLINE",
-                    }
-                  : lesson,
-              ),
-            }));
           }}
           className="w-full"
           leftSection={<Upload size={16} />}
@@ -440,34 +388,21 @@ const VideoUpload = ({
             value={
               uploadResponse?.source === "youtube"
                 ? uploadResponse.secure_url
-                : undefined
+                : ""
             }
             onChange={(e) => {
-              setUploadResponse({
-                secure_url: e.target.value,
+              const youtubeUrl = e.target.value;
+              const response = {
+                secure_url: youtubeUrl,
                 public_id: null,
-                source: "youtube",
-              });
-              setState((prev) => ({
-                ...prev,
-                lessons: prev.lessons.map((lesson) =>
-                  lesson.id === day
-                    ? {
-                        ...lesson,
-                        // title: description.title,
-                        // // @ts-expect-error chi
-                        // content: description.content,
-                        // location: undefined,
-                        video: e.target.value,
-                        // type: "ONLINE",
-                      }
-                    : lesson,
-                ),
-              }));
+                source: "youtube" as const,
+              };
+              setUploadResponse(response);
+              updateLesson({ video: youtubeUrl });
             }}
           />
         )}
-        <Button>Save</Button>
+        <Button onClick={() => setModalOpen(false)}>Save</Button>
       </Modal>
     </div>
   );
@@ -530,28 +465,29 @@ export default function PartnerCreateCourse() {
   };
 
   const numberOfDays = useMemo(() => {
-    if (formData.startDate && formData.endDate) {
-      const start = new Date(formData.startDate).getTime();
-      const end = new Date(formData.endDate).getTime();
-      const final =
-        1 + Math.max(0, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
-      if (formData.lessons.length !== final) {
-        setFormData((prev) => ({
-          ...prev,
-          lessons: Array.from({ length: final }, (_, index) => ({
+  if (formData.startDate && formData.endDate) {
+    const start = new Date(formData.startDate).getTime();
+    const end = new Date(formData.endDate).getTime();
+    const final = 1 + Math.max(0, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+    
+    if (formData.lessons.length !== final) {
+      setFormData((prev) => ({
+        ...prev,
+        lessons: Array.from({ length: final }, (_, index) => {
+          const existingLesson = prev.lessons.find(l => l.id === index + 1);          return existingLesson || {
             title: "",
             content: "",
             video: "",
-            type: "ONLINE",
+            type: "ONLINE" as const,
             id: index + 1,
-          })),
-        }));
-      }
-      return final;
+          };
+        }),
+      }));
     }
-    return 0;
-  }, [formData.startDate, formData.endDate, formData.lessons]);
-
+    return final;
+  }
+  return 0;
+}, [formData.startDate, formData.endDate]);
   return (
     <div className="w-full mt-4">
       <div className="flex flex-row h-full w-full my-12">
