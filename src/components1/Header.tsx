@@ -312,11 +312,25 @@ const Header = () => {
                     Partner with us
                   </Button>
                 </Link>
-                <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                {user ?( 
+                  <button
+          onClick={() => {
+            setDropdownOpen(false);
+            signOut();
+          }}
+          className="w-full bg-[#0389FF] hover:bg-[#0389FF]/90 text-white rounded-full"
+        >
+          Logout
+        </button>
+                ):(
+                  <Link to="/login" onClick={() => setIsMenuOpen(false)}>
                   <Button className="w-full bg-[#0389FF] hover:bg-[#0389FF]/90 text-white rounded-full">
                     LOGIN
                   </Button>
                 </Link>
+
+                )}
+                
               </div>
             </div>
           </div>
