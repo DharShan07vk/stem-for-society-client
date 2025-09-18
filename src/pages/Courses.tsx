@@ -158,6 +158,7 @@ const INITIAL_DATE_FILTERS: FilterOption[] = [
 const INITIAL_MODE_FILTERS: FilterOption[] = [
   { id: 'online', label: 'Online', checked: false },
   { id: 'offline', label: 'Offline', checked: false },
+  {id : 'hybrid', label: 'Hybrid', checked: false},
 ];
 
 const Courses = () => {
@@ -432,7 +433,7 @@ const Courses = () => {
         const matchesMode = !hasModeFilter || 
                            modeFilters.some(filter => {
                              if (!filter.checked) return false;
-                             const trainingMode = getDisplayMode(training.location);
+                             const trainingMode =training.type;
                              return filter.label.toLowerCase() === trainingMode.toLowerCase();
                            });
 
@@ -851,7 +852,7 @@ const Courses = () => {
                                             <span className="font-medium">Mode:</span>
                                             <span className="bg-white text-gray-800 px-2 py-1 rounded text-xs font-medium border shadow-sm flex items-center space-x-1">
                                               <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                                              <span>{getDisplayMode(training.location)}</span>
+                                              <span>{training.type || (training.location ? "Offline" : "Online")}</span>
                                             </span>
                                           </div>
                                         </div>

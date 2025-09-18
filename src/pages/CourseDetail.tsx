@@ -396,7 +396,7 @@ const CourseDetail = () => {
                 <div className="flex items-center bg-blue-100 text-blue-700 px-4 py-2 rounded-full">
                   <FaLocationDot className="h-4 w-4 mr-2" />
                   <Badge color={course.location ? "red" : "green"}>
-                    {course.type || (course.location ? "Offline" : "Online")}
+                    {course.type }
                   </Badge>
                 </div>
               </div>
