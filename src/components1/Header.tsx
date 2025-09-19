@@ -184,6 +184,7 @@ const Header = () => {
         <button
           onClick={() => {
             setDropdownOpen(false);
+            setFilterByMe(null);
             signOut();
           }}
           className="w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
@@ -317,6 +318,7 @@ const Header = () => {
           onClick={() => {
             setDropdownOpen(false);
             signOut();
+            setFilterByMe(null);
           }}
           className="w-full bg-[#0389FF] hover:bg-[#0389FF]/90 text-white rounded-full"
         >

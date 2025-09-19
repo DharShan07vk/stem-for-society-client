@@ -36,26 +36,27 @@ export function useUser({ extraOnSuccess = () => null }: UseUserArgs = {}) {
       
       // If not in cache, check localStorage
       if (!authObject) {
-        const storedAuth = localStorage.getItem("studentAuth");
-        if (storedAuth) {
+        const stored = localStorage.getItem("studentAuth");
+        if (stored) {
           try {
-            authObject = JSON.parse(storedAuth);
-            // Validate the stored data before using it
-            if (authObject && authObject.user && authObject.token) {
-              // Restore to cache
-              queryClient.setQueryData(["auth"], authObject);
-            } else {
+            const parsed = JSON.parse(stored);
+            // Check if stored data has expired (24 hours)
+            if (parsed.timestamp && Date.now() - parsed.timestamp > 24 * 60 * 60 * 1000) {
               localStorage.removeItem("studentAuth");
-              authObject = null;
+              return null;
             }
-          } catch (error) {
+            authObject = parsed;
+          } catch {
             localStorage.removeItem("studentAuth");
-            authObject = null;
+            return null;
           }
         }
       }
       
-      if (authObject && authObject.user?.role !== "STUDENT") return null;
+      if (authObject && authObject.user?.role !== "STUDENT") {
+        localStorage.removeItem("studentAuth");
+        return null;
+      }
       return authObject ?? null;
     },
     staleTime: 1000 * 60 * 60, // Increased to 1 hour for better session persistence
@@ -81,6 +82,9 @@ export function useUser({ extraOnSuccess = () => null }: UseUserArgs = {}) {
       return response.data;
     },
     onSuccess: ({ data }) => {
+      // CLEAR ALL PREVIOUS DATA FIRST
+      queryClient.clear();
+      
       queryClient.setQueryData(["auth"], data);
       // Persist to localStorage with timestamp for expiry management
       const authData = {
@@ -97,17 +101,26 @@ export function useUser({ extraOnSuccess = () => null }: UseUserArgs = {}) {
     },
   });
 
+  const signOut = () => {
+    // CLEAR ALL CACHED DATA
+    queryClient.clear();
+    queryClient.setQueryData(["auth"], null);
+    localStorage.removeItem("studentAuth");
+    
+    // Clear any other related localStorage items
+    localStorage.removeItem("partnerAuth");
+    localStorage.removeItem("adminAuth");
+    
+    navigate("/login");
+  };
+
   return {
     user,
     isLoading,
     isError,
     isSigningIn,
     signIn: signInUser,
-    signOut: () => {
-      queryClient.setQueryData(["auth"], null);
-      localStorage.removeItem("studentAuth");
-      navigate("/login");
-    },
+    signOut,
   };
 }
 

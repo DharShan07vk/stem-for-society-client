@@ -151,7 +151,13 @@ function Header() {
               >
                 My trainings
               </Menu.Item>
-              <Menu.Item onClick={() => signOut()}>Logout</Menu.Item>
+              <Menu.Item onClick={() => {
+                // Clear any query filters that might persist
+                setFilterByMe(null);
+                signOut();
+              }}>
+                Logout
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         ) : (

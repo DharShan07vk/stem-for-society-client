@@ -6,6 +6,7 @@ import { signInWithGoogle } from "../lib/firebaseAuth";
 import { API_URL } from "../Constants";
 import LoginStages from "@/components1/ui/LoginStages";
 import LoginForm from "@/components1/ui/LoginForm";
+import { queryClient } from "@/lib/api";
 
 interface LoginFormData {
   email: string;
@@ -48,6 +49,10 @@ const Login = () => {
       };
       
       const uniqueMobile = generateUniqueeMobile(firebaseUser.uid);
+      
+      // CLEAR PREVIOUS SESSION DATA BEFORE NEW LOGIN
+      queryClient.clear();
+      localStorage.clear();
       
       // Always try registration first (will fail silently if user exists)
       fetch(`${API_URL}/auth/register`, {
@@ -100,6 +105,10 @@ const Login = () => {
 
   const handleSubmit = () => {
     if (formData.email && formData.password) {
+      // CLEAR PREVIOUS SESSION DATA BEFORE NEW LOGIN
+      queryClient.clear();
+      localStorage.clear();
+      
       signIn(formData);
     } else {
       toast.error("Please fill in all fields");

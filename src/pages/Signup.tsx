@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import { api } from "../lib/api";
+import { api, queryClient } from "../lib/api";
 import { GenericError, GenericResponse } from "../lib/types";
 import { signInWithGoogle } from "../lib/firebaseAuth";
 import { useUser } from "../lib/hooks";
@@ -104,6 +104,10 @@ const Signup = () => {
       if (!formData.accept)
         return toast.warn("Accept terms and conditions to continue");
       
+      // CLEAR PREVIOUS SESSION DATA BEFORE NEW REGISTRATION
+      queryClient.clear();
+      localStorage.clear();
+      
       // Use API registration directly
       signUpMutation.mutate(formData);
     } else {
@@ -140,6 +144,10 @@ const Signup = () => {
       };
       
       const uniqueMobile = generateUniqueeMobile(firebaseUser.uid);
+      
+      // CLEAR PREVIOUS SESSION DATA BEFORE NEW LOGIN
+      queryClient.clear();
+      localStorage.clear();
       
       // Always try registration first (will fail silently if user exists)
       fetch(`${API_URL}/auth/register`, {
