@@ -17,11 +17,35 @@ body {
 	width: 100%;
 	height: 100%;
 	font-family: 'Inter', sans-serif;
+	/* Prevent horizontal scroll on mobile */
+	overflow-x: hidden;
 }
 
 #root {
 	margin: 0;
 	padding: 0;
+}
+
+/* Responsive media defaults */
+img,
+svg,
+video,
+canvas,
+iframe {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Make long words/URLs wrap on small screens */
+.break-anywhere {
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+
+/* Safer tap targets */
+.tap-target {
+	min-height: 44px;
+	min-width: 44px;
 }
 
 .ql-container {

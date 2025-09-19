@@ -42,7 +42,7 @@ export default function PartnerLayout() {
   }, [user]);
 
   return (
-    <div className="w-full min-h-screen lg:grid lg:grid-cols-[0.2fr_0.86fr]">
+    <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-[0.2fr_0.86fr]">
       <SideNavbar
         user={user?.user}
         links={
@@ -53,7 +53,7 @@ export default function PartnerLayout() {
         logoutFn={signOut}
         type="partner"
       />
-      <div className="bg-gray-50 p-2 overflow-y-auto">
+      <div className="bg-gray-50 p-2 lg:p-4 overflow-y-auto">
         <Outlet />
       </div>
     </div>

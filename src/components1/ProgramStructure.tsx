@@ -85,23 +85,23 @@ const ProgramStructure = () => {
   );
 
   return (
-    <section className="py-8">
-      <div className="container mx-auto px-4 max-w-full">
-        <h2 className="text-2xl font-bold text-center mb-6">Program Structure</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+    <section className="py-10 md:py-14">
+      <div className="container mx-auto px-4">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8">Program Structure</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-5 md:gap-6 max-w-6xl mx-auto">
           {programStructure.map((program, index) => (
-            <Card key={index} className="p-4 bg-white border border-gray-200 rounded-xl relative transition-all duration-300 hover:shadow-md hover:bg-[#0389FF] group cursor-pointer">
+            <Card key={index} className="p-4 md:p-5 bg-white border border-gray-200 rounded-2xl relative transition-shadow duration-300 hover:shadow-md lg:hover:bg-[#0389FF] group cursor-pointer">
               <ArrowWithTail />
               <CardContent className="p-0">
                 <div className="flex items-center mb-3">
-                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3 group-hover:bg-blue-500 transition-colors">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-3 lg:group-hover:bg-blue-500 transition-colors">
                     <div className="group-hover:[&>svg]:text-white transition-colors">
                       {program.icon}
                     </div>
                   </div>
                   <Badge 
                     variant="secondary" 
-                    className={`rounded-full px-3 py-1 text-xs group-hover:bg-blue-500 group-hover:text-white transition-colors ${
+                    className={`rounded-full px-3 py-1 text-[10px] sm:text-xs lg:group-hover:bg-blue-500 lg:group-hover:text-white transition-colors ${
                       index === 0 ? 'bg-gray-100 text-gray-700' :
                       index === 1 ? 'bg-blue-100 text-blue-700' :
                       index === 2 ? 'bg-gray-100 text-gray-700' :
@@ -113,29 +113,29 @@ const ProgramStructure = () => {
                 </div>
                 
                 <div className="transition-all duration-300">
-                  <div className="group-hover:hidden">
-                    <h3 className="font-semibold text-sm mb-2">{program.subtitle}</h3>
+                  <div className="lg:group-hover:hidden">
+                    <h3 className="font-semibold text-sm md:text-base mb-2">{program.subtitle}</h3>
                     
-                    <div className="flex items-center gap-2 mb-3 text-xs text-gray-600">
+                    <div className="flex items-center gap-2 mb-2 md:mb-3 text-xs md:text-sm text-gray-600">
                       <Calendar className="h-3 w-3" />
                       <span>{program.duration}</span>
                     </div>
                     
-                    <div className="flex items-center gap-2 mb-3 text-xs text-gray-600">
+                    <div className="flex items-center gap-2 mb-2 md:mb-3 text-xs md:text-sm text-gray-600">
                       <Monitor className="h-3 w-3" />
                       <span>{program.features[0]}</span>
                     </div>
                   </div>
                   
-                  <div className="hidden group-hover:block">
-                    <h3 className="font-semibold text-sm mb-2 text-white">{program.hoverSubtitle}</h3>
+                  <div className="hidden lg:group-hover:block">
+                    <h3 className="font-semibold text-sm md:text-base mb-2 text-white">{program.hoverSubtitle}</h3>
                     
-                    <div className="flex items-center gap-2 mb-3 text-xs text-blue-100">
+                    <div className="flex items-center gap-2 mb-2 md:mb-3 text-xs md:text-sm text-blue-100">
                       <Calendar className="h-3 w-3" />
                       <span>{program.hoverDuration}</span>
                     </div>
                     
-                    <div className="flex items-center gap-2 mb-3 text-xs text-blue-100">
+                    <div className="flex items-center gap-2 mb-2 md:mb-3 text-xs md:text-sm text-blue-100">
                       <Monitor className="h-3 w-3" />
                       <span>{program.hoverFeatures[0]}</span>
                     </div>
@@ -144,11 +144,11 @@ const ProgramStructure = () => {
 
                 {/* Expanded Content */}
                 {expandedCard === index && (
-                  <div className="mb-3 p-3 bg-blue-50 group-hover:bg-blue-500 rounded-xl animate-fade-in transition-colors">
-                    <p className="text-xs text-gray-700 group-hover:text-blue-100 mb-2">{program.expandedContent.description}</p>
+                  <div className="mb-3 p-3 bg-blue-50 lg:group-hover:bg-blue-500 rounded-xl animate-fade-in transition-colors">
+                    <p className="text-xs md:text-sm text-gray-700 lg:group-hover:text-blue-100 mb-2">{program.expandedContent.description}</p>
                     <div className="space-y-1">
                       {program.expandedContent.highlights.map((highlight, idx) => (
-                        <div key={idx} className="flex items-center text-xs text-gray-600 group-hover:text-blue-100">
+                        <div key={idx} className="flex items-center text-xs md:text-sm text-gray-600 lg:group-hover:text-blue-100">
                           <div className="w-1 h-1 bg-[#0389FF] group-hover:bg-blue-200 rounded-full mr-2"></div>
                           {highlight}
                         </div>
@@ -157,11 +157,11 @@ const ProgramStructure = () => {
                   </div>
                 )}
                 
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-2">
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="flex-1 text-xs py-2 h-8 rounded-xl group-hover:bg-transparent group-hover:border-white group-hover:text-white transition-colors"
+                    className="flex-1 text-xs md:text-sm py-2 h-9 md:h-10 rounded-xl lg:group-hover:bg-transparent lg:group-hover:border-white lg:group-hover:text-white transition-colors"
                     onClick={() => toggleExpanded(index)}
                   >
                     
@@ -178,10 +178,10 @@ const ProgramStructure = () => {
                     )}
                   </Button>
                   {expandedCard === index && (
-                    <Link to={program.filterUrl}>
+                    <Link to={program.filterUrl} className="flex-1">
                       <Button 
                         size="sm" 
-                        className="text-xs py-2 h-8 bg-[#0389FF] hover:bg-[#0389FF]/90 group-hover:bg-white group-hover:text-[#0389FF] transition-colors rounded-xl"
+                        className="w-full text-xs md:text-sm py-2 h-9 md:h-10 bg-[#0389FF] hover:bg-[#0389FF]/90 lg:group-hover:bg-white lg:group-hover:text-[#0389FF] transition-colors rounded-xl"
                       >
                         START LEARNING
                       </Button>
