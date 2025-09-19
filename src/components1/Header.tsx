@@ -57,7 +57,7 @@ const Header = () => {
                       to="/courses?filter=Seminars%2FWebinar%2FMentorship" 
                       className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
                     >
-                      Seminars/Webinar
+                      Seminars/Webinar/Mentorship
                     </Link>
                   </MenubarItem>
                   <MenubarItem asChild>
@@ -232,7 +232,7 @@ const Header = () => {
                   className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Seminars/Webinar
+                  Seminars/Webinar/Mentorship
                 </Link>
                 <Link 
                   to="/courses?filter=Certificate%20Program" 

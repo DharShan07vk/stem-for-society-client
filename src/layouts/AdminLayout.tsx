@@ -39,14 +39,14 @@ export default function AdminLayout() {
   }, [user]);
 
   return (
-    <div className="w-full min-h-screen grid grid-cols-[0.2fr_0.86fr]">
+    <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-[0.2fr_0.86fr]">
       <SideNavbar
         links={AdminNavLinks}
         logoutFn={signOut}
         type="admin"
         user={user?.user}
       />
-      <div className="bg-gray-50 p-2 overflow-y-auto">
+      <div className="bg-gray-50 p-2 lg:p-4 overflow-y-auto">
         <Outlet />
       </div>
     </div>

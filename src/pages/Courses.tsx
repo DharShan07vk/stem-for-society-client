@@ -35,7 +35,7 @@ interface FilterOption {
   id: string;
   label: string;
   checked: boolean;
-}
+};
 
 // Student training data structure
 export type StudentTraining = {
@@ -161,6 +161,7 @@ const Courses = () => {
   const navigate = useNavigate();
   const { data: trainings, isLoading, error } = useTrainings();
   const { isShowing, handleShare } = useShare();
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [trainingFilter, setTrainingFilter] = useQueryState<string[] | null>(
     "filter",
     {
@@ -650,7 +651,7 @@ const Courses = () => {
 
           {/* Navigation */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
+            <div className="hidden md:flex items-center justify-between">
               {/* Back Button */}
               <Link to="/">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -681,7 +682,7 @@ const Courses = () => {
           </div>
 
           {/* Page Title */}
-          <div className="text-center mb-8 pb-16">
+          <div className="text-center mb-8 pb-2">
             <motion.h1 
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -709,64 +710,40 @@ const Courses = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-xl shadow-sm p-6 mb-8 sticky top-4 z-20"
+          className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 md:mb-8 md:sticky md:top-4 z-20"
         >
-          <div className="flex flex-wrap items-center gap-4">
-            {/* Filter Label */}
+          {/* Mobile top bar: search + toggle */}
+          <div className="flex flex-col gap-3 md:hidden">
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg px-3 py-2">
+              <Search className="h-4 w-4 text-gray-400" />
+              <input 
+                type="text" 
+                placeholder="Search for Courses"
+                className="bg-transparent border-none focus:ring-0 text-sm w-full"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setSearch(e.target.value);
+                }}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Filter className="h-4 w-4 text-gray-500" />
+                <span className="text-sm font-medium text-gray-700">Filters</span>
+              </div>
+              <Button variant="outline" size="sm" onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}>
+                {mobileFiltersOpen ? 'Hide' : 'Show'} Filters
+              </Button>
+            </div>
+          </div>
+
+          {/* Desktop header row */}
+          <div className="hidden md:flex flex-wrap items-center gap-4">
             <div className="flex items-center space-x-2">
               <Filter className="h-4 w-4 text-gray-500" />
               <span className="text-sm font-medium text-gray-700">Filter By</span>
             </div>
-            
-            {/* Filter Dropdowns */}
-            <FilterDropdown
-              title="Sector"
-              options={sectorFilters}
-              onOptionChange={(optionId, checked) => handleFilterChange('sector', optionId, checked)}
-            />
-            
-            <FilterDropdown
-              title="Course type"
-              options={courseTypeFilters}
-              onOptionChange={(optionId, checked) => handleFilterChange('courseType', optionId, checked)}
-            />
-            
-            <FilterDropdown
-              title="Start date"
-              options={startDateFilters}
-              onOptionChange={(optionId, checked) => handleFilterChange('startDate', optionId, checked)}
-            />
-            
-            <FilterDropdown
-              title="Mode"
-              options={modeFilters}
-              onOptionChange={(optionId, checked) => handleFilterChange('mode', optionId, checked)}
-            />
-
-            {/* My Enrollments Toggle */}
-            <Button
-              variant={filterByMe ? "default" : "outline"}
-              size="sm"
-              className={filterByMe ? "bg-green-600 text-white" : "border-gray-300"}
-              onClick={() => setFilterByMe(!filterByMe)}
-            >
-              My Enrollments
-            </Button>
-            
-            {/* Reset Button */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-red-500 hover:text-red-600 flex items-center space-x-1"
-                onClick={resetAllFilters}
-              >
-                <span className="text-red-500">↻</span>
-                <span>Reset Filter</span>
-              </Button>
-            </motion.div>
-            
-            {/* Search Box */}
             <div className="ml-auto flex items-center space-x-2 bg-gray-100 rounded-lg px-3 py-1.5">
               <Search className="h-4 w-4 text-gray-400" />
               <input 
@@ -779,6 +756,51 @@ const Courses = () => {
                   setSearch(e.target.value);
                 }}
               />
+            </div>
+          </div>
+
+          {/* Filter controls */}
+          <div className={`${mobileFiltersOpen ? 'grid' : 'hidden'} md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mt-3`}>
+            <FilterDropdown
+              title="Sector"
+              options={sectorFilters}
+              onOptionChange={(optionId, checked) => handleFilterChange('sector', optionId, checked)}
+            />
+            <FilterDropdown
+              title="Course type"
+              options={courseTypeFilters}
+              onOptionChange={(optionId, checked) => handleFilterChange('courseType', optionId, checked)}
+            />
+            <FilterDropdown
+              title="Start date"
+              options={startDateFilters}
+              onOptionChange={(optionId, checked) => handleFilterChange('startDate', optionId, checked)}
+            />
+            <FilterDropdown
+              title="Mode"
+              options={modeFilters}
+              onOptionChange={(optionId, checked) => handleFilterChange('mode', optionId, checked)}
+            />
+            <div className="flex items-center gap-2">
+              <Button
+                variant={filterByMe ? "default" : "outline"}
+                size="sm"
+                className={`w-full ${filterByMe ? 'bg-green-600 text-white' : 'border-gray-300'}`}
+                onClick={() => setFilterByMe(!filterByMe)}
+              >
+                My Enrollments
+              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full text-red-500 hover:text-red-600 flex items-center justify-center space-x-1"
+                  onClick={resetAllFilters}
+                >
+                  <span className="text-red-500">↻</span>
+                  <span>Reset</span>
+                </Button>
+              </motion.div>
             </div>
           </div>
         </motion.div>
@@ -868,7 +890,7 @@ const Courses = () => {
                                       
                                       {/* Course Info */}
                                       <div className="mt-3 space-y-2">
-                                        <div className="flex items-center space-x-4 text-sm text-gray-600">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm text-gray-600">
                                           <div className="flex items-center space-x-1">
                                             <Calendar className="h-4 w-4" />
                                             <span>{formatDate(training.startDate)}</span>
@@ -884,7 +906,7 @@ const Courses = () => {
                                           </div>
                                         </div>
                                         
-                                        <div className="flex items-center space-x-4 text-sm text-gray-600">
+                                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600">
                                           {/* Location (for offline courses) */}
                                           {training.location && (
                                             <div className="flex items-center space-x-1">
@@ -916,12 +938,12 @@ const Courses = () => {
                                     </div>
                                     
                                     {/* Price and Action Buttons */}
-                                    <div className="flex items-center justify-between mt-4">
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-4">
                                       <div className="flex items-center space-x-1 text-lg font-semibold text-gray-900">
                                         <span>{formatPrice(training.cost)}</span>
                                       </div>
                                       
-                                      <div className="flex items-center space-x-3">
+                                      <div className="flex items-center gap-3 sm:justify-end">
                                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                           <Button variant="outline" size="sm" onClick={(e) => e.preventDefault()}>
                                             More Info
@@ -929,7 +951,7 @@ const Courses = () => {
                                         </motion.div>
                                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                           <Button 
-                                            className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white"
+                                            className="w-full sm:w-auto bg-[#0389FF] hover:bg-[#0389FF]/90 text-white"
                                             onClick={(e) => {
                                               e.preventDefault();
                                               navigate(`/course-detail/${training.id}`);
@@ -1024,6 +1046,6 @@ const Courses = () => {
       <SharePopup isVisible={isShowing} />
     </div>
   );
-};
+}
 
 export default Courses;

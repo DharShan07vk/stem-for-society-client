@@ -103,12 +103,12 @@ function App() {
                 <Route path="/training/:id" element={<TrainingSpotlight />} />
                 <Route path="/blogs" element={<BlogListing />} />
                 <Route path="/blogs/:id" element={<BlogSpotlight />} />
-                <Route path="/pricing" element={<Home />} />
+                {/* <Route path="/pricing" element={<Home />} /> */}
                 <Route path="/community" element={<Community />} />
-                <Route path="/blogs/new" element={<BlogCreate />} />
+                {/* <Route path="/blogs/new" element={<BlogCreate />} /> */}
                 <Route path="/login" element={<Login />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/refund-policy" element={<RefundPolicy />} />
+                {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/refund-policy" element={<RefundPolicy />} /> */}
                 <Route path="/join-community" element={<JoinCommunity />} />
                 <Route path="/partner-role" element={<PartnerRole />} />
                 <Route path="/campus-ambassador-signup" element={<CampusAmbassadorSignup />} />

@@ -47,12 +47,13 @@ const TestimonialsSection = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Testimonials</h2>
         
-        {/* Scrolling container */}
+        {/* Scrolling container */
+        }
         <div className="relative">
           <div className="flex animate-scroll space-x-4">
             {/* First set of testimonials */}
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="flex-shrink-0 w-80 md:w-96 p-4 md:p-6 rounded-xl" style={{ backgroundColor: '#C0E1FF' }}>
+              <Card key={index} className="flex-shrink-0 w-64 sm:w-72 md:w-96 p-4 md:p-6 rounded-xl" style={{ backgroundColor: '#C0E1FF' }}>
                 <CardContent className="p-0">
                   <div className="flex mb-3 gap-1">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -77,7 +78,7 @@ const TestimonialsSection = () => {
             ))}
             {/* Duplicate set for seamless scrolling */}
             {testimonials.map((testimonial, index) => (
-              <Card key={`duplicate-${index}`} className="flex-shrink-0 w-72 md:w-80 p-3 md:p-4 rounded-xl" style={{ backgroundColor: '#C0E1FF' }}>
+              <Card key={`duplicate-${index}`} className="flex-shrink-0 w-56 sm:w-64 md:w-80 p-3 md:p-4 rounded-xl" style={{ backgroundColor: '#C0E1FF' }}>
                 <CardContent className="p-0">
                   <div className="flex mb-2">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -106,7 +107,7 @@ const TestimonialsSection = () => {
           }
           
           .animate-scroll {
-            animation: scroll 30s linear infinite;
+            animation: scroll 24s linear infinite;
           }
           
           .animate-scroll:hover {
@@ -125,6 +126,14 @@ const TestimonialsSection = () => {
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+          }
+
+          /* Speed up on small screens for better perceived motion */
+          @media (max-width: 768px) {
+            .animate-scroll { animation-duration: 18s; }
+          }
+          @media (max-width: 480px) {
+            .animate-scroll { animation-duration: 14s; }
           }
         `
       }} />
