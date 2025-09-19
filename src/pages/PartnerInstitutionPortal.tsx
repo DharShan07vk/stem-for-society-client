@@ -101,8 +101,30 @@ const PartnerInstitutionPortal = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Update the handleFileChange function to include file validation
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, fieldName: 'logo' | 'digitalSign') => {
     const file = e.target.files?.[0] || null;
+    
+    if (file) {
+      // Check file type - only allow PNG and JPG
+      const allowedTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error(`Only PNG and JPG files are allowed for ${fieldName === 'logo' ? 'company logo' : 'digital signature'}`);
+        // Clear the input
+        e.target.value = '';
+        return;
+      }
+      
+      // Check file size (optional - limit to 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        toast.error(`File size must be less than 5MB`);
+        // Clear the input
+        e.target.value = '';
+        return;
+      }
+    }
+    
     setFormData(prev => ({ ...prev, [fieldName]: file }));
   };
 
@@ -116,8 +138,26 @@ const PartnerInstitutionPortal = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all required fields
     if (!formData.acceptTerms) {
       return toast.error("Accept terms to continue!");
+    }
+    
+    if (!formData.logo) {
+      return toast.error("Please upload company logo");
+    }
+    
+    if (!formData.digitalSign) {
+      return toast.error("Please upload digital signature");
+    }
+    
+    if (otpSent && !formData.otp) {
+      return toast.error("Please enter OTP");
+    }
+    
+    if (!formData.email || !formData.password || !formData.phone || !formData.topic || !formData.sector) {
+      return toast.error("Please fill in all required fields");
     }
     
     // Create FormData object for file uploads
@@ -139,7 +179,21 @@ const PartnerInstitutionPortal = () => {
     registerMutation.mutate(submitData);
   };
 
+  // Update the form validation in handleNext function
   const handleNext = () => {
+    // Validate current step before proceeding
+    if (currentStep === 1) {
+      if (!formData.companyName || !formData.gst || !formData.instructorName || !formData.logo || !formData.digitalSign) {
+        toast.error("Please fill in all required fields and upload both logo and digital signature");
+        return;
+      }
+    } else if (currentStep === 2) {
+      if (!formData.country || !formData.state || !formData.city || !formData.pincode || !formData.addressLine1) {
+        toast.error("Please fill in all required address fields");
+        return;
+      }
+    }
+    
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
@@ -236,17 +290,23 @@ const PartnerInstitutionPortal = () => {
               />
             </div>
             
-            {/* Company Logo Upload */}
+            {/* Company Logo Upload - UPDATED */}
               <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Company Logo
+                Company Logo <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 block">Only PNG and JPG files allowed (Max: 5MB)</span>
               </label>
               <div className="flex items-center justify-between bg-white/80 rounded-xl border border-gray-300 p-3">
                 <div className="flex-1">
                   {formData.logo ? (
-                    <span className="text-sm text-green-600 font-medium">
-                      {formData.logo.name}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-green-600 font-medium">
+                        {formData.logo.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        ({(formData.logo.size / 1024 / 1024).toFixed(2)} MB)
+                      </span>
+                    </div>
                   ) : (
                     <span className="text-sm text-gray-500">
                       No file selected
@@ -258,26 +318,33 @@ const PartnerInstitutionPortal = () => {
                     Choose File
                     <input
                       type="file"
-                      accept="image/*"
+                      accept=".png,.jpg,.jpeg,image/png,image/jpg,image/jpeg"
                       onChange={(e) => handleFileChange(e, 'logo')}
                       className="hidden"
+                      required
                     />
                   </label>
                 </div>
               </div>
             </div>
             
-            {/* Digital Signature Upload */}
+            {/* Digital Signature Upload - UPDATED */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Digital Signature
+                Digital Signature <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 block">Only PNG and JPG files allowed (Max: 5MB)</span>
               </label>
               <div className="flex items-center justify-between bg-white/80 rounded-xl border border-gray-300 p-3">
                 <div className="flex-1">
                   {formData.digitalSign ? (
-                    <span className="text-sm text-green-600 font-medium">
-                      {formData.digitalSign.name}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-green-600 font-medium">
+                        {formData.digitalSign.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        ({(formData.digitalSign.size / 1024 / 1024).toFixed(2)} MB)
+                      </span>
+                    </div>
                   ) : (
                     <span className="text-sm text-gray-500">
                       No file selected
@@ -289,9 +356,10 @@ const PartnerInstitutionPortal = () => {
                     Choose File
                     <input
                       type="file"
-                      accept="image/*"
+                      accept=".png,.jpg,.jpeg,image/png,image/jpg,image/jpeg"
                       onChange={(e) => handleFileChange(e, 'digitalSign')}
                       className="hidden"
+                      required
                     />
                   </label>
                 </div>
