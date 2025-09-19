@@ -124,9 +124,7 @@ function useTrainings() {
 
 // Course type mapping for filter translations
 const COURSE_TYPE_MAPPING = {
-  'Seminar': 'Seminars/Webinar/Mentorship',
-  'Webinar': 'Seminars/Webinar/Mentorship', 
-  'Mentorship': 'Seminars/Webinar/Mentorship',
+  'Seminar/Webinar/Mentorship': 'Seminars/Webinar/Mentorship',
   'Certificate': 'Certificate Program',
   'Hands On': 'Instrumentation Hands-on',
   'Training Program': 'Corporate Training'
@@ -142,9 +140,7 @@ const INITIAL_SECTOR_FILTERS: FilterOption[] = [
 ];
 
 const INITIAL_COURSE_TYPE_FILTERS: FilterOption[] = [
-  { id: 'seminar', label: 'Seminar', checked: false },
-  { id: 'webinar', label: 'Webinar', checked: false },
-  { id: 'mentorship', label: 'Mentorship', checked: false },
+  { id: 'seminar-webinar-mentorship', label: 'Seminar/Webinar/Mentorship', checked: false },
   { id: 'certificate', label: 'Certificate', checked: false },
   { id: 'handson', label: 'Hands On', checked: false },
   { id: 'training', label: 'Training Program', checked: false },
@@ -214,7 +210,7 @@ const Courses = () => {
     }
   }, [trainings]);
 
-  // FIX: Improved sync for course type filters with URL parameters
+  // FIX: Updated sync for combined course type filters with URL parameters
   useEffect(() => {
     console.log('=== SYNCING COURSE TYPE FILTERS ===');
     console.log('trainingFilter from URL:', trainingFilter);
@@ -346,7 +342,7 @@ const Courses = () => {
                              training.title.toLowerCase().includes(searchTerm) ||
                              training.title.toLowerCase().includes(queryTerm);
         
-        // FIX: Improved category filter logic
+        // FIX: Updated category filter logic for combined option
         const hasCategories = trainingFilter?.length > 0;
         let matchesCategory = true; // Default to true if no filters
         
@@ -363,31 +359,57 @@ const Courses = () => {
               return true;
             }
             
-            // Flexible matching based on filter type
+            // FIX: Enhanced matching logic for the combined option
             switch (filter) {
               case 'Seminars/Webinar/Mentorship':
-                const isWebinarType = categoryLower.includes('seminar') || 
-                                     categoryLower.includes('webinar') || 
-                                     categoryLower.includes('mentorship') ||
-                                     titleLower.includes('seminar') ||
-                                     titleLower.includes('webinar') ||
-                                     titleLower.includes('mentorship');
-                console.log('✓ Webinar type check:', isWebinarType);
-                return isWebinarType;
+                const isSeminarWebinarMentorship = 
+                  // Check category keywords
+                  categoryLower.includes('seminar') || 
+                  categoryLower.includes('webinar') || 
+                  categoryLower.includes('mentorship') ||
+                  categoryLower.includes('workshop') ||
+                  categoryLower.includes('session') ||
+                  categoryLower.includes('talk') ||
+                  categoryLower.includes('discussion') ||
+                  // Check title keywords
+                  titleLower.includes('seminar') ||
+                  titleLower.includes('webinar') ||
+                  titleLower.includes('mentorship') ||
+                  titleLower.includes('workshop') ||
+                  titleLower.includes('session') ||
+                  titleLower.includes('talk') ||
+                  titleLower.includes('discussion') ||
+                  titleLower.includes('mentor') ||
+                  titleLower.includes('guidance') ||
+                  // Check for online discussion formats
+                  titleLower.includes('online') && (
+                    titleLower.includes('discussion') ||
+                    titleLower.includes('meet') ||
+                    titleLower.includes('talk')
+                  );
+                console.log('✓ Seminar/Webinar/Mentorship check:', isSeminarWebinarMentorship);
+                return isSeminarWebinarMentorship;
                 
               case 'Certificate Program':
                 const isCertificate = categoryLower.includes('certificate') || 
                                      categoryLower.includes('program') ||
+                                     categoryLower.includes('course') ||
                                      titleLower.includes('certificate') ||
-                                     titleLower.includes('program');
+                                     titleLower.includes('program') ||
+                                     titleLower.includes('certification') ||
+                                     titleLower.includes('certified');
                 console.log('✓ Certificate check:', isCertificate);
                 return isCertificate;
                 
               case 'Corporate Training':
                 const isCorporate = categoryLower.includes('corporate') || 
                                    categoryLower.includes('training') ||
+                                   categoryLower.includes('professional') ||
                                    titleLower.includes('corporate') ||
-                                   titleLower.includes('training');
+                                   titleLower.includes('training') ||
+                                   titleLower.includes('professional') ||
+                                   titleLower.includes('business') ||
+                                   titleLower.includes('enterprise');
                 console.log('✓ Corporate check:', isCorporate);
                 return isCorporate;
                 
@@ -396,10 +418,14 @@ const Courses = () => {
                                  categoryLower.includes('hands') ||
                                  categoryLower.includes('practical') ||
                                  categoryLower.includes('workshop') ||
+                                 categoryLower.includes('lab') ||
                                  titleLower.includes('instrumentation') ||
                                  titleLower.includes('hands') ||
                                  titleLower.includes('practical') ||
-                                 titleLower.includes('workshop');
+                                 titleLower.includes('workshop') ||
+                                 titleLower.includes('lab') ||
+                                 titleLower.includes('hands-on') ||
+                                 titleLower.includes('laboratory');
                 console.log('✓ Hands-on check:', isHandsOn);
                 return isHandsOn;
                 
@@ -433,7 +459,7 @@ const Courses = () => {
         const matchesMode = !hasModeFilter || 
                            modeFilters.some(filter => {
                              if (!filter.checked) return false;
-                             const trainingMode =training.type;
+                             const trainingMode = training.type;
                              return filter.label.toLowerCase() === trainingMode.toLowerCase();
                            });
 
@@ -582,6 +608,7 @@ const Courses = () => {
    * Reset all filters to default state
    */
   const resetAllFilters = () => {
+    // FIX: Update to use new filter structure
     setSectorFilters(INITIAL_SECTOR_FILTERS);
     setCourseTypeFilters(INITIAL_COURSE_TYPE_FILTERS);
     setStartDateFilters(INITIAL_DATE_FILTERS);

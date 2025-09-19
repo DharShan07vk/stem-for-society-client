@@ -16,62 +16,60 @@ interface FilterDropdownProps {
   onOptionChange: (optionId: string, checked: boolean) => void;
 }
 
-const FilterDropdown: React.FC<FilterDropdownProps> = ({ title, options, onOptionChange }) => {
+const FilterDropdown: React.FC<FilterDropdownProps> = ({
+  title,
+  options,
+  onOptionChange,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const selectedCount = options.filter(opt => opt.checked).length;
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={`flex items-center space-x-2 h-10 px-3 text-sm rounded-md border transition-colors ${
-            selectedCount > 0 ? 'border-blue-200 bg-blue-50' : 'border-gray-200 bg-white'
-          }`}
-        >
-          <Filter className="h-4 w-4 text-gray-500" />
-          <span>{title}</span>
-          {selectedCount > 0 && (
-            <span className="inline-flex items-center justify-center h-5 w-5 rounded-full bg-blue-600 text-white text-xs">
-              {selectedCount}
-            </span>
-          )}
-          {isOpen ? (
-            <ChevronUp className="h-4 w-4 ml-1 text-gray-500" />
-          ) : (
-            <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
-          )}
-        </Button>
-      </PopoverTrigger>
-      
-      <PopoverContent 
-        className="w-56 p-0 !bg-white border border-gray-200 shadow-md rounded-md" 
-        align="start"
-        sideOffset={4}
+    <div className="relative">
+      <Button
+        variant="outline"
+        size="sm"
+        className="flex items-center space-x-2 border-gray-300 hover:border-gray-400 min-w-max"
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <div className="p-2 space-y-1">
-          {options.map((option) => (
-            <div 
-              key={option.id} 
-              className="flex items-center space-x-2 p-2 rounded hover:bg-gray-50"
-            >
-              <Checkbox
-                id={option.id}
-                checked={option.checked}
-                onCheckedChange={(checked: boolean) => onOptionChange(option.id, checked)}
-                className="h-4 w-4 rounded border-gray-300 data-[state=checked]:bg-[#0389FF] data-[state=checked]:border-blue-600 data-[state=checked]:text-white"
-              />
-              <label
-                htmlFor={option.id}
-                className="text-sm text-gray-700 cursor-pointer select-none flex-1"
-              >
-                {option.label}
-              </label>
+        <span className="truncate max-w-[120px]">{title}</span>
+        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </Button>
+
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 z-10" 
+            onClick={() => setIsOpen(false)} 
+          />
+          
+          {/* Dropdown */}
+          <div className="absolute top-full left-0 mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[200px] max-w-[280px] py-2">
+            <div className="max-h-60 overflow-y-auto">
+              {options.map((option) => (
+                <label
+                  key={option.id}
+                  className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer group"
+                >
+                  <input
+                    type="checkbox"
+                    checked={option.checked}
+                    onChange={(e) => onOptionChange(option.id, e.target.checked)}
+                    className="mr-3 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span 
+                    className="text-sm text-gray-700 group-hover:text-gray-900 break-words leading-tight"
+                    title={option.label} // Show full text on hover
+                  >
+                    {option.label}
+                  </span>
+                </label>
+              ))}
             </div>
-          ))}
-        </div>
-      </PopoverContent>
-    </Popover>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
