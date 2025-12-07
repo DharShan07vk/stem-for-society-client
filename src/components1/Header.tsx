@@ -48,7 +48,7 @@ const Header = () => {
               {/* Courses/Trainings Dropdown */}
               <MenubarMenu>
                 <MenubarTrigger className="bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium shadow-none backdrop-blur-sm border-none outline-none">
-                  <span>Courses/Trainings</span>
+                  <span>Academy</span>
                   <ChevronDown className="h-4 w-4" />
                 </MenubarTrigger>
                 <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
