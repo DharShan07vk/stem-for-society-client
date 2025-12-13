@@ -47,9 +47,10 @@ const Header = () => {
             <Menubar className="border-none bg-transparent p-0 h-auto">
               {/* Courses/Trainings Dropdown */}
               <MenubarMenu>
-                <MenubarTrigger className="bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium shadow-none backdrop-blur-sm border-none outline-none">
-                  <span>Academy</span>
+                <MenubarTrigger className="bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1 text-[#00000080] hover:text-gray-900 transition-all duration-300 font-medium shadow-none backdrop-blur-sm border-none outline-none">
+                  <span >Academy</span>
                   <ChevronDown className="h-4 w-4" />
+
                 </MenubarTrigger>
                 <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
                   <MenubarItem asChild>
@@ -89,42 +90,52 @@ const Header = () => {
 
               {/* Services Dropdown */}
               <MenubarMenu>
-                <MenubarTrigger className="bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium shadow-none backdrop-blur-sm border-none outline-none">
-                  <span>Services</span>
-                  <ChevronDown className="h-4 w-4" />
-                </MenubarTrigger>
-                <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
-                  <MenubarItem asChild>
-                    <Link 
-                      to="/mental-wellbeing" 
-                      className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-                    >
-                     Mental WellBeing
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem asChild>
-                    <Link 
-                      to="/career-counselling" 
-                      className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-                    >
-                      Career Counselling
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem asChild>
-                    <Link 
-                      to="/institution-pricing" 
-                      className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-                    >
-                      Institution Plan & Pricing
-                    </Link>
-                  </MenubarItem>
-                </MenubarContent>
-              </MenubarMenu>
+  <MenubarTrigger 
+    className="group bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 
+               rounded-full cursor-pointer flex items-center space-x-1 
+               text-[#00000080] hover:text-gray-900 transition-all duration-300 
+               font-medium shadow-none backdrop-blur-sm border-none outline-none"
+  >
+    <span>Services</span>
+    <ChevronDown 
+      className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180"
+    />
+  </MenubarTrigger>
+
+  <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
+    <MenubarItem asChild>
+      <Link 
+        to="/mental-wellbeing" 
+        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
+      >
+        Mental WellBeing
+      </Link>
+    </MenubarItem>
+
+    <MenubarItem asChild>
+      <Link 
+        to="/career-counselling" 
+        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
+      >
+        Career Counselling
+      </Link>
+    </MenubarItem>
+
+    <MenubarItem asChild>
+      <Link 
+        to="/institution-pricing" 
+        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
+      >
+        Institution Plan & Pricing
+      </Link>
+    </MenubarItem>
+  </MenubarContent>
+</MenubarMenu>
 
               {/* Resources Dropdown */}
               <MenubarMenu>
-                <MenubarTrigger className="bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition-all duration-300 font-medium shadow-none backdrop-blur-sm border-none outline-none">
-                  <span>Resources</span>
+                <MenubarTrigger className="bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20 px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1 text-[#00000080] hover:text-gray-900 transition-all duration-300 font-medium shadow-none backdrop-blur-sm border-none outline-none">
+                  <span >Resources</span>
                   <ChevronDown className="h-4 w-4" />
                 </MenubarTrigger>
                 <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
