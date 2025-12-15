@@ -105,7 +105,7 @@ function useSendEmailOTP() {
     unknown
   >({
     mutationFn: async (data) => {
-      const response = await api().post("/otp/send", data);
+      const response = await api().post("/email/sendOTP", data);
       return response.data;
     },
     onError: (err) => mutationErrorHandler(err),
@@ -121,7 +121,7 @@ function useVerifyEmailOTP() {
     unknown
   >({
     mutationFn: async (data) => {
-      const response = await api().post("/otp/verify", data);
+      const response = await api().post("/email/verifyOTP", data);
       return response.data;
     },
     onError: (err) => mutationErrorHandler(err),
@@ -521,12 +521,28 @@ const InstitutionBookingFlow = () => {
           email: formData.contactEmail,
           contact: formData.contactMobile,
         },
-        async handler() {
+        async handler(response) {
           toast.success(
             "Payment was made successfully! We will verify the payment and will be in touch with you shortly",
             { autoClose: false, draggable: false },
           );
           setCurrentStep(5); // Move to success step
+          try{
+            await api().post("/email/send-institution-booking", {
+              userEmail: formData.contactEmail,
+              userName: formData.contactName + " - " + formData.schoolName,
+              institutionName : formData.schoolName,
+              serviceType : formData.plan,
+              amount : Number(order.amount),
+              currency : "INR",
+              paymentId : response.razorpay_payment_id,
+              sessionDate : formData.selectedDate,
+            });
+            console.log("Email sent successfully");
+          }
+          catch(error){
+            console.log("Email Error ", error);
+          }
         },
       };
 
@@ -1201,9 +1217,9 @@ const InstitutionBookingFlow = () => {
         >
           Back to Home
         </Button>
-        <Button className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white px-8 h-12">
+        {/* <Button className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white px-8 h-12">
           DOWNLOAD CONFIRMATION
-        </Button>
+        </Button> */}
       </div>
     </div>
   );
