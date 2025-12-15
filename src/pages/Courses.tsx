@@ -126,7 +126,7 @@ const Courses = () => {
   const { data: trainings, isLoading, error } = useTrainings();
   const { isShowing, handleShare } = useShare();
   function check(id: string, isEnrolled: boolean) {
-  navigate(`/courses/${id}`);
+  navigate(`/course-details/${id}`);
    console.log(isEnrolled)
 }
   const [expandedMonths, setExpandedMonths] = useState<Record<string, boolean>>({});
@@ -433,7 +433,7 @@ const Courses = () => {
                           instructorImage={undefined}
                           trainingId={training.id}
                           isEnrolled={isUserEnrolled(training)}
-                          onRegister={() => navigate(`/courses/${training.id}`)}
+                          onRegister={() => navigate(`/course-detail/${training.id}`)}
                           onMoreDetails={() => check(training.id, training.isEnrolled)}
                         />
                       ))}
