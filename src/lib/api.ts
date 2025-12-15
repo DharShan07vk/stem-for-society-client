@@ -11,10 +11,24 @@ const api = (queryKeyName: string = "auth") => {
   });
 
   api.interceptors.request.use((config) => {
-    const token = queryClient.getQueryData<UserAuthResponse>([
+    // First try to get token from React Query cache
+    let token = queryClient.getQueryData<UserAuthResponse>([
       queryKeyName,
     ])?.token;
-    // console.log("🚀 ~ api.interceptors.request.use ~ token:", token);
+    
+    // Fallback to localStorage if not in cache
+    if (!token) {
+      const stored = localStorage.getItem("studentAuth");
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          token = parsed.token;
+        } catch {
+          // Invalid JSON in localStorage
+        }
+      }
+    }
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
