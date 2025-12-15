@@ -15,6 +15,7 @@
   "dependencies": {
     "@gfazioli/mantine-marquee": "^2.0.8",
     "@hookform/resolvers": "^3.9.0",
+    "@iconify/react": "^6.0.2",
     "@mantine/carousel": "^7.15.1",
     "@mantine/core": "^7.14.1",
     "@mantine/dates": "^7.14.3",
