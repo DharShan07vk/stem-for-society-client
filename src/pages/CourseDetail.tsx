@@ -356,7 +356,7 @@ const CourseDetails = () => {
         <div className="container mx-auto px-4 max-w-4xl pt-4 pb-8">
           {/* Back Button and Share */}
           <div className="flex items-center justify-between py-4">
-            <Link to="/newcourse">
+            <Link to="/courses">
               <Button
                 variant="outline"
                 size="sm"
