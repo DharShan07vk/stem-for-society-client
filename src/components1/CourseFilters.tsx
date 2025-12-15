@@ -10,6 +10,7 @@ import {
 } from "@/components1/ui/select";
 import { Search, ChevronDown, RotateCcw } from "lucide-react";
 import { Icon } from "@iconify/react";
+import FilterIcon from "@/assets/filter.png"
 
 interface CourseFiltersProps {
   onFilterChange?: (filters: FilterState) => void;
@@ -54,7 +55,7 @@ const CourseFilters = ({ onFilterChange }: CourseFiltersProps) => {
     <div className="flex flex-wrap items-center rounded-lg gap-3 p-3 bg-white border border-gray-100 shadow-sm">
       {/* Filter Icon */}
       <div className="flex flex-row items-center justify-center h-[70px]  gap-1 rounded-lg bg-gray-50">
-        <img src="src\assets\filter.png" alt="Filter Icon" className="w-auto h-auto max-w-[67.5px]"></img>
+        <img src={FilterIcon} alt="Filter Icon" className="w-auto h-auto max-w-[67.5px]"></img>
       </div>
       Filter By
 
