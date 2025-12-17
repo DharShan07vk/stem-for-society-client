@@ -1,6 +1,5 @@
-
 import { Card, CardContent } from "@/components1/ui/card";
-import { Star } from "lucide-react";
+import { Quote } from "lucide-react";
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -11,13 +10,13 @@ const TestimonialsSection = () => {
       text: "I am grateful for the Experience Innovation challenges we conduct. Programs are world through and provide practical insights into healthcare technology and devices through lab activities focused on real problem-solving and development."
     },
     {
-      name: "Dharshini ", 
+      name: "Dharshini",
       title: "Effective Winning Strategy & Performance-Driven Engineering",
       rating: 5,
       text: "Very informative as it brings me close to point strategies to develop my skills in Engineering. The program exceeded my expectations."
     },
     {
-      name: "Vishveshwaran ",
+      name: "Vishveshwaran",
       title: "Biomedical Engineering and Healthcare Innovation",
       rating: 5,
       text: "The hands-on approach and mentorship provided transformed my understanding of biomedical applications. Highly recommend this program."
@@ -44,59 +43,53 @@ const TestimonialsSection = () => {
 
   return (
     <section className="py-16 bg-white overflow-hidden">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Testimonials</h2>
-        
-        {/* Scrolling container */
-        }
-        <div className="relative">
-          <div className="flex animate-scroll space-x-4">
-            {/* First set of testimonials */}
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="flex-shrink-0 w-64 sm:w-72 md:w-96 p-4 md:p-6 rounded-xl" style={{ backgroundColor: '#C0E1FF' }}>
-                <CardContent className="p-0">
-                  <div className="flex mb-3 gap-1">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <svg 
-  key={i}
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 512 512"
-  fill="#00549F"
-  className="h-5 w-5 mx-0.5"
->
-  <path d="M256 0l73 149 165 24-119 116 28 164-147-77-147 77 28-164L18 173l165-24L256 0z" />
-</svg>
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-2xl font-medium text-gray-500 mb-8">
+          Testimonials
+        </h2>
 
+        <div className="relative overflow-hidden">
+          <div className="flex gap-6 animate-scroll hover:[animation-play-state:paused]">
+            
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
+              <Card
+                key={index}
+                className="min-w-[320px] max-w-[340px] rounded-xl border-none flex-shrink-0"
+                style={{ backgroundColor: "#C0E1FF" }}
+              >
+                <CardContent className="p-6 flex flex-col h-full">
+                  <Quote
+                    className="w-16 h-16 text-[#9EC9F2] mb-4 scale-y-[-1] scale-x-[-1] fill-[#1010101A] stroke-none"
+                    strokeWidth={3}
+                  />
 
-                    ))}
+                  <h4 className="font-semibold text-sm md:text-base leading-relaxed mb-3 line-clamp-3">
+                    {testimonial.title}
+                  </h4>
+
+                  <p className="text-sm text-gray-600 mb-auto line-clamp-3">
+                    {testimonial.text}
+                  </p>
+
+                  <div className="flex items-center gap-3 mt-6">
+                    <div className="w-8 h-8 rounded-xl bg-gray-800 flex items-center justify-center text-white text-xs">
+                      {testimonial.name.charAt(0)}
+                    </div>
+                    <span className="text-sm font-medium text-gray-700">
+                      {testimonial.name}
+                    </span>
                   </div>
-                  <h4 className="font-semibold mb-2 text-sm md:text-base line-clamp-2">{testimonial.title}</h4>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-3">{testimonial.text}</p>
-                  <p className="font-medium text-sm md:text-base">- {testimonial.name}</p>
                 </CardContent>
               </Card>
             ))}
-            {/* Duplicate set for seamless scrolling */}
-            {testimonials.map((testimonial, index) => (
-              <Card key={`duplicate-${index}`} className="flex-shrink-0 w-56 sm:w-64 md:w-80 p-3 md:p-4 rounded-xl" style={{ backgroundColor: '#C0E1FF' }}>
-                <CardContent className="p-0">
-                  <div className="flex mb-2">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-3 w-3 fill-current text-current" style={{ color: '#00549F' }} />
-                    ))}
-                  </div>
-                  <h4 className="font-semibold mb-2 text-xs md:text-sm line-clamp-2">{testimonial.title}</h4>
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-3">{testimonial.text}</p>
-                  <p className="font-medium text-xs md:text-sm">- {testimonial.name}</p>
-                </CardContent>
-              </Card>
-            ))}
+
           </div>
         </div>
       </div>
-      
-      <style dangerouslySetInnerHTML={{
-        __html: `
+
+      {/* animation */}
+      <style>
+        {`
           @keyframes scroll {
             0% {
               transform: translateX(0);
@@ -105,38 +98,12 @@ const TestimonialsSection = () => {
               transform: translateX(-50%);
             }
           }
-          
+
           .animate-scroll {
-            animation: scroll 24s linear infinite;
+            animation: scroll 30s linear infinite;
           }
-          
-          .animate-scroll:hover {
-            animation-play-state: paused;
-          }
-
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-
-          .line-clamp-3 {
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-
-          /* Speed up on small screens for better perceived motion */
-          @media (max-width: 768px) {
-            .animate-scroll { animation-duration: 18s; }
-          }
-          @media (max-width: 480px) {
-            .animate-scroll { animation-duration: 14s; }
-          }
-        `
-      }} />
+        `}
+      </style>
     </section>
   );
 };
