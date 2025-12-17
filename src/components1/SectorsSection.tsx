@@ -37,7 +37,7 @@ const Sectors = () => {
                    py-20 px-6"
       >
         {/* Heading */}
-        <h2 className="text-center text-4xl md:text-5xl font-instrument py-3 mb-14 text-[#203D59]">
+        <h2 className="text-center text-5xl md:text-5xl font-instrument py-3 mb-14 text-[#203D59]">
           Sectors that we focus
         </h2>
 

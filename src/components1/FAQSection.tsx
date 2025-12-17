@@ -103,11 +103,11 @@ const FAQSection = () => {
       <div className="container mx-auto px-4 max-w-full">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
-            <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+            <h2 className="text-5xl  text-[#00000080]">Frequently Asked Questions</h2>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  className={`border rounded px-3 py-1 text-sm flex items-center ${
+                  className={`border-rounded px-3 py-1 text-sm flex items-center ${
                     isToggled ? 'bg-[#C0E1FF] border-[#C0E1FF]' : 'bg-white border-gray-200'
                   }`}
                   style={{
@@ -149,7 +149,7 @@ const FAQSection = () => {
                 <AccordionTrigger className={`text-left text-base px-6 py-4 hover:no-underline ${
                   openItem === `item-${index}` ? 'text-blue-700' : 'text-gray-900'
                 }`}>
-                  Q{index + 1}. {faq.question}
+                  0{index + 1}. {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-base px-6 pb-4 text-gray-600">
                   {faq.answer}
