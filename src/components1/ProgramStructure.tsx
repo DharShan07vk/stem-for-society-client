@@ -69,7 +69,7 @@ const OurPrograms = () => {
             >
               <div
     className="absolute inset-0 bg-[url('/src/assets/asset2.png')] 
-              bg-contain bg-center bg-no-repeat bg-[position:113%_0%]
+              bg-contain bg-center bg-no-repeat bg-[position:115%_0%]
                opacity-80
                transition-transform duration-300
                group-hover:scale-105"
@@ -95,10 +95,10 @@ const OurPrograms = () => {
             >
               <div
     className="absolute inset-0 bg-[url('/src/assets/asset3.png')] 
-               bg-cover  bg-no-repeat bg-[position:120%_20%]
+               bg-contain  bg-no-repeat bg-[position:50%_20%]
                opacity-80
                transition-transform duration-300
-               group-hover:scale-105"
+               group-hover:scale-105 bg-[size:150%_160%]"
   />
               <div className="relative z-10">
                 <h3 className="text-4xl font-instrument mb-3 text-[#594D20] scale-y-[1.5] inline-block">
@@ -147,10 +147,10 @@ const OurPrograms = () => {
             >
               <div
     className="absolute inset-0 bg-[url('/src/assets/asset6.png')] 
-               bg-contain bg-center bg-no-repeat bg-[position:100%_70%]
+               bg-contain bg-center bg-no-repeat bg-[position:100%_80%]
                opacity-80
                transition-transform duration-300
-               group-hover:scale-105 bg-[size:65%_150%]"
+               group-hover:scale-105 bg-[size:70%_150%]"
   />
               <div className="absolute bottom-4">
                 <h3 className="text-4xl font-instrument mb-3 text-[#592B20] scale-y-[1.5] inline-block  tracking-widest ">
