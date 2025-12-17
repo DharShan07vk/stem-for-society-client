@@ -282,7 +282,7 @@ const VideoUpload = ({
                   )
                 ) : (
                   <>
-                    Youtube URL:{" "}
+                    Google Meet:{" "}
                     <Link to={uploadResponse.secure_url} target="_blank">
                       {uploadResponse.secure_url}
                     </Link>
@@ -383,8 +383,8 @@ const VideoUpload = ({
         </div>
         {uploadStatus === "waiting" && (
           <TextInput
-            label="Youtube URL"
-            placeholder="https://youtube.com/watch?v=xxxxxxx"
+            label="Google Meet Link"
+            placeholder="https://meet.google.com/v=xxxxxxx"
             value={
               uploadResponse?.source === "youtube"
                 ? uploadResponse.secure_url

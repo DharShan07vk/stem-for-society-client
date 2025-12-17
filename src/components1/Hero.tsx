@@ -72,14 +72,20 @@ const HeroSection = () => {
 
       
       <div className="container mx-auto text-center px-4 relative max-w-7xl z-10">
-        <p className="text-gray-600 mb-4 text-lg">Empowering Future Innovators through STEM Learning</p>
+        <p className="text-#000000 mb-4 text-lg">Empowering Future Innovators through STEM Learning</p>
         
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight max-w-4xl mx-auto">
-          Let's <span className="text-black">Innovate, Incubate and Impact</span> <span className="text-gray-400">the<br />world together!</span>
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal mb-4 leading-tight max-w-5xl mx-auto">
+          <span className="text-gray-400">Let's</span> <span className="text-black">Innovate, Incubate and Impact</span> <span className="text-gray-400">the<br />world together!</span>
         </h1>
         
-        <p className="text-gray-600 mb-6 text-lg max-w-xl mx-auto">
-          Join hands with us to solve <span className="text-yellow-600 font-semibold">Real-world challenges</span>
+        <p className="text-#000000 mb-6 text-lg max-w-xl mx-auto">
+          Join hands with us to solve <span className="relative font-normal
+  before:content-[''] before:absolute before:left-0 before:bottom-[0.15em]
+  before:h-[0.5em] before:w-full before:bg-[#FFEE00]/80 before:-z-10
+  before:rounded-sm">
+  Real-world challenges
+</span>
+
         </p>
         
         <Link to="/explore-program-dashboard">

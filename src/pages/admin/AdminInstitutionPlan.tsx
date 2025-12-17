@@ -170,7 +170,7 @@ export default function AdminInstitutionRegistrations() {
                   className: "max-w-[40%]",
                 },
                 {
-                  render: r.transactions[0].plan,
+                  render: r.transactions?.[0]?.plan || "No Plan",
                 },
                 {
                   render : r.selectedDate + " " + r.selectedTime,
@@ -256,7 +256,7 @@ export default function AdminInstitutionRegistrations() {
                   label="Plan chosen"
                   value={
                     <Badge color="dark">
-                      {currentInst.transactions?.[0]?.plan}
+                      {currentInst.transactions?.[0]?.plan || "No Plan"}
                     </Badge>
                   }
                 />
@@ -280,7 +280,7 @@ export default function AdminInstitutionRegistrations() {
                     { render: "Status" },
                     { render: "Paid on" },
                   ]}
-                  rows={currentInst.transactions.map((trans, i) => ({
+                  rows={currentInst.transactions?.map((trans, i) => ({
                     id: trans.id,
                     cells: [
                       {
@@ -307,7 +307,7 @@ export default function AdminInstitutionRegistrations() {
                         render: formatDate(trans.updatedAt),
                       },
                     ],
-                  }))}
+                  })) || []}
                 />
               </div>
             </div>

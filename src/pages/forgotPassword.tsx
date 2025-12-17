@@ -480,7 +480,7 @@ function useSendEmailOTP() {
     unknown
   >({
     mutationFn: async (data) => {
-      const response = await api().post("/otp/reset", data);
+      const response = await api().post("/email/resetOTP", data);
       return response.data;
     },
     onError: (err) => mutationErrorHandler(err),
@@ -495,7 +495,7 @@ function useVerifyOTP() {
     unknown
   >({
     mutationFn: async (data) => {
-      const response = await api().post("/otp/verify", data);
+      const response = await api().post("/email/verifyOTP", data);
       return response.data;
     },
     onError: (err) => mutationErrorHandler(err),

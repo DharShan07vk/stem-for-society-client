@@ -1,10 +1,8 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
-		fontFamily: {
-        instrument: ['"Instrument Serif"', 'serif'],
-      },
 		extend: {},
 	},
 	plugins: [],
