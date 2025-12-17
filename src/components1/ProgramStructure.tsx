@@ -2,10 +2,10 @@ import { TbH1 } from "react-icons/tb";
 
 const OurPrograms = () => {
   return (
-    <section className="py-20 bg-white px-[120px]">
+    <section className="py-10 bg-white px-[120px]">
       <div className="max-w-screen-2xl mx-auto px-4">
         {/* Heading */}
-        <h2 className="text-4xl font-instrument text-[#203D59] mb-10 text-center">
+        <h2 className="text-4xl px-5  mb-10 text-[#00000080]">
           Our Programs
         </h2>
 

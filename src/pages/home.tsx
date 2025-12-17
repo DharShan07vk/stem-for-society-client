@@ -43,9 +43,9 @@ function Home() {
 
       {/* Other Sections */}
       <SectorsWeFocus />
-      <WhyChooseUs />
-      <Partners/>
       <ProgramsOffered/>
+     <WhyChooseUs />
+       <Partners/>
       <ReviewCards/>
       <FAQ />
       <Footer />

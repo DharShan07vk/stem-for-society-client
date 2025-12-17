@@ -35,7 +35,7 @@ const PartnersSection = () => {
   return (
     <section className="py-20 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4 text-center max-w-7xl">
-        <h2 className="text-2xl md:text-3xl font-bold mb-10 md:mb-16 text-gray-800">Industrial & Academic Partners</h2>
+        <h2 className="text-4xl md:text-3xl  mb-10 md:mb-16 text-[#00000080]">Industrial & Academic Partners</h2>
 
         <div className="overflow-hidden">
           <div className="flex items-center will-change-transform animate-partners-scroll">
