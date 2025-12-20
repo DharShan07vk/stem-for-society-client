@@ -103,19 +103,22 @@ const HeroSection = () => {
         </Link>
 
         {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="flex flex-row gap-6 max-w-6xl mx-auto justify-center items-stretch flex-nowrap overflow-visible">
           {stats.map((stat, index) => {
             const isMiddleCard = index === 1;
             return (
-              <Card key={index} className={`p-4 rounded-3xl border-2 transition-all duration-300 hover:scale-105 backdrop-blur-sm ${isMiddleCard ? 'bg-blue-100/80 border-blue-200' : 'bg-white/80 border-gray-200'}`}>
-                <CardContent className="p-0">
+              <Card
+                key={index}
+                className={`p-4 rounded-3xl border-2 transition-transform duration-300 transform-gpu hover:scale-105 hover:z-10 backdrop-blur-sm ${isMiddleCard ? 'bg-blue-50/60' : 'bg-transparent'} border-black/60 self-stretch min-h-56`}
+                style={{ willChange: 'transform' }}>
+                <CardContent className="p-0 h-full flex flex-col justify-between">
                   <div className="flex items-center mb-3">
-                    <Badge variant="secondary" className={`rounded-full px-3 py-1 text-sm ${isMiddleCard ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>
+                    <Badge variant="secondary" className={`rounded-full px-3 py-1 text-sm border-2 border-black/60 ${isMiddleCard ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>
                       {stat.subtitle}
                     </Badge>
                   </div>
                   
-                  <h3 className="font-bold text-lg mb-2 text-left text-black">{stat.title}</h3>
+                  <h3 className="font text-2xl mb-2 text-left text-black">{stat.title}</h3>
                   <p className="text-sm text-gray-600 mb-3 text-left leading-relaxed">{stat.description}</p>
                   
                   {stat.hasAvatars && (
@@ -128,7 +131,7 @@ const HeroSection = () => {
                     </div>
                   )}
                   
-                  <div className="grid grid-cols-2 gap-3 text-left">
+                  <div className="flex flex-row gap-6 text-left items-center whitespace-nowrap">
                     {stat.stats.map((item, idx) => (
                       <div key={idx}>
                         <div className="text-xl font-bold text-gray-800 mb-1">{item.value}</div>
