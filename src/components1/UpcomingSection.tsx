@@ -73,7 +73,7 @@ const UpcomingSessions = () => {
 
   if (isLoading) {
     return (
-      <section className="bg-[#2B8C63] text-[#FFD6DC] py-16">
+      <section className="bg-[#2B8C63] text-[#FBCED9] py-16">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-xl">Loading upcoming sessions...</p>
         </div>
@@ -86,7 +86,7 @@ const UpcomingSessions = () => {
   }
 
   return (
-    <section className="bg-[#2B8C63] text-[#FFD6DC] py-16 overflow-x-hidden">
+    <section className="bg-[#2B8C63] text-[#FBCED9] py-16 overflow-x-hidden">
       <div className="max-w-7xl mx-auto px-6">
 
         <div className="flex items-center gap-3 mb-14">
@@ -139,7 +139,7 @@ const UpcomingSessions = () => {
 
                 {/* Content */}
                 <div className="flex-1 max-w-2xl">
-                  <h3 className="text-xl md:text-2xl font-semibold mb-2 text-[#FFD6DC]">
+                  <h3 className="text-xl md:text-2xl font-semibold mb-2 text-[#FBCED9]">
                     {item.title}
                   </h3>
 
@@ -162,8 +162,8 @@ const UpcomingSessions = () => {
 
 
                 <div className="shrink-0 self-center">
-                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-[#FFD6DC] flex items-center justify-center transition-all duration-500 ease-in-out group-hover:bg-[#FFD6DC]">
-                    <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-[#FFD6DC] transition-all duration-500 ease-in-out rotate-180 group-hover:rotate-0 group-hover:text-[#2B8C63]" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-[#FBCED9] flex items-center justify-center transition-all duration-500 ease-in-out group-hover:bg-[#FBCED9]">
+                    <ArrowUpRight className="w-5 h-5 md:w-6 md:h-6 text-[#FBCED9] transition-all duration-500 ease-in-out rotate-180 group-hover:rotate-0 group-hover:text-[#2B8C63]" />
                   </div>
                 </div>
 
@@ -171,8 +171,8 @@ const UpcomingSessions = () => {
 
 
               <div className="flex items-center">
-                <span className="w-3 h-3 bg-[#FFD6DC] rotate-45 shrink-0" />
-                <div className="flex-1 h-px bg-[#FFD6DC]/60" />
+                <span className="w-3 h-3 bg-[#FBCED9] rotate-45 shrink-0" />
+                <div className="flex-1 h-px bg-[#FBCED9]/60" />
               </div>
             </div>
           ))}
