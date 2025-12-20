@@ -18,9 +18,6 @@ import { SharePopup } from '../components1/ui/SharePopup';
 import { RZPY_KEYID } from '@/Constants';
 import { Icon } from '@iconify/react';
 
-// ============================================
-// BACKEND DATA TYPES - What gets sent to backend
-// ============================================
 
 /**
  * Backend response type for payment creation
@@ -30,22 +27,13 @@ type CreatePaymentResponse = {
   amount: number;
 };
 
-/**
- * Backend response type for email authentication
- * TODO: Implement endpoint POST /auth/email/send-verification
- */
-type EmailAuthResponse = {
-  success: boolean;
+type SendOTPResponse = {
   message: string;
-  verificationId?: string;
-};
-
-
-type OtpVerifyResponse = {
-  success: boolean;
-  verified: boolean;
+  data: any;
+}
+type VerifyOTPResponse = {
   message: string;
-};
+}
 
 type PsychologyBookingForm = {
   // Personal Info
@@ -75,7 +63,7 @@ type PsychologyBookingForm = {
 
 // Frontend form data type
 interface FormData {
-  // Step 1: Personal Information
+  //Personal Information
   firstName: string;
   lastName: string;
   addressLine1: string;
@@ -83,7 +71,7 @@ interface FormData {
   city: string;
   state: string;
   pincode: string;
-  // Step 2: Contact Information
+  //Contact Information
   email: string;
   emailVerified: boolean;
   emailVerificationSent: boolean;
@@ -95,66 +83,43 @@ interface FormData {
   // Legacy fields
   age: string;
   concerns: string;
-  // Step 3: Upload ID
+  //Upload ID
   documentType: string;
   idCard: File | null;
-  // Step 4: Schedule Session
+  //Schedule Session
   selectedDate: string;
   selectedTime: string;
 }
 
-//Simple Brute Force verification
-function useSendEmailVerification() {
+function useSendEmailOTP() {
   return useMutation<
-    GenericResponse<EmailAuthResponse>,
+    SendOTPResponse,
     AxiosError<GenericError>,
-    { email: string },
+    { email: string,
+      institutionName: string,
+      mobile: string;
+
+    },
     unknown
   >({
     mutationFn: async (data) => {
-      
-      console.log('📧 [BACKEND TODO] Send email verification to:', data.email);
-      //Simulate own Verify 
-      return {
-        data: { success: true, message: 'Verification email sent', verificationId: 'mock-id' },
-        message: 'Success'
-      } as GenericResponse<EmailAuthResponse>;
+      const response = await api().post("/email/sendOTP", data);
+      return response.data;
     },
     onError: (err) => mutationErrorHandler(err),
   });
 }
 
-function useSendMobileOtp() {
+function useVerifyEmailOtp() {
   return useMutation<
-    GenericResponse<{ success: boolean; message: string }>,
+    VerifyOTPResponse,
     AxiosError<GenericError>,
-    { mobile: string; countryCode: string },
-    unknown
-  >({
-    mutationFn: async (data) => {      
-      console.log('📱 [BACKEND TODO] Send OTP to:', data.countryCode, data.mobile);
-      return {
-        data: { success: true, message: 'OTP sent successfully' },
-        message: 'Success'
-      } as GenericResponse<{ success: boolean; message: string }>;
-    },
-    onError: (err) => mutationErrorHandler(err),
-  });
-}
-
-function useVerifyMobileOtp() {
-  return useMutation<
-    GenericResponse<OtpVerifyResponse>,
-    AxiosError<GenericError>,
-    { mobile: string; countryCode: string; otp: string },
+    { email: string; otp: number },
     unknown
   >({
     mutationFn: async (data) => {
-      console.log('📱 [BACKEND TODO] Verify OTP:', data.otp, 'for', data.mobile);
-      return {
-        data: { success: true, verified: true, message: 'OTP verified' },
-        message: 'Success'
-      } as GenericResponse<OtpVerifyResponse>;
+      const response = await api().post("/email/verifyOTP", data);
+      return response.data;
     },
     onError: (err) => mutationErrorHandler(err),
   });
@@ -191,7 +156,7 @@ function useCreatePsychologyPayment() {
       // formData.append("mobileVerified", String(data.mobileVerified));
       // formData.append("documentType", data.documentType);
 
-      console.log('📤 Sending to backend:', {
+      console.log('Sending to backend:', {
         firstName: data.firstName,
         lastName: data.lastName,
         city: data.city,
@@ -256,9 +221,10 @@ const PsychologyBookingFlow = () => {
   
   // API Hooks
   const { mutateAsync: createPayment, isPending } = useCreatePsychologyPayment();
-  const { mutateAsync: sendEmailVerification, isPending: isEmailSending } = useSendEmailVerification();
-  const { mutateAsync: sendMobileOtp, isPending: isOtpSending } = useSendMobileOtp();
-  const { mutateAsync: verifyMobileOtp, isPending: isOtpVerifying } = useVerifyMobileOtp();
+  const { mutateAsync: sendOTP, isPending: isSendingOTP } = useSendEmailOTP();
+  const { mutateAsync: verifyOTP, isPending: isVerifyingOTP } = useVerifyEmailOtp();
+  const [otpTimer,setOtpTimer] = useState(0);
+  const [canResendOtp, setCanResendOtp] = useState(true);
 
   const [formData, setFormData] = useState<FormData>({
     // Step 1
@@ -330,7 +296,7 @@ const PsychologyBookingFlow = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSendEmailVerification = async () => {
+  const handleSendOtp = async () => {
     if (!formData.email) {
       toast.error("Please enter your email address");
       return;
@@ -343,42 +309,26 @@ const PsychologyBookingFlow = () => {
     }
 
     try {
-      await sendEmailVerification({ email: formData.email });
-      updateFormData('emailVerificationSent', true);
-      toast.success("Verification link sent! Check your inbox and click the link.");
-
-      setTimeout(() => {
-        updateFormData('emailVerified', true);
-        toast.success("Email verified successfully!");
-      }, 3000);
+      const response = await sendOTP({ 
+        email: formData.email,
+        institutionName : "Psychology Counselling",
+        mobile : formData.mobile 
+      });
+      if(response.message){
+        toast.success("OTP sent! Check your inbox.");
+        updateFormData('otpSent', true);
+        setOtpTimer(60);
+        setCanResendOtp(false);
+      }
+      else{
+        toast.error("Failed to send email otp");
+      }
+      
     } catch (error) {
       toast.error("Failed to send verification email");
     }
   };
 
-
-  const handleSendOtp = async () => {
-    if (!formData.mobile) {
-      toast.error("Please enter your mobile number");
-      return;
-    }
-    
-    if (formData.mobile.length < 10) {
-      toast.error("Please enter a valid 10-digit mobile number");
-      return;
-    }
-
-    try {
-      await sendMobileOtp({ 
-        mobile: formData.mobile, 
-        countryCode: formData.countryCode 
-      });
-      updateFormData('otpSent', true);
-      toast.success("OTP sent to your mobile number");
-    } catch (error) {
-      toast.error("Failed to send OTP");
-    }
-  };
 
   const handleVerifyOtp = async () => {
     if (!formData.otp || formData.otp.length < 4) {
@@ -387,20 +337,32 @@ const PsychologyBookingFlow = () => {
     }
 
     try {
-      const result = await verifyMobileOtp({
-        mobile: formData.mobile,
-        countryCode: formData.countryCode,
-        otp: formData.otp
+      const result = await verifyOTP({
+        email: formData.email,
+        otp: parseInt(formData.otp)
       });
       
-      if (result.data?.verified) {
-        updateFormData('mobileVerified', true);
-        toast.success("Mobile number verified successfully!");
+      if (result.message) {
+        updateFormData('emailVerified', true);
+        toast.success("Email verified successfully!");
       } else {
         toast.error("Invalid OTP. Please try again.");
       }
-    } catch (error) {
-      toast.error("OTP verification failed");
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        const errorMessage = error.response?.data?.error;
+        if (errorMessage === 'OTP has expired') {
+          toast.error('OTP has expired. Please request a new one.');
+          updateFormData('otpSent', false);
+          updateFormData('otp', '');
+        } else if (errorMessage === 'Invalid OTP') {
+          toast.error('Invalid OTP. Please check and try again.');
+        } else {
+          toast.error('Invalid or expired OTP. Please try again.');
+        }
+      } else {
+        toast.error('OTP verification failed. Please try again.');
+      }
     }
   };
 
@@ -502,12 +464,12 @@ const PsychologyBookingFlow = () => {
           toast.error("Please fill all required fields");
           return false;
         }
-        if (!formData.emailVerified) {
-          toast.error("Please verify your email address");
+        if (formData.mobile.length !== 10) {
+          toast.error("Please enter a valid 10-digit mobile number");
           return false;
         }
-        if (!formData.mobileVerified) {
-          toast.error("Please verify your mobile number with OTP");
+        if (!formData.emailVerified) {
+          toast.error("Please verify your email address with OTP");
           return false;
         }
         return true;
@@ -667,35 +629,36 @@ const PsychologyBookingFlow = () => {
 
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-center mb-8">
-      {steps.map((step, index) => (
-        <div key={step.number} className="flex items-center">
-          <div className="flex items-center gap-2">
-            <div className={cn(
-              "w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all flex-shrink-0",
-              currentStep === step.number 
-                ? "bg-[#0389FF] text-white border-[#0389FF]" 
-                : currentStep > step.number 
-                  ? "bg-[#0389FF] text-white border-[#0389FF]"
-                  : "bg-white text-gray-400 border-gray-300"
-            )}>
-              {currentStep > step.number ? <Check className="h-5 w-5" /> : step.number}
+    <div className="flex items-center justify-center w-full h-10 mb-8">
+      <div className="flex items-center justify-between w-full max-w-[700px] px-4">
+        {steps.map((step, index) => (
+          <React.Fragment key={step.number}>
+            <div className="flex items-center gap-2">
+              <div className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all flex-shrink-0",
+                currentStep === step.number 
+                  ? "bg-[#0389FF] text-white border-[#0389FF]" 
+                  : currentStep > step.number 
+                    ? "bg-[#0389FF] text-white border-[#0389FF]"
+                    : "bg-white text-gray-400 border-gray-300"
+              )}>
+                {currentStep > step.number ? <Check className="h-4 w-4" /> : step.number}
+              </div>
+              {currentStep === step.number && (
+                <span className="text-sm font-medium whitespace-nowrap text-[#0389FF]">
+                  {step.title}
+                </span>
+              )}
             </div>
-            <span className={cn(
-              "text-xs font-medium whitespace-nowrap hidden sm:block",
-              currentStep >= step.number ? "text-[#0389FF]" : "text-gray-400"
-            )}>
-              {step.title}
-            </span>
-          </div>
-          {index < steps.length - 1 && (
-            <div className={cn(
-              "w-8 md:w-16 h-0.5 mx-2",
-              currentStep > step.number ? "bg-[#0389FF]" : "bg-gray-300"
-            )} />
-          )}
-        </div>
-      ))}
+            {index < steps.length - 1 && (
+              <div className={cn(
+                "flex-1 h-0.5 mx-3",
+                currentStep > step.number ? "bg-[#0389FF]" : "bg-gray-300"
+              )} />
+            )}
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 
@@ -764,6 +727,21 @@ const PsychologyBookingFlow = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Select 
+          value={formData.city} 
+          onValueChange={(value) => updateFormData('city', value)}
+          disabled={!formData.state}
+        >
+          <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
+            <SelectValue placeholder={formData.state ? "City *" : "City"} />
+          </SelectTrigger>
+          <SelectContent>
+            {getCitiesForState(formData.state).map((city) => (
+              <SelectItem key={city} value={city}>{city}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        <Select 
           value={formData.state} 
           onValueChange={(value) => {
             updateFormData('state', value);
@@ -771,26 +749,11 @@ const PsychologyBookingFlow = () => {
           }}
         >
           <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
-            <SelectValue placeholder="State *" />
+            <SelectValue placeholder="State" />
           </SelectTrigger>
           <SelectContent>
             {INDIAN_STATES.map((state) => (
               <SelectItem key={state} value={state}>{state}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        
-        <Select 
-          value={formData.city} 
-          onValueChange={(value) => updateFormData('city', value)}
-          disabled={!formData.state}
-        >
-          <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
-            <SelectValue placeholder={formData.state ? "City *" : "Select State first"} />
-          </SelectTrigger>
-          <SelectContent>
-            {getCitiesForState(formData.state).map((city) => (
-              <SelectItem key={city} value={city}>{city}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -806,14 +769,11 @@ const PsychologyBookingFlow = () => {
     </div>
   );
 
-  // ============================================
-  // RENDER: STEP 2 - CONTACT INFORMATION
-  // ============================================
 
   const renderContactInfo = () => (
     <div className="space-y-5">
-      {/* Email with Authenticate */}
-      <div className="space-y-2">
+      {/* Email with OTP */}
+      <div className="space-y-3">
         <div className="flex gap-3">
           <Input
             placeholder="Email *"
@@ -822,15 +782,16 @@ const PsychologyBookingFlow = () => {
             onChange={(e) => {
               updateFormData('email', e.target.value);
               updateFormData('emailVerified', false);
-              updateFormData('emailVerificationSent', false);
+              updateFormData('otpSent', false);
+              updateFormData('otp', '');
             }}
             className="bg-gray-50 border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
             disabled={formData.emailVerified}
           />
           <Button
             type="button"
-            onClick={handleSendEmailVerification}
-            disabled={isEmailSending || formData.emailVerified || !formData.email}
+            onClick={handleSendOtp}
+            disabled={isSendingOTP || formData.emailVerified || !formData.email}
             className={cn(
               "h-12 px-6 rounded-lg font-medium",
               formData.emailVerified 
@@ -843,69 +804,7 @@ const PsychologyBookingFlow = () => {
                 <Check className="h-4 w-4 mr-2" />
                 Verified
               </>
-            ) : isEmailSending ? (
-              "Sending..."
-            ) : formData.emailVerificationSent ? (
-              "Resend"
-            ) : (
-              "Authenticate"
-            )}
-          </Button>
-        </div>
-        {formData.emailVerificationSent && !formData.emailVerified && (
-          <p className="text-sm text-amber-600 flex items-center gap-2">
-            <Icon icon="mdi:information-outline" className="h-4 w-4" />
-            Check your inbox and click the verification link
-          </p>
-        )}
-      </div>
-
-      {/* Mobile with OTP */}
-      <div className="space-y-3">
-        <div className="flex gap-3">
-          <Select value={formData.countryCode} onValueChange={(value) => updateFormData('countryCode', value)}>
-            <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg w-28">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {COUNTRY_CODES.map((item) => (
-                <SelectItem key={item.code} value={item.code}>
-                  {item.code}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          
-          <Input
-            placeholder="Mobile Number *"
-            value={formData.mobile}
-            onChange={(e) => {
-              updateFormData('mobile', e.target.value.replace(/\D/g, '').slice(0, 10));
-              updateFormData('mobileVerified', false);
-              updateFormData('otpSent', false);
-            }}
-            className="bg-gray-50 border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
-            disabled={formData.mobileVerified}
-            maxLength={10}
-          />
-          
-          <Button
-            type="button"
-            onClick={handleSendOtp}
-            disabled={isOtpSending || formData.mobileVerified || !formData.mobile || formData.mobile.length < 10}
-            className={cn(
-              "h-12 px-6 rounded-lg font-medium",
-              formData.mobileVerified
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "bg-[#0389FF] hover:bg-[#0389FF]/90 text-white"
-            )}
-          >
-            {formData.mobileVerified ? (
-              <>
-                <Check className="h-4 w-4 mr-2" />
-                Verified
-              </>
-            ) : isOtpSending ? (
+            ) : isSendingOTP ? (
               "Sending..."
             ) : formData.otpSent ? (
               "Resend OTP"
@@ -915,12 +814,12 @@ const PsychologyBookingFlow = () => {
           </Button>
         </div>
 
-        {/* OTP Input */}
-        {formData.otpSent && !formData.mobileVerified && (
+        {/* OTP Input for Email */}
+        {formData.otpSent && !formData.emailVerified && (
           <div className="space-y-2">
             <p className="text-sm text-gray-600 flex items-center gap-2">
               <Icon icon="mdi:information-outline" className="h-4 w-4" />
-              Enter the OTP sent to your mobile number
+              Enter the OTP sent to your email address
             </p>
             <div className="flex gap-3">
               <Input
@@ -933,21 +832,44 @@ const PsychologyBookingFlow = () => {
               <Button
                 type="button"
                 onClick={handleVerifyOtp}
-                disabled={isOtpVerifying || !formData.otp || formData.otp.length < 4}
+                disabled={isVerifyingOTP || !formData.otp || formData.otp.length < 4}
                 className="h-12 px-6 rounded-lg font-medium bg-green-600 hover:bg-green-700 text-white"
               >
-                {isOtpVerifying ? "Verifying..." : "Verify OTP"}
+                {isVerifyingOTP ? "Verifying..." : "Verify OTP"}
               </Button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Mobile Number (without OTP) */}
+      <div className="flex gap-3">
+        <Select value={formData.countryCode} onValueChange={(value) => updateFormData('countryCode', value)}>
+          <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg w-28">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {COUNTRY_CODES.map((item) => (
+              <SelectItem key={item.code} value={item.code}>
+                {item.code}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        <Input
+          placeholder="Mobile Number *"
+          value={formData.mobile}
+          onChange={(e) => {
+            updateFormData('mobile', e.target.value.replace(/\D/g, '').slice(0, 10));
+          }}
+          className="bg-gray-50 border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
+          maxLength={10}
+        />
+      </div>
     </div>
   );
 
-  // ============================================
-  // RENDER: STEP 3 - UPLOAD ID
-  // ============================================
 
   const renderUploadId = () => (
     <div className="space-y-6">
@@ -1040,9 +962,7 @@ const PsychologyBookingFlow = () => {
     </div>
   );
 
-  // ============================================
-  // RENDER: STEP 4 - SCHEDULE SESSION
-  // ============================================
+
 
   const renderScheduleSession = () => {
     const today = new Date();
@@ -1227,9 +1147,6 @@ const PsychologyBookingFlow = () => {
     </div>
   );
 
-  // ============================================
-  // MAIN RENDER
-  // ============================================
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -1276,9 +1193,8 @@ const PsychologyBookingFlow = () => {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentStep <= 4 && renderStepIndicator()}
-
         <Card className="p-8 shadow-sm border border-gray-200 rounded-xl">
+          {currentStep <= 4 && renderStepIndicator()}
           {currentStep === 1 && renderPersonalInfo()}
           {currentStep === 2 && renderContactInfo()}
           {currentStep === 3 && renderUploadId()}
@@ -1326,7 +1242,7 @@ const PsychologyBookingFlow = () => {
           <div className="flex items-center">
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mr-4">
               <img 
-                src="https://stem-for-society.netlify.app/logo-01.png" 
+                src="/lovable-uploads/FooterLogo.png" 
                 alt="STEM for Society" 
                 className="w-8 h-8 object-contain"
               />
