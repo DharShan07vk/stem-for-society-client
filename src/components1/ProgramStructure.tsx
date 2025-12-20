@@ -1,5 +1,14 @@
 import { useState } from "react";
 
+// Import images for production build
+import asset1 from "../assets/asset1.png";
+import asset2 from "../assets/asset2.png";
+import asset3 from "../assets/asset3.png";
+import asset4 from "../assets/asset4.png";
+import asset6 from "../assets/asset6.png";
+import joinAsset from "../assets/joinAsset.png";
+
+
 const OurPrograms = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
@@ -27,7 +36,7 @@ const OurPrograms = () => {
             >
               
               <img
-                src="/src/assets/asset1.png"
+                src={asset1}
                 alt=""
                 className="absolute transition-all duration-500 "
                 style={{
@@ -58,7 +67,7 @@ const OurPrograms = () => {
               className={`group relative w-[818.67px] h-[344px] col-span-4 row-span-2 rounded-[40px] p-6 overflow-hidden transition-all duration-500 bg-[#FF8FB0] hover:bg-[#FF7FA4] ${getCardClasses("finishing")}`}
             >
               <img
-                src="/src/assets/asset2.png"
+                src={asset2}
                 alt=""
                 className="absolute transition-all duration-500 group-hover:scale-105 group-hover:-translate-x-2 group-hover:-translate-y-2"
                 style={{
@@ -88,7 +97,7 @@ const OurPrograms = () => {
             >
       
               <img
-                src="/src/assets/asset3.png"
+                src={asset3}
                 alt=""
                 className="absolute transition-all duration-500 group-hover:scale-105"
                 style={{
@@ -117,7 +126,7 @@ const OurPrograms = () => {
             >
             
               <img
-                src="/src/assets/asset4.png"
+                src={asset4}
                 alt=""
                 className="absolute transition-all duration-500  hover:scale-105"
                 style={{
@@ -146,7 +155,7 @@ const OurPrograms = () => {
             >
               
               <img
-                src="/src/assets/asset6.png"
+                src={asset6}
                 alt=""
                 className="absolute transition-all duration-500 group-hover:scale-105"
                 style={{
@@ -173,7 +182,7 @@ const OurPrograms = () => {
               className={`group relative col-start-5 row-start-5 col-span-2 row-span-2 rounded-3xl p-6 overflow-hidden transition-all duration-500 bg-[#C5D7E6] hover:bg-[#B5CADC] ${getCardClasses("community")}`}
             >
               <img
-                src="/src/assets/joinAsset.png"
+                src={joinAsset}
                 alt=""
                 className="absolute transition-all duration-500 group-hover:scale-105"
                 style={{
