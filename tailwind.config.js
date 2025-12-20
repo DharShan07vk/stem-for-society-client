@@ -3,11 +3,10 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 export default {
 	content: ['./src/**/*.{js,ts,jsx,tsx}'],
 	theme: {
-		extend: {
-			fontFamily: {
-        sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+		extend: {},
+		fontFamily: {
+        instrument: ['"Instrument Serif"', 'serif'],
       },
-		},
 	},
 	plugins: [],
 }

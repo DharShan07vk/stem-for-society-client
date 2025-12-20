@@ -7,6 +7,7 @@ import ReviewCards from "../components1/TestimonialsSection";
 import SectorsWeFocus from "../components1/SectorsSection";
 import WhyChooseUs from "../components1/WhyChooseSection";
 import Header from "../components1/Header";
+import UpcomingSessions from "@/components1/UpcomingSection"; 
 
 function Home() {
   return (
@@ -43,9 +44,10 @@ function Home() {
 
       {/* Other Sections */}
       <SectorsWeFocus />
-      <WhyChooseUs />
-      <Partners/>
       <ProgramsOffered/>
+     <WhyChooseUs />
+       <Partners/>
+       <UpcomingSessions/>
       <ReviewCards/>
       <FAQ />
       <Footer />
