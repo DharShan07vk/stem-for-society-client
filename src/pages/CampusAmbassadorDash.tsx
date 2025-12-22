@@ -63,8 +63,13 @@ const CampusAmbassador = () => {
             </div>
           </div>
 
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-6">Campus Ambassador Program!</h1>
+          <div className="text-center mb-8">
+            <h1 className="text-2xl md:text-3xl font-medium text-[#000000] relative inline-block">
+              <span className="relative text-2xl md:text-3xl">
+                Campus Ambassador Program!
+                <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+              </span>
+            </h1>
           </div>
         </div>
       </div>
@@ -88,32 +93,34 @@ const CampusAmbassador = () => {
         </div>
 
         {/* Why Join Section */}
-        <div className="bg-blue-100 rounded-2xl p-8 mb-8">
-          <h2 className="text-2xl font-bold text-blue-900 mb-6 bg-blue-200 px-4 py-3 rounded-lg inline-block">
-            Why Join?
-          </h2>
-          <div className="space-y-4">
+        <div className="rounded-2xl overflow-hidden mb-8 shadow-sm">
+          <div className="bg-[#C0E1FF] px-6 py-4">
+            <span className="text-xl  text-black">
+              Why Join?
+            </span>
+          </div>
+          <div className="bg-white p-6 space-y-4">
             <div className="flex items-start space-x-3">
-              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
-              <p className="text-gray-800 text-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p className="text-gray-700 text-base">
                 Access to exclusive STEM for Society opportunities and a chance to win a Campus Ambassador Points
               </p>
             </div>
             <div className="flex items-start space-x-3">
-              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
-              <p className="text-gray-800 text-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p className="text-gray-700 text-base">
                 Certificates of recognition for your contributions
               </p>
             </div>
             <div className="flex items-start space-x-3">
-              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
-              <p className="text-gray-800 text-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p className="text-gray-700 text-base">
                 Opportunities to network with fellow participants and free access to Stem for Society Conference
               </p>
             </div>
             <div className="flex items-start space-x-3">
-              <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
-              <p className="text-gray-800 text-lg">
+              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+              <p className="text-gray-700 text-base">
                 30% discount in all the program offered by Stem for Society
               </p>
             </div>
@@ -121,19 +128,23 @@ const CampusAmbassador = () => {
         </div>
 
         {/* Ready to Apply Section */}
-        <div className="bg-blue-100 rounded-2xl p-8 mb-12">
-          <h2 className="text-2xl font-bold text-blue-900 mb-6 bg-blue-200 px-4 py-3 rounded-lg inline-block">
-            Ready to apply?
-          </h2>
-          <p className="text-gray-800 text-lg mb-8">
-            Sign up today to embark on this exciting journey. Let's make Stem for Society unforgettable together!
-          </p>
-          <div className="text-right">
-            <Link to="/campus-ambassador-booking">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-lg font-semibold">
-                REGISTER NOW
-              </Button>
-            </Link>
+        <div className="rounded-2xl overflow-hidden mb-12 shadow-sm">
+          <div className="bg-[#C0E1FF] px-6 py-4">
+            <h2 className="text-xl  text-black">
+              Ready to apply?
+            </h2>
+          </div>
+          <div className="bg-white p-6">
+            <p className="text-gray-700 text-base mb-6">
+              Sign up today to embark on this exciting journey. Let's make Stem for Society unforgettable together!
+            </p>
+            <div className="text-right">
+              <Link to="/campus-ambassador-booking">
+                <Button className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white px-6 py-2 rounded-lg text-sm font-semibold">
+                  REGISTER NOW
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
