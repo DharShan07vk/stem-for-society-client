@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components1/ui/button';
 import { Input } from '@/components1/ui/input';
-import { Search, Plus, ArrowLeft, Share2, FileText, PenTool, BookOpen } from 'lucide-react';
+import { Search, Plus, ArrowLeft, Share2, FileText, PenTool, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '@/components1/Header';
 import Footer from '@/components1/Footer';
@@ -11,6 +11,8 @@ import Errorbox from "../components/Errorbox";
 import { api } from "../lib/api";
 import { GenericError, GenericResponse } from "../lib/types";
 import { formatDate } from "../lib/utils";
+import { useShare } from '@/hooks/useShare';
+import { SharePopup } from '@/components1/ui/SharePopup';
 
 export type Blog = {
   id: string;
@@ -42,7 +44,10 @@ function useBlog() {
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
   const { data: blogPosts, isLoading, error } = useBlog();
+  const { isShowing, handleShare } = useShare();
   
   if (error) { 
     //@ts-expect-error - error is of type AxiosError
@@ -86,6 +91,13 @@ const Blog = () => {
     return filtered;
   }, [blogs, searchQuery, selectedCategory]);
 
+  // Pagination logic
+  const totalItems = filteredBlogs.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
+
   const categories = ["All", "Education", "Career", "Research", "Technology", "Innovation"];
 
   // Check if there are no blogs at all (not just filtered results)
@@ -95,21 +107,18 @@ const Blog = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <div className="relative overflow-hidden min-h-screen" style={{ height: '100%', minHeight: '100%' }}>
+        <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
           {/* Grid background */}
           <div 
             className="absolute inset-0 opacity-50 pointer-events-none z-0"
             style={{
-              minHeight: '100vh',
               backgroundImage: `
                 linear-gradient(rgba(107,114,128,0.5) 2px, transparent 2px),
                 linear-gradient(90deg, rgba(107,114,128,0.5) 2px, transparent 2px)
               `,
               backgroundSize: '100px 100px',
-             WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 100%)',
-maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 100%)',
-
-
+              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+              maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
               WebkitMaskRepeat: 'no-repeat',
               maskRepeat: 'no-repeat',
               WebkitMaskSize: '100% 100%',
@@ -120,46 +129,71 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
           {/* Content above grid */}
           <div className="relative z-10">
             <Header />
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold text-gray-900 mb-2">Explore Articles</h1>
-              <h2 className="text-3xl font-bold text-gray-900">Scientific Communication Platform</h2>
+            <div className="text-center mb-8 pt-4">
+              <p className="text-base text-gray-600 mb-1">Explore Blogs</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-[#0389FF] relative inline-block">
+                <span className="relative">
+                  Scientific Communication
+                  <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+                </span>
+              </h1>
             </div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Description skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div className="lg:col-span-2 space-y-4">
+              <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-11/12"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-10/12"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse mt-4"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-11/12"></div>
+            </div>
+            <div className="lg:col-span-1">
+              <div className="bg-[#E8F4FD] rounded-xl p-6 h-32 animate-pulse"></div>
+            </div>
+          </div>
+
+          {/* Blog cards skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div key={index} className="bg-white rounded-xl overflow-hidden border border-gray-100">
                 <div className="h-48 bg-gray-200 animate-pulse"></div>
-                <div className="p-6">
-                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-4"></div>
-                  <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                <div className="p-4">
+                  <div className="h-5 bg-gray-200 rounded animate-pulse w-16 mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4 mb-3"></div>
+                  <div className="flex items-center space-x-2">
+                    <div className="w-6 h-6 bg-gray-200 rounded-full animate-pulse"></div>
+                    <div className="h-3 bg-gray-200 rounded animate-pulse w-20"></div>
+                    <div className="h-3 bg-gray-200 rounded animate-pulse w-24"></div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="relative overflow-hidden min-h-screen" style={{ height: '100%', minHeight: '100%' }}>
+      <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
         {/* Grid background */}
         <div 
           className="absolute inset-0 opacity-50 pointer-events-none z-0"
           style={{
-            minHeight: '100vh',
             backgroundImage: `
               linear-gradient(rgba(107,114,128,0.5) 2px, transparent 2px),
               linear-gradient(90deg, rgba(107,114,128,0.5) 2px, transparent 2px)
             `,
             backgroundSize: '100px 100px',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 100%)',
-            maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 0%, transparent 100%)',
             WebkitMaskRepeat: 'no-repeat',
             maskRepeat: 'no-repeat',
             WebkitMaskSize: '100% 100%',
@@ -188,6 +222,7 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
               <Button
                 variant="outline"
                 size="sm"
+                onClick={handleShare}
                 className="flex items-center space-x-2 bg-[#0389FF] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
               >
                 <Share2 className="h-4 w-4" />
@@ -195,73 +230,57 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
               </Button>
             </div>
           </div>
+
+          {/* Page Title */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Explore Articles</h1>
-            <h2 className="text-3xl font-bold text-gray-900">Scientific Communication Platform</h2>
+            <p className="text-base text-gray-600 mb-1">Explore Blogs</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-[#0389FF] relative inline-block">
+              <span className="relative">
+                Scientific Communication
+                <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+              </span>
+            </h1>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        {/* Show search and filters only if blogs are available */}
-        {!noBlogsAvailable && (
-          <>
-            {/* Search and Create Article Section */}
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="Search articles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 h-12 bg-gray-50 border-0 rounded-full"
-                />
-              </div>
+      {/* Description Section */}
+      <div className="w-[832px]  mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          {/* Left Content - Description */}
+          <div className="lg:col-span-2 space-y-4">
+            <p className="text-black text-sm leading-relaxed">
+              Join us in making your research matter to everyone—let's empower society with 
+              knowledge and encourage curiosity about the world around us! Every month for 
+              the best scientific communication and Outstanding contributions will be rewarded 
+              with prizes and certificates of appreciation, recognizing your efforts to make 
+              science accessible and engaging for all.
+            </p>
+            <p className="text-black text-sm leading-relaxed">
+              Stem for Society invites Scientist, Postdoc, PhD, masters, bachelor students and 
+              researchers to share their research journey by writing blogs about their publication 
+              or scientific information aimed at the general public and society! By sharing 
+              insights and engaging with readers, you can foster community connections and 
+              encourage meaningful discussions around your research.
+            </p>
+          </div>
+
+          {/* Right Content - Info Card */}
+          <div className="lg:col-span-1">
+            <div className="bg-[#E8F4FD] rounded-xl p-6 text-center">
+              <p className="text-[#0389FF] h-[150px] text-xl">
+                Getting your article published typically takes about a day to get verified
+              </p>
               <Link to="/blog-article">
-                <Button className="bg-blue-600 hover:bg-blue-700 h-12 px-8 rounded-full text-white">
-                  <Plus className="w-5 h-5 mr-2" />
-                  Create Article
+                <Button className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white px-6 py-2 rounded-lg font-medium">
+                  CREATE ARTICLE
                 </Button>
               </Link>
             </div>
+          </div>
+        </div>
 
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={category === selectedCategory ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`rounded-full ${
-                    category === selectedCategory
-                      ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                      : "bg-white hover:bg-gray-50 text-gray-700 border-gray-300"
-                  }`}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-
-            {/* Search Results Info */}
-            {(searchQuery.trim() || selectedCategory !== 'All') && (
-              <div className="mb-6">
-                <p className="text-gray-600">
-                  {filteredBlogs.length > 0 
-                    ? `Found ${filteredBlogs.length} article${filteredBlogs.length === 1 ? '' : 's'}${
-                        searchQuery.trim() ? ` for "${searchQuery}"` : ''
-                      }${selectedCategory !== 'All' ? ` in ${selectedCategory}` : ''}`
-                    : `No articles found${
-                        searchQuery.trim() ? ` for "${searchQuery}"` : ''
-                      }${selectedCategory !== 'All' ? ` in ${selectedCategory}` : ''}`
-                  }
-                </p>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* No Blogs Available State */}
+        {/* Blog Posts Grid */}
         {noBlogsAvailable ? (
           <div className="text-center py-16">
             <div className="mb-8">
@@ -288,7 +307,7 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link to="/blog-article">
-                  <Button className="bg-blue-600 hover:bg-blue-700 h-12 px-8 rounded-full text-white flex items-center">
+                  <Button className="bg-[#0389FF] hover:bg-[#0389FF]/90 h-12 px-8 rounded-full text-white flex items-center">
                     <Plus className="w-5 h-5 mr-2" />
                     Create First Article
                   </Button>
@@ -304,54 +323,16 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
                   </Button>
                 </Link>
               </div>
-              
-              {/* Additional helpful links */}
-              <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-sm text-gray-500 mb-4">
-                  Looking for inspiration? Here are some ways to get started:
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <FileText className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Share Research</h4>
-                    <p className="text-sm text-gray-600">
-                      Write about your latest research findings and discoveries
-                    </p>
-                  </div>
-                  
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <BookOpen className="w-6 h-6 text-green-600" />
-                    </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Educational Content</h4>
-                    <p className="text-sm text-gray-600">
-                      Create tutorials and guides for fellow researchers
-                    </p>
-                  </div>
-                  
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <PenTool className="w-6 h-6 text-purple-600" />
-                    </div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Career Insights</h4>
-                    <p className="text-sm text-gray-600">
-                      Share career advice and industry perspectives
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         ) : (
           <>
-            {/* Blog Posts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredBlogs.map((post) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {paginatedBlogs.map((post) => (
                 <Link key={post.id} to={`/blog-post/${post.slug}`}>
-                  <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
-                    <div className="h-48 bg-gray-200 relative">
+                  <div className="bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow cursor-pointer border border-gray-100">
+                    {/* Image */}
+                    <div className="h-48 bg-gray-200 relative overflow-hidden rounded-t-xl">
                       <img
                         src={post.coverImage || '/placeholder-image.jpg'}
                         alt={post.title || 'Blog post'}
@@ -360,25 +341,31 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
                           e.currentTarget.src = '/placeholder-image.jpg';
                         }}
                       />
-                      {post.category && (
-                        <div className="absolute top-4 left-4">
-                          <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-                            {post.category}
-                          </span>
-                        </div>
-                      )}
                     </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                    
+                    {/* Content */}
+                    <div className="p-4">
+                      {/* Category Badge */}
+                      {post.category && (
+                        <span className="inline-block bg-[#F2F2F2] text-[#0389FF] px-3 py-1 rounded-md text-xs font-medium mb-3">
+                          {post.category}
+                        </span>
+                      )}
+                      
+                      {/* Title */}
+                      <h3 className="text-base font-semibold text-gray-900 mb-3 line-clamp-2 leading-snug">
                         {post.title || 'Untitled Article'}
                       </h3>
 
-                      <div className="flex items-center justify-between text-sm text-gray-500">
-                        <div className="flex items-center space-x-2">
-                          <span>{post.blogAuthor?.name || 'Anonymous'}</span>
-                          <span>•</span>
-                          <span>{formatDate(post.createdAt)}</span>
+                      {/* Author and Date */}
+                      <div className="flex items-center space-x-2 text-sm text-gray-500">
+                        <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center">
+                          <span className="text-white text-xs font-medium">
+                            {(post.blogAuthor?.name || 'A').charAt(0).toUpperCase()}
+                          </span>
                         </div>
+                        <span className="text-gray-600">{post.blogAuthor?.name || 'Anonymous'}</span>
+                        <span className="text-gray-400">{formatDate(post.createdAt)}</span>
                       </div>
                     </div>
                   </div>
@@ -386,45 +373,32 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
               ))}
             </div>
 
-            {/* No Results Message (for filtered results when blogs exist) */}
-            {(searchQuery.trim() || selectedCategory !== 'All') && filteredBlogs.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <Search className="w-16 h-16 mx-auto" />
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No articles found</h3>
-                <p className="text-gray-600 mb-4">
-                  Try adjusting your search terms or browse all articles
+            {/* Pagination */}
+            {totalItems > 0 && (
+              <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600">
+                  Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems}
                 </p>
-                <div className="flex gap-2 justify-center">
-                  {searchQuery.trim() && (
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setSearchQuery('')}
-                      className="bg-white hover:bg-gray-50 border-gray-300"
-                    >
-                      Clear Search
-                    </Button>
-                  )}
-                  {selectedCategory !== 'All' && (
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setSelectedCategory('All')}
-                      className="bg-white hover:bg-gray-50 border-gray-300"
-                    >
-                      Show All Categories
-                    </Button>
-                  )}
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="w-8 h-8 p-0 border-gray-300 disabled:opacity-50"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="w-8 h-8 p-0 border-gray-300 disabled:opacity-50"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
-              </div>
-            )}
-
-            {/* Load More Button - Only show when not filtering */}
-            {!searchQuery.trim() && selectedCategory === 'All' && filteredBlogs.length > 0 && (
-              <div className="text-center mt-12">
-                <Button variant="outline" className="bg-white hover:bg-gray-50 border-gray-300 px-8 py-3">
-                  Load More Articles
-                </Button>
               </div>
             )}
           </>
@@ -432,6 +406,7 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
       </div>
 
       <Footer />
+      <SharePopup isVisible={isShowing} />
     </div>
   );
 };
