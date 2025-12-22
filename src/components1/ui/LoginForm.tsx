@@ -46,10 +46,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
     <div className="w-full max-w-md">
       {/* Header */}
       <div className="text-center mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#202224] mb-2">
           Login as Student
         </h1>
-        <p className="text-gray-600 text-lg">
+        <p className="text-[#202224] text-lg">
           Enter your credentials to proceed further
         </p>
       </div>
@@ -57,30 +57,24 @@ const LoginForm: React.FC<LoginFormProps> = ({
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1">
-          <Label htmlFor="email" className="text-gray-700 font-medium text-sm">
-            Email
-          </Label>
           <Input
             id="email"
             name="email"
             type="email"
-            placeholder="Enter your email"
+            placeholder="Email"
             value={email}
             onChange={onInputChange}
-            className="h-10 bg-white border-gray-300 text-gray-800 rounded-xl placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
+            className="h-10 bg-[#F1F4F9] border-gray-300 text-[#49454F] rounded-xl placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
             required
           />
         </div>
 
         <div className="space-y-1">
-          <Label htmlFor="password" className="text-gray-700 font-medium text-sm">
-            Password
-          </Label>
           <Input
             id="password"
             name="password"
             type="password"
-            placeholder="Enter your password"
+            placeholder="Password"
             value={password}
             onChange={onInputChange}
             className="h-10 bg-white border-gray-300 text-gray-800 rounded-xl placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
@@ -151,45 +145,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </svg>
         </Button>
 
-        {/* Email */}
-        <Button
-          variant="outline"
-          className="h-10 w-10 rounded-full bg-white border-gray-200 hover:bg-gray-50 p-0"
-        >
-          <svg
-            className="w-4 h-4 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
-        </Button>
-
-        {/* User Profile */}
-        <Button
-          variant="outline"
-          className="h-10 w-10 rounded-full bg-white border-gray-200 hover:bg-gray-50 p-0"
-        >
-          <svg
-            className="w-4 h-4 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
-        </Button>
       </div>
 
       <div className="text-center">
