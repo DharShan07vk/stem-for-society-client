@@ -629,36 +629,29 @@ const PsychologyBookingFlow = () => {
 
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-center w-full h-10 mb-8">
-      <div className="flex items-center justify-between w-full max-w-[700px] px-4">
-        {steps.map((step, index) => (
-          <React.Fragment key={step.number}>
-            <div className="flex items-center gap-2">
-              <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold border-2 transition-all flex-shrink-0",
-                currentStep === step.number 
-                  ? "bg-[#0389FF] text-white border-[#0389FF]" 
-                  : currentStep > step.number 
-                    ? "bg-[#0389FF] text-white border-[#0389FF]"
-                    : "bg-white text-gray-400 border-gray-300"
-              )}>
-                {currentStep > step.number ? <Check className="h-4 w-4" /> : step.number}
-              </div>
-              {currentStep === step.number && (
-                <span className="text-sm font-medium whitespace-nowrap text-[#0389FF]">
-                  {step.title}
-                </span>
-              )}
+    <div className="flex items-center justify-center space-x-8 mb-12">
+      {steps.map((step, index) => (
+        <div key={step.number} className="flex items-center">
+          <div className={cn(
+            "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium",
+            currentStep === step.number 
+              ? "bg-blue-500 text-white" 
+              : currentStep > step.number 
+                ? "bg-green-500 text-white"
+                : "bg-gray-200 text-gray-500"
+          )}>
+            {currentStep > step.number ? <Check className="h-4 w-4" /> : step.number}
+          </div>
+          {step.number === currentStep && (
+            <div className="text-blue-500 text-sm font-medium ml-3">
+              {step.title}
             </div>
-            {index < steps.length - 1 && (
-              <div className={cn(
-                "flex-1 h-0.5 mx-3",
-                currentStep > step.number ? "bg-[#0389FF]" : "bg-gray-300"
-              )} />
-            )}
-          </React.Fragment>
-        ))}
-      </div>
+          )}
+          {index < steps.length - 1 && (
+            <div className="w-16 h-px bg-gray-300 ml-3"></div>
+          )}
+        </div>
+      ))}
     </div>
   );
 
@@ -700,13 +693,13 @@ const PsychologyBookingFlow = () => {
           placeholder="First Name *"
           value={formData.firstName}
           onChange={(e) => updateFormData('firstName', e.target.value)}
-          className="bg-gray-50 border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
+          className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
         />
         <Input
           placeholder="Last Name"
           value={formData.lastName}
           onChange={(e) => updateFormData('lastName', e.target.value)}
-          className="bg-gray-50 border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
+          className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
         />
       </div>
       
@@ -715,13 +708,13 @@ const PsychologyBookingFlow = () => {
           placeholder="Address line 1 *"
           value={formData.addressLine1}
           onChange={(e) => updateFormData('addressLine1', e.target.value)}
-          className="bg-gray-50 border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
+          className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
         />
         <Input
           placeholder="Address line 2"
           value={formData.addressLine2}
           onChange={(e) => updateFormData('addressLine2', e.target.value)}
-          className="bg-gray-50 border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
+          className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
         />
       </div>
       
@@ -731,7 +724,7 @@ const PsychologyBookingFlow = () => {
           onValueChange={(value) => updateFormData('city', value)}
           disabled={!formData.state}
         >
-          <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
+          <SelectTrigger className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg">
             <SelectValue placeholder={formData.state ? "City *" : "City"} />
           </SelectTrigger>
           <SelectContent>
@@ -748,7 +741,7 @@ const PsychologyBookingFlow = () => {
             updateFormData('city', ''); // Reset city when state changes
           }}
         >
-          <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
+          <SelectTrigger className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg">
             <SelectValue placeholder="State" />
           </SelectTrigger>
           <SelectContent>
@@ -763,7 +756,7 @@ const PsychologyBookingFlow = () => {
         placeholder="Pincode *"
         value={formData.pincode}
         onChange={(e) => updateFormData('pincode', e.target.value.replace(/\D/g, '').slice(0, 6))}
-        className="bg-gray-50 border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
+        className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg focus:border-[#0389FF] focus:ring-[#0389FF]"
         maxLength={6}
       />
     </div>
@@ -785,7 +778,7 @@ const PsychologyBookingFlow = () => {
               updateFormData('otpSent', false);
               updateFormData('otp', '');
             }}
-            className="bg-gray-50 border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
+            className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
             disabled={formData.emailVerified}
           />
           <Button
@@ -826,7 +819,7 @@ const PsychologyBookingFlow = () => {
                 placeholder="Enter OTP *"
                 value={formData.otp}
                 onChange={(e) => updateFormData('otp', e.target.value.replace(/\D/g, '').slice(0, 6))}
-                className="bg-gray-50 border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
+                className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
                 maxLength={6}
               />
               <Button
@@ -845,7 +838,7 @@ const PsychologyBookingFlow = () => {
       {/* Mobile Number (without OTP) */}
       <div className="flex gap-3">
         <Select value={formData.countryCode} onValueChange={(value) => updateFormData('countryCode', value)}>
-          <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg w-28">
+          <SelectTrigger className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg w-28">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -863,7 +856,7 @@ const PsychologyBookingFlow = () => {
           onChange={(e) => {
             updateFormData('mobile', e.target.value.replace(/\D/g, '').slice(0, 10));
           }}
-          className="bg-gray-50 border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
+          className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg flex-1 focus:border-[#0389FF] focus:ring-[#0389FF]"
           maxLength={10}
         />
       </div>
@@ -878,7 +871,7 @@ const PsychologyBookingFlow = () => {
         <div className="space-y-4">
           <label className="block text-sm font-medium text-gray-700">Document Type *</label>
           <Select value={formData.documentType} onValueChange={(value) => updateFormData('documentType', value)}>
-            <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
+            <SelectTrigger className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg">
               <SelectValue placeholder="Select document type" />
             </SelectTrigger>
             <SelectContent>
@@ -909,7 +902,7 @@ const PsychologyBookingFlow = () => {
               "border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer min-h-[200px] flex flex-col items-center justify-center",
               formData.idCard 
                 ? "border-green-400 bg-green-50" 
-                : "border-gray-300 bg-gray-50 hover:border-[#0389FF] hover:bg-blue-50"
+                : "border-gray-300 bg-[#F1F4F9] hover:border-[#0389FF] hover:bg-blue-50"
             )}
           >
             {formData.idCard ? (
@@ -951,7 +944,7 @@ const PsychologyBookingFlow = () => {
                 type="button"
                 variant="outline"
                 onClick={() => updateFormData('idCard', null)}
-                className="flex-1 h-12 border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg"
+                className="flex-1 h-12 border-gray-300 text-gray-700 hover:bg-[#F1F4F9] rounded-lg"
               >
                 Re-upload
               </Button>
@@ -973,7 +966,7 @@ const PsychologyBookingFlow = () => {
       <div className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Calendar */}
-          <div className="bg-gray-50 rounded-xl p-6">
+          <div className="bg-[#F1F4F9] rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <Button
                 variant="ghost"
@@ -1058,7 +1051,7 @@ const PsychologyBookingFlow = () => {
                 value={selectedDate ? formatDateForComparison(selectedDate) : ''} 
                 onValueChange={handleDropdownDateSelect}
               >
-                <SelectTrigger className="bg-gray-50 border border-gray-200 h-12 rounded-lg">
+                <SelectTrigger className="bg-[#F1F4F9] border border-gray-200 h-12 rounded-lg">
                   <SelectValue placeholder="Choose a date" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1181,12 +1174,17 @@ const PsychologyBookingFlow = () => {
               Back
             </Button>
 
-            <div className="text-center">
-              <p className="text-gray-600 mb-2">Book your Session</p>
-              <h1 className="text-3xl md:text-4xl font-bold text-[#0389FF]">
-                Psychology Counselling
-              </h1>
-            </div>
+
+            <div className="text-center mb-8">
+              <p className="text-black text-sm font-medium mb-5">Book your Session</p>
+            <h1 className="text-2xl md:text-3xl font-medium text-[#000000] relative inline-block">
+              <span className="relative">
+                Mental WellBeing
+                <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+              </span>
+            </h1>
+          </div>
+
           </div>
         </div>
       </div>
