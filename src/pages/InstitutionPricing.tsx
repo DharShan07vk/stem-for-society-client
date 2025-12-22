@@ -65,9 +65,14 @@ maskImage: 'linear-gradient(to bottom, black 0%, transparent 35%, transparent 10
         </Button>
       </div>
     </div>
-      <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">Institution Plans & Pricing</h1>
-        </div>
+      <div className="text-center mb-8">
+            <h1 className="text-2xl md:text-3xl font-medium text-[#000000] relative inline-block">
+              <span className="relative">
+                Institution Plans & Pricing
+                <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+              </span>
+            </h1>
+          </div>
   </div>
 </div>
 

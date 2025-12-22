@@ -5,7 +5,7 @@ import { Input } from '@/components1/ui/input';
 import { Card } from '@/components1/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components1/ui/select';
 import { ArrowLeft, Share2, Check, AlertTriangle, ChevronLeft, ChevronRight, Send, AlertCircle, Mail } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useMutation } from '@tanstack/react-query';
 import { GenericError, GenericResponse, RazorpayOrderOptions } from '../lib/types';
@@ -129,6 +129,7 @@ function useVerifyEmailOTP() {
 }
 
 const InstitutionBookingFlow = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -237,7 +238,9 @@ const InstitutionBookingFlow = () => {
   };
 
   const handleBack = () => {
-    if (currentStep > 1) {
+    if (currentStep === 1) {
+      navigate('/institution-pricing');
+    } else if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
@@ -587,23 +590,18 @@ const InstitutionBookingFlow = () => {
             currentStep === step.number 
               ? "bg-blue-500 text-white" 
               : currentStep > step.number 
-                ? "bg-gray-300 text-gray-600"
+                ? "bg-green-500 text-white"
                 : "bg-gray-200 text-gray-500"
           )}>
-            {step.number}
+            {currentStep > step.number ? <Check className="h-4 w-4" /> : step.number}
           </div>
-          {step.number === currentStep ? (
-            <div className="text-blue-500 text-sm font-medium ml-2">
+          {step.number === currentStep && (
+            <div className="text-blue-500 text-sm font-medium ml-3">
               {step.title}
             </div>
-          ) : step.number < currentStep ? (
-            <div className="text-gray-500 text-sm ml-2">
-              {step.title}
-            </div>
-          ) : null}
-          {/* Add line connector between steps */}
+          )}
           {index < steps.length - 1 && (
-            <div className="w-16 h-0.5 bg-gray-200 mx-4"></div>
+            <div className="w-16 h-px bg-gray-300 ml-3"></div>
           )}
         </div>
       ))}
@@ -618,7 +616,7 @@ const InstitutionBookingFlow = () => {
           placeholder="Institution/School Name *"
           value={formData.schoolName}
           onChange={(e) => updateFormData('schoolName', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
         />
       </div>
 
@@ -634,13 +632,13 @@ const InstitutionBookingFlow = () => {
           placeholder="Address line 1 *"
           value={formData.addressLine1}
           onChange={(e) => updateFormData('addressLine1', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
         />
         <Input
           placeholder="Address line 2"
           value={formData.addressLine2}
           onChange={(e) => updateFormData('addressLine2', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
         />
       </div>
 
@@ -649,13 +647,13 @@ const InstitutionBookingFlow = () => {
           placeholder="City *"
           value={formData.city}
           onChange={(e) => updateFormData('city', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
         />
         <Input
           placeholder="State *"
           value={formData.state}
           onChange={(e) => updateFormData('state', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
         />
       </div>
 
@@ -664,7 +662,7 @@ const InstitutionBookingFlow = () => {
           placeholder="Pincode *"
           value={formData.pincode}
           onChange={(e) => updateFormData('pincode', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
         />
       </div>
     </div>
@@ -678,7 +676,7 @@ const InstitutionBookingFlow = () => {
           placeholder="Contact Person Name *"
           value={formData.contactName}
           onChange={(e) => updateFormData('contactName', e.target.value)}
-          className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+          className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
           disabled={formData.otpVerified}
         />
         <div className="relative">
@@ -687,7 +685,7 @@ const InstitutionBookingFlow = () => {
             type="email"
             value={formData.contactEmail}
             onChange={(e) => updateFormData('contactEmail', e.target.value)}
-            className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+            className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
             disabled={formData.otpVerified}
           />
           {formData.otpVerified && (
@@ -703,7 +701,7 @@ const InstitutionBookingFlow = () => {
           value={formData.country}
           onValueChange={(value) => updateFormData('country', value)}
         >
-          <SelectTrigger className="h-12 bg-gray-100 border-0 text-gray-500">
+          <SelectTrigger className="h-12 bg-[#F1F4F9] border-0 text-gray-500">
             <SelectValue placeholder="Country" />
           </SelectTrigger>
           <SelectContent>
@@ -724,7 +722,7 @@ const InstitutionBookingFlow = () => {
               const value = e.target.value.replace(/\D/g, '').slice(0, 10);
               updateFormData('contactMobile', value);
             }}
-            className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+            className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
             maxLength={10}
           />
         </div>
@@ -763,7 +761,7 @@ const InstitutionBookingFlow = () => {
                   const value = e.target.value.replace(/\D/g, '').slice(0, 6);
                   updateFormData('otp', value);
                 }}
-                className="h-12 bg-gray-100 border-0 placeholder:text-gray-500"
+                className="h-12 bg-[#F1F4F9] border-0 placeholder:text-gray-500"
                 maxLength={6}
                 disabled={isVerifyingOTP}
               />
@@ -835,7 +833,7 @@ const InstitutionBookingFlow = () => {
             updateFormData('studentsCount', parseInt(value.split('-')[0]) || 0);
           }}
         >
-          <SelectTrigger className="w-full h-12 bg-gray-100 border-0 text-gray-500">
+          <SelectTrigger className="w-full h-12 bg-[#F1F4F9] border-0 text-gray-500">
             <SelectValue placeholder="Number of Students *" />
           </SelectTrigger>
           <SelectContent>
@@ -1042,7 +1040,7 @@ const InstitutionBookingFlow = () => {
                 value={selectedDate ? formatDateForComparison(selectedDate) : ''} 
                 onValueChange={handleDropdownDateSelect}
               >
-                <SelectTrigger id="date-select" className="w-full h-12 bg-gray-100 border-0 text-gray-700">
+                <SelectTrigger id="date-select" className="w-full h-12 bg-[#F1F4F9] border-0 text-gray-700">
                   <SelectValue placeholder="Select Date" />
                 </SelectTrigger>
                 <SelectContent>
@@ -1253,16 +1251,15 @@ const InstitutionBookingFlow = () => {
           {/* Navigation Bar */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
-              <Link to="/institution-pricing">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2 bg-[#0389FF] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  <span>Back</span>
-                </Button>
-              </Link>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleBack}
+                className="flex items-center space-x-2 bg-[#0389FF] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back</span>
+              </Button>
 
               <Button
                 variant="outline"
@@ -1276,11 +1273,14 @@ const InstitutionBookingFlow = () => {
             </div>
           </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-medium text-gray-900 mb-2">Book your Session</h1>
-            <h2 className="text-4xl font-bold text-gray-900 mb-8">
-              <span className="text-yellow-500">Institution Plans & Pricing</span>
-            </h2>
+                  <div className="text-center mb-8">
+          <p className="text-black mb-5">Book your Session</p>
+            <h1 className="text-2xl md:text-3xl font-medium text-[#000000] relative inline-block">
+              <span className="relative">
+                Career Counselling
+                <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+              </span>
+            </h1>
           </div>
         </div>
       </div>
@@ -1298,22 +1298,11 @@ const InstitutionBookingFlow = () => {
         </Card>
 
         {currentStep <= 4 && (
-          <div className="flex justify-between items-center mt-8">
-            {/* Back Button */}
-            <Button 
-              onClick={handleBack}
-              variant="outline"
-              className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-lg font-semibold h-12"
-              disabled={currentStep === 1}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              BACK
-            </Button>
-
+          <div className="flex justify-end items-center mt-8">
             {/* Continue/Payment Button */}
             <Button 
               onClick={nextStep}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 text-lg font-semibold h-12"
+              className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white px-8 py-3 text-sm font-semibold h-12 rounded-lg"
               disabled={isPending || (currentStep === 2 && !formData.otpVerified)}
             >
               {currentStep === 4 ? (isPending ? 'PROCESSING...' : 'PROCEED TO PAYMENT') : 'CONTINUE'}
