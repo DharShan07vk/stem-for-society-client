@@ -1261,11 +1261,14 @@ const CareerCounsellingBookingFlow = () => {
            </div>
          </div>
 
-          <div className="text-center mb-8">
-            <h1 className="text-xl font-medium text-gray-600 mb-2">Book your Session</h1>
-            <h2 className="text-4xl font-bold text-gray-900">
-              <span className="text-blue-500">Career</span> Counselling
-            </h2>
+        <div className="text-center mb-8">
+          <p className="text-black mb-5">Book your Session</p>
+            <h1 className="text-2xl md:text-3xl font-medium text-[#000000] relative inline-block">
+              <span className="relative">
+                Career Counselling
+                <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
+              </span>
+            </h1>
           </div>
         </div>
       </div>
