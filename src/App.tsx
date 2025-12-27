@@ -72,6 +72,7 @@ import BlogPost from "./pages/BlogPost";
 import CareerCounsellingBookingFlow from "./pages/CareerCounsellingBookingFlow";
 import PsychologyBookingFlow from "./pages/PsychologyBookingFlow";
 import InstitutionBookingFlow from "./pages/InstitutionBookingFlow";
+import InstitutionOrIndividual from "./pages/InstitutionOrIndividual";
 function AppLayout() {
   return (
     <>
@@ -109,6 +110,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/refund-policy" element={<RefundPolicy />} /> */}
+                <Route path = "/insituion-individual" element={<InstitutionOrIndividual />} />
                 <Route path="/join-community" element={<JoinCommunity />} />
                 <Route path="/partner-role" element={<PartnerRole />} />
                 <Route path="/campus-ambassador-signup" element={<CampusAmbassadorSignup />} />
