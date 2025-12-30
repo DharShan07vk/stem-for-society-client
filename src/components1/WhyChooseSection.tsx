@@ -1,116 +1,143 @@
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Users, Award, Building, HeadphonesIcon } from "lucide-react";
+import { Globe, Users, Award, Building, HeadphonesIcon } from "lucide-react";
 
 const WhyChooseSection = () => {
-  const [expandedItem, setExpandedItem] = useState<number | null>(null);
+  const [activeItem, setActiveItem] = useState<number>(0);
 
   const whyChooseItems = [
     {
       title: "World Class Instructors",
-      content: "Learn from top industry professionals with real-world experience",
-      hoverContent: "Our instructors bring decades of industry experience from top companies like Google, Microsoft, and leading research institutions.",
-      icon: <Users className="h-5 w-5 text-blue-600" />
+      content: "Learn from top industry professionals with real-world experience.",
+      icon: <Globe className="h-6 w-6 text-white" />,
+      bgColor: "bg-[#FFE0CD]",
+      iconBg: "from-orange-500 to-orange-600"
     },
     {
       title: "1 on 1 Mentorship", 
-      content: "Get personalized guidance and support throughout your learning journey",
-      hoverContent: "Dedicated mentors provide weekly one-on-one sessions, career guidance, and personalized feedback on your projects.",
-      icon: <HeadphonesIcon className="h-5 w-5 text-blue-600" />
+      content: "Get personalized guidance and support throughout your learning journey.",
+      icon: <HeadphonesIcon className="h-6 w-6 text-white" />,
+      bgColor: "bg-[#D4E7FE]",
+      iconBg: "from-blue-500 to-blue-600"
     },
     {
       title: "Industrial Training",
-      content: "Hands-on experience with real industry projects and scenarios", 
-      hoverContent: "Work on live projects from partner companies, use industry-standard tools, and gain practical experience that employers value.",
-      icon: <Building className="h-5 w-5 text-blue-600" />
+      content: "Hands-on experience with real industry projects and scenarios.", 
+      icon: <Building className="h-6 w-6 text-white" />,
+      bgColor: "bg-[#D5F5E3]",
+      iconBg: "from-emerald-500 to-emerald-600"
     },
     {
       title: "Placement Assistant",
-      content: "Comprehensive support for career placement and job opportunities",
-      hoverContent: "Resume building, interview preparation, job referrals, and placement guarantee with our 95% success rate.",
-      icon: <Award className="h-5 w-5 text-blue-600" />
+      content: "Comprehensive support for career placement and job opportunities.",
+      icon: <Award className="h-6 w-6 text-white" />,
+      bgColor: "bg-[#E8DAEF]",
+      iconBg: "from-purple-500 to-purple-600"
     }
   ];
 
-  const toggleExpanded = (index: number) => {
-    setExpandedItem(expandedItem === index ? null : index);
-  };
+  // Calculate total height needed for the right side
+  const totalHeight = 56 * 3 + 140 + 12 * 3; // 3 collapsed + 1 expanded + gaps
 
   return (
-    <section className="py-6 md:py-8 bg-white w-full overflow-hidden">
-      <div className="w-full max-w-none px-0">
-        <div className="grid md:grid-cols-2 items-center relative min-h-[200px] md:min-h-[220px]">
-          {/* Background image on the left side centered */}
-       <div className="relative flex items-center justify-center h-full">
-  <div 
-    className="w-64 h-64 md:w-72 md:h-72 opacity-20 bg-center bg-no-repeat bg-contain"
-    style={{ 
-      backgroundImage: `url("/lovable-uploads/4d9d066b-41c7-4f9e-8821-af3a85d56f80.png")`
-    }}
-  ></div>
-  
-  {/* Title overlaid on the background - centered */}
-  <div className="absolute inset-0 flex flex-col justify-center items-center px-4 md:px-8">
-    <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold leading-tight text-center">
-      Why Choose<br/>
-      <span className="text-blue-600">Stem for Society</span> ?
-    </h2>
-  </div>
-</div>
+    <section className="py-12 md:py-16 bg-gray-100 w-full overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto px-4 md:px-8">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+          {/* Left side - Title with background - Fixed height to prevent movement */}
+          <div 
+            className="relative flex items-center justify-center"
+            style={{ minHeight: `${totalHeight}px` }}
+          >
+            {/* Decorative background pattern - Fixed position */}
+            <div 
+              className="absolute w-72 h-72 md:w-80 md:h-80 opacity-15 bg-center bg-no-repeat bg-contain pointer-events-none"
+              style={{ 
+                backgroundImage: `url("/lovable-uploads/4d9d066b-41c7-4f9e-8821-af3a85d56f80.png")`,
+                transform: 'translateZ(0)'
+              }}
+            />
+            
+            {/* Title - Fixed position */}
+            <div className="relative z-10 text-center pointer-events-none">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight">
+                Why Choose
+              </h2>
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-blue-600">
+                Stem for Society <span className="text-gray-900">?</span>
+              </h2>
+            </div>
+          </div>
 
-
-          {/* Right side - Features */}
-          <div className="relative z-10 space-y-2 md:space-y-3 px-4 md:px-6 py-4 md:py-0">
-            {whyChooseItems.map((item, index) => (
-              <div key={index} className="bg-gray-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 relative hover:bg-blue-600 group cursor-pointer">
-                {/* Toggle icon in top right corner */}
-                <button
-                  className="absolute top-3 right-3 z-20 p-1 rounded-full hover:bg-gray-200 group-hover:bg-blue-500 transition-colors"
-                  onClick={() => toggleExpanded(index)}
-                >
-                  {expandedItem === index ? (
-                    <ChevronUp className="h-4 w-4 text-gray-600 group-hover:text-white" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-600 group-hover:text-white" />
-                  )}
-                </button>
-
+          {/* Right side - Features with vertical grow animation */}
+          <div className="relative z-10 flex flex-col gap-3 md:gap-4">
+            {whyChooseItems.map((item, index) => {
+              const isActive = activeItem === index;
+              
+              return (
                 <div 
-                  className="p-3 md:p-4 cursor-pointer flex items-center pr-12"
-                  onClick={() => toggleExpanded(index)}
+                  key={index} 
+                  className={`
+                    relative rounded-2xl cursor-pointer overflow-hidden
+                    transition-all duration-500 ease-out
+                    ${isActive 
+                      ? `${item.bgColor} shadow-lg` 
+                      : 'bg-white shadow-sm'
+                    }
+                  `}
+                  onMouseEnter={() => setActiveItem(index)}
+                  style={{
+                    height: isActive ? '200px' : '52px',
+                    transition: 'height 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, box-shadow 0.3s ease'
+                  }}
                 >
-                  <div className="flex items-center space-x-3">
-                    {/* Icon - only shows on hover */}
-                    <div className="h-8 w-8 rounded-full bg-blue-100 items-center justify-center group-hover:bg-blue-500 transition-colors hidden group-hover:flex">
-                      <div className="group-hover:[&>svg]:text-white transition-colors">
-                        {item.icon}
-                      </div>
+                  {/* Icon in top right - only visible when active */}
+                  <div 
+                    className={`
+                      absolute top-3 right-3 h-10 w-10 rounded-full 
+                      bg-gradient-to-br ${item.iconBg}
+                      flex items-center justify-center
+                      transition-all duration-300 ease-out z-10
+                      ${isActive 
+                        ? 'opacity-100 scale-100' 
+                        : 'opacity-0 scale-75'
+                      }
+                    `}
+                    style={{
+                      transitionDelay: isActive ? '0.1s' : '0s'
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+
+                  {/* Content wrapper - flex column to push title to bottom */}
+                  <div className="h-full flex flex-col justify-end p-4 md:p-5">
+                    {/* Content - appears above title on hover, grows from bottom */}
+                    <h3 className="font-semibold text-base md:text-lg text-gray-900">
+                      {item.title}
+                    </h3>
+                    <div 
+                      className={`
+                        overflow-hidden transition-all duration-400 ease-out
+                        ${isActive 
+                          ? 'max-h-20 opacity-100 mb-2' 
+                          : 'max-h-0 opacity-0 mb-0'
+                        }
+                      `}
+                      style={{
+                        transition: 'max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin 0.3s ease'
+                      }}
+                    >
+                      <p className="text-sm md:text-base text-gray-600 leading-relaxed pr-14">
+                        {item.content}
+                      </p>
                     </div>
                     
-                    <div className="transition-all duration-300">
-                      {/* Default state - only title */}
-                      <div className="group-hover:hidden">
-                        <span className="text-sm md:text-base font-medium">{item.title}</span>
-                      </div>
-                      
-                      {/* Hover state - title and detailed content */}
-                      <div className="hidden group-hover:block">
-                        <span className="text-sm md:text-base font-medium text-white">{item.title}</span>
-                        <p className="text-xs text-blue-100 mt-1">{item.hoverContent}</p>
-                      </div>
-                    </div>
+                    {/* Title - always visible at bottom left */}
+                    
                   </div>
                 </div>
-                
-                {expandedItem === index && (
-                  <div className="px-4 pb-4 animate-fade-in">
-                    <div className="bg-blue-50 group-hover:bg-blue-500 rounded-lg p-3 ml-11 transition-colors">
-                      <p className="text-sm text-gray-700 group-hover:text-blue-100">{item.content}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
