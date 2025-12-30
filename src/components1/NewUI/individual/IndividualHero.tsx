@@ -22,7 +22,13 @@ export const IndividualHero = () => {
           {/* Left Content */}
           <div className="max-w-2xl mx-auto lg:mx-0 space-y-6 md:space-y-8 text-center lg:text-left">
             {/* Badge */}
-            
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-blue-100 text-blue-700 text-xs md:text-sm font-semibold shadow-sm mx-auto lg:mx-0">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
+              </span>
+              Accepting New Students for Fall 2025
+            </div>
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-slate-900 leading-[1.15] md:leading-[1.1] font-[Poppins]">
