@@ -109,24 +109,24 @@ const HeroSection = () => {
             return (
               <Card
                 key={index}
-                className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 transition-transform duration-300 transform-gpu hover:scale-105 hover:z-10 backdrop-blur-sm ${isMiddleCard ? 'bg-blue-50/60' : 'bg-transparent'} border-black/60 min-h-[200px] sm:min-h-56 ${index === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+                className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 transition-transform duration-300 transform-gpu hover:scale-105 hover:z-10 backdrop-blur-sm min-h-[200px] sm:min-h-56 ${isMiddleCard ? 'border-[#0389FF] bg-[#1288ef40]' : 'border-black/60'} ${index === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
                 style={{ willChange: 'transform' }}>
                 <CardContent className="p-0 h-full flex flex-col justify-between">
                   <div className="flex items-center mb-2 sm:mb-3">
-                    <Badge variant="secondary" className={`rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm border-2 border-black/60 ${isMiddleCard ? 'bg-blue-200 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>
+                    <Badge className={`rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm border-2 ${isMiddleCard ? 'border-white/60 bg-white/20 text-black' : 'border-black/60 text-black'}`}>
                       {stat.subtitle}
                     </Badge>
                   </div>
                   
-                  <h3 className="font text-xl sm:text-2xl mb-1 sm:mb-2 text-left text-black">{stat.title}</h3>
-                  <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 text-left leading-relaxed">{stat.description}</p>
+                  <h3 className={`font text-xl sm:text-2xl mb-1 sm:mb-2 text-left text-black`}>{stat.title}</h3>
+                  <p className={`text-xs sm:text-sm mb-2 sm:mb-3 text-left leading-relaxed text-gray-600`}>{stat.description}</p>
                   
                   {stat.hasAvatars && (
                     <div className="flex items-center mb-2 sm:mb-3">
                       <div className="flex -space-x-2">
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-500 border-2 border-white"></div>
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-500 border-2 border-white"></div>
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-purple-500 border-2 border-white"></div>
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-300 border-2 border-white"></div>
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-green-400 border-2 border-white"></div>
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-purple-400 border-2 border-white"></div>
                       </div>
                     </div>
                   )}
@@ -134,8 +134,8 @@ const HeroSection = () => {
                   <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-6 text-left items-center">
                     {stat.stats.map((item, idx) => (
                       <div key={idx} className="min-w-fit">
-                        <div className="text-lg sm:text-xl font-bold text-gray-800 mb-0.5 sm:mb-1">{item.value}</div>
-                        <div className="text-[10px] sm:text-xs text-gray-500 whitespace-nowrap">{item.label}</div>
+                        <div className={`text-lg sm:text-xl font-sans mb-0.5 sm:mb-1 ${isMiddleCard ? 'text-white' : 'text-black'}`}>{item.value}</div>
+                        <div className={`text-[10px] sm:text-s ${isMiddleCard ? 'text-white/80' : 'text-black'}`}>{item.label}</div>
                       </div>
                     ))}
                   </div>
