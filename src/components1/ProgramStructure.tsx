@@ -15,7 +15,7 @@ const OurPrograms = () => {
   const getCardClasses = (cardId: string) => {
     if (hoveredCard === null) return "";
     if (hoveredCard === cardId) return "";
-    return "grayscale opacity-50";
+    return "opacity-50";
   };
 
   return (
@@ -38,7 +38,7 @@ const OurPrograms = () => {
               <img
                 src={asset1}
                 alt=""
-                className="absolute transition-all duration-500 "
+                className="absolute transition-all duration-500 group-hover:scale-105"
                 style={{
                   width: '411px',      
                   height: '549px',     
