@@ -40,7 +40,7 @@ const WhyChooseSection = () => {
   const totalHeight = 56 * 3 + 140 + 12 * 3; // 3 collapsed + 1 expanded + gaps
 
   return (
-    <section className="py-12 md:py-16 overflow-hidden">
+    <section className="py-4 md:py-8 overflow-hidden bg-[#F2F2F2] ">
       <div className="max-w-7xl bg-[#F2F2F2] mx-auto px-4 sm:px-6 py-8 sm:py-10 md:py-12 rounded-2xl sm:rounded-3xl">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Left side - Title with background - Fixed height to prevent movement */}
@@ -52,7 +52,7 @@ const WhyChooseSection = () => {
             <div 
               className="absolute w-72 h-72 md:w-80 md:h-80 opacity-15 bg-center bg-no-repeat bg-contain pointer-events-none"
               style={{ 
-                backgroundImage: `url("/lovable-uploads/image.png")`,
+                backgroundImage: `url("src/assets/logo.png")`,
                 transform: 'translateZ(0)'
               }}
             />
