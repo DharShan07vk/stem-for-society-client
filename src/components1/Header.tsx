@@ -27,11 +27,8 @@ const Header = () => {
   };
 
   return (
-    <header 
-      className="relative shadow-sm">
- 
-      
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+    <header className="relative shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">

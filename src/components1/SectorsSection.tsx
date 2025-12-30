@@ -30,20 +30,21 @@ const sectors = [
 
 const Sectors = () => {
   return (
-    <section className="py-20 px-4 bg-white">
-      <div
-        className="relative max-w-6xl mx-auto rounded-[3rem] overflow-hidden
-                   bg-[linear-gradient(to_bottom,#DDFAFF_0%,#DDFAFF_70%,#FFFFFF_100%)]
-                   py-20 px-6"
-      >
-        {/* Heading */}
-        <h2 className="text-center text-5xl md:text-5xl font-instrument py-3 mb-14 text-[#203D59]">
-          Sectors that we focus
-        </h2>
+    <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div
+          className="relative w-full rounded-[2rem] sm:rounded-[3rem] overflow-hidden
+                     bg-[linear-gradient(to_bottom,#DDFAFF_0%,#DDFAFF_70%,#FFFFFF_100%)]
+                     py-12 sm:py-16 md:py-20 px-4 sm:px-6"
+        >
+          {/* Heading */}
+          <h2 className="text-center text-3xl sm:text-4xl md:text-5xl font-instrument py-3 mb-8 sm:mb-10 md:mb-14 text-[#203D59]">
+            Sectors that we focus
+          </h2>
 
-        {/* Pills wrapper */}
-                       
-        <div className="flex flex-wrap justify-center gap-4 w-full max-w-5xl mx-auto">
+          {/* Pills wrapper */}
+                         
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full max-w-5xl mx-auto">
           {sectors.map((sector, index) => {
             const isLastRow = index === 10 || index === 11;
 
@@ -69,11 +70,12 @@ const Sectors = () => {
               </div>
             );
           })}
-        </div>
+          </div>
 
-        {/* Bottom fade */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-28
-                        bg-gradient-to-t from-white to-transparent" />
+          {/* Bottom fade */}
+          <div className="pointer-events-none absolute bottom-0 left-0 w-full h-28
+                          bg-gradient-to-t from-white to-transparent" />
+        </div>
       </div>
     </section>
   );

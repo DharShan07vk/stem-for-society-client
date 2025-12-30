@@ -74,7 +74,7 @@ const UpcomingSessions = () => {
   if (isLoading) {
     return (
       <section className="bg-[#2B8C63] text-[#FBCED9] py-16">
-        <div className="max-w-7xl mx-auto px-6 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-xl">Loading upcoming sessions...</p>
         </div>
       </section>
@@ -86,17 +86,17 @@ const UpcomingSessions = () => {
   }
 
   return (
-    <section className="bg-[#2B8C63] text-[#FBCED9] py-16 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-[#2B8C63] text-[#FBCED9] py-12 sm:py-16 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-        <div className="flex items-center gap-3 mb-14">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-wide italic">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-8 sm:mb-10 md:mb-14">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-wide italic">
             UPCOMING SESSIONS
           </h2>
-          <span className="text-2xl md:text-3xl font-light">
+          <span className="text-xl sm:text-2xl md:text-3xl font-light">
             THIS MONTH
           </span>
-          <ChevronDown className="w-8 h-8 ml-1" />
+          <ChevronDown className="w-6 h-6 sm:w-8 sm:h-8 ml-1" />
         </div>
 
 

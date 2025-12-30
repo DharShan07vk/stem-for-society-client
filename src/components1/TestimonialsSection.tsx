@@ -42,9 +42,9 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-5xl font-medium text-gray-500 mb-10">
+    <section className="py-12 sm:py-16 bg-white overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-medium text-gray-500 mb-6 sm:mb-8 md:mb-10">
           Testimonials
         </h2>
 

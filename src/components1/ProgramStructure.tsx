@@ -19,15 +19,15 @@ const OurPrograms = () => {
   };
 
   return (
-    <section className="py-6 sm:py-8 md:py-10 bg-white px-4 sm:px-8 md:px-16 lg:px-20 xl:px-[120px]">
-      <div className="max-w-screen-2xl mx-auto">
+    <section className="py-8 sm:py-12 md:py-16 bg-white px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
 
-        <h2 className="text-2xl sm:text-3xl md:text-4xl px-2 sm:px-5 mb-6 sm:mb-8 md:mb-10 text-[#00000080]">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl mb-6 sm:mb-8 md:mb-10 text-[#00000080]">
           Our Programs
         </h2>
         <div className="w-full flex justify-center">
           {/* Mobile: Single column, Tablet: 2 columns, Desktop: Original 6-column grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 w-full max-w-[1440px] mx-auto auto-rows-auto lg:grid-rows-6 lg:h-[1080px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 w-full max-w-[1280px] mx-auto auto-rows-auto lg:grid-rows-6 lg:h-[1080px]">
 
             {/* 1. Skill Development Card */}
             <div

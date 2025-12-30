@@ -3,11 +3,11 @@ import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: "#00549F" }} className="text-white py-6">
-      <div className="container mx-auto px-4 max-w-7xl">
+    <footer style={{ backgroundColor: "#00549F" }} className="text-white py-8 sm:py-10 md:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         
         {/* Logo + Tagline */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-6 sm:mb-8">
           <img
             src="/lovable-uploads/FooterLogo.png"
             alt="STEM for Society Logo"

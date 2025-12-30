@@ -33,9 +33,9 @@ const PartnersSection = () => {
   const itemsWithStars = createItemsWithStars();
 
   return (
-    <section className="py-20 md:py-24 bg-gray-50">
-      <div className="container mx-auto px-4 text-center max-w-7xl">
-        <h2 className="text-4xl md:text-3xl  mb-10 md:mb-16 text-[#00000080]">Industrial & Academic Partners</h2>
+    <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
+        <h2 className="text-3xl sm:text-4xl mb-8 sm:mb-12 md:mb-16 text-[#00000080]">Industrial & Academic Partners</h2>
 
         <div className="overflow-hidden">
           <div className="flex items-center will-change-transform animate-partners-scroll">
