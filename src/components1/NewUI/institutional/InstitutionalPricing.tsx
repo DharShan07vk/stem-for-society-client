@@ -1,6 +1,9 @@
 import { CircleCheck } from "lucide-react";
+import { useEnquiry } from "@/pages/InstitutionOrIndividual";
 
 export const InstitutionalPricing = () => {
+  const { openEnquiry } = useEnquiry();
+
   return (
     <section className="py-20 md:py-28 lg:py-32 bg-white relative overflow-hidden" id="plans">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[100px] pointer-events-none" />
@@ -38,7 +41,10 @@ export const InstitutionalPricing = () => {
                 <span>Topic-specific resources</span>
               </li>
             </ul>
-            <button className="inline-flex items-center justify-center w-full h-12 font-semibold border border-slate-200 hover:bg-slate-50 text-slate-900 rounded-xl transition-colors">
+            <button 
+              onClick={() => openEnquiry("single-theme")}
+              className="inline-flex items-center justify-center w-full h-12 font-semibold border border-slate-200 hover:bg-slate-50 text-slate-900 rounded-xl transition-colors"
+            >
               Get Single Session
             </button>
           </div>
@@ -67,7 +73,10 @@ export const InstitutionalPricing = () => {
                 <span>Combined module discounts</span>
               </li>
             </ul>
-            <button className="inline-flex items-center justify-center w-full h-12 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-lg shadow-emerald-200 transition-colors">
+            <button 
+              onClick={() => openEnquiry("comprehensive-package")}
+              className="inline-flex items-center justify-center w-full h-12 font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-lg shadow-emerald-200 transition-colors"
+            >
               Request Proposal
             </button>
           </div>

@@ -1,6 +1,9 @@
 import { CircleCheck } from "lucide-react";
+import { useEnquiry } from "@/pages/InstitutionOrIndividual";
 
 export const IndividualPricing = () => {
+  const { openEnquiry } = useEnquiry();
+
   return (
     <section className="py-20 md:py-28 lg:py-32 bg-white relative overflow-hidden" id="plans">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[100px] pointer-events-none" />
@@ -38,7 +41,10 @@ export const IndividualPricing = () => {
                 <span>Actionable Next Steps</span>
               </li>
             </ul>
-            <button className="inline-flex items-center justify-center w-full h-12 font-semibold border border-slate-200 hover:bg-slate-50 text-slate-900 rounded-xl transition-colors">
+            <button 
+              onClick={() => openEnquiry("career-counselling-session")}
+              className="inline-flex items-center justify-center w-full h-12 font-semibold border border-slate-200 hover:bg-slate-50 text-slate-900 rounded-xl transition-colors"
+            >
               Book Session
             </button>
           </div>
@@ -87,7 +93,10 @@ export const IndividualPricing = () => {
                 <span>Guidance for Funding</span>
               </li>
             </ul>
-            <button className="inline-flex items-center justify-center w-full h-12 font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-200 transition-colors">
+            <button 
+              onClick={() => openEnquiry("career-counselling-full")}
+              className="inline-flex items-center justify-center w-full h-12 font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-200 transition-colors"
+            >
               Get Standard Package
             </button>
           </div>

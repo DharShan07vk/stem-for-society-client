@@ -1,6 +1,9 @@
 import { Compass, Heart, CircleCheck, Download } from "lucide-react";
+import { useEnquiry } from "@/pages/InstitutionOrIndividual";
 
 export const IndividualServices = () => {
+  const { openEnquiry } = useEnquiry();
+
   const services = [
     {
       badge: "Career Path",
@@ -115,7 +118,10 @@ export const IndividualServices = () => {
 
                 {/* CTA Button */}
                 <div className="mt-auto">
-                  <button className="inline-flex items-center justify-center w-full h-12 rounded-xl text-white transition-all duration-300 font-semibold bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-200">
+                  <button 
+                    onClick={() => openEnquiry(index === 0 ? "career-counselling-full" : "mental-wellbeing")}
+                    className="inline-flex items-center justify-center w-full h-12 rounded-xl text-white transition-all duration-300 font-semibold bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-200"
+                  >
                     Register Now
                   </button>
                 </div>

@@ -1,4 +1,15 @@
 import { Compass, Lightbulb, UserCircle, Heart, Smartphone, HeartPulse, CircleCheck } from "lucide-react";
+import { useEnquiry } from "@/pages/InstitutionOrIndividual";
+
+// Service value mapping for enquiry popup
+const moduleServiceMap: Record<number, string> = {
+  0: "career-counselling",
+  1: "entrepreneurship",
+  2: "personality-development",
+  3: "mental-wellbeing",
+  4: "digital-wellness",
+  5: "sex-education",
+};
 
 const modules = [
   {
@@ -112,6 +123,8 @@ const modules = [
 ];
 
 export const InstitutionalModules = () => {
+  const { openEnquiry } = useEnquiry();
+
   return (
     <section className="py-20 md:py-28 lg:py-32 bg-white relative overflow-hidden" id="services">
       <div className="container mx-auto px-6 md:px-8 lg:px-12 relative z-10">
@@ -188,7 +201,10 @@ export const InstitutionalModules = () => {
 
                 {/* CTA Button */}
                 <div className="mt-6">
-                  <button className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-slate-200">
+                  <button 
+                    onClick={() => openEnquiry(moduleServiceMap[index])}
+                    className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-semibold transition-colors shadow-lg shadow-slate-200"
+                  >
                     Inquire Now
                   </button>
                 </div>
