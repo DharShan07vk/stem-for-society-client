@@ -77,22 +77,6 @@ const Header = () => {
                 </MenubarContent>
               </MenubarMenu>
 
-              {/* Finishing School Dropdown */}
-              <MenubarMenu>
-                <MenubarTrigger
-  className="group bg-transparent hover:bg-white/20 data-[state=open]:bg-white/20
-             px-6 py-3 rounded-full cursor-pointer flex items-center space-x-1
-             text-[#00000080] hover:text-gray-900 transition-all duration-300
-             font-medium shadow-none backdrop-blur-sm border-none outline-none"
->
-  <span>Finishing School</span>
-  <ChevronDown
-    className="h-4 w-4 transition-transform duration-300 group-hover:rotate-180"
-  />
-</MenubarTrigger>
-
-                
-              </MenubarMenu>
 
               {/* Services Dropdown */}
               <MenubarMenu>
