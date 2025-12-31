@@ -118,6 +118,15 @@ const Header = () => {
         Institution Plan & Pricing
       </Link>
     </MenubarItem>
+    <div className="my-1 border-t border-gray-100" />
+    <MenubarItem asChild>
+      <Link 
+        to="/insituion-individual" 
+        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
+      >
+        Individual/Institustional
+      </Link>
+    </MenubarItem>
   </MenubarContent>
 </MenubarMenu>
 
@@ -294,6 +303,20 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Institution Plan & Pricing
+                </Link>
+                <Link 
+                  to="/insituion-individual" 
+                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Individual
+                </Link>
+                <Link 
+                  to="/insituion-individual" 
+                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Institutional
                 </Link>
               </div>
               
