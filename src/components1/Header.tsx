@@ -59,34 +59,19 @@ const Header = () => {
                 <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
                   <MenubarItem asChild>
                     <Link 
-                      to="/courses?filter=Seminars%2FWebinar%2FMentorship" 
+                      to="/courses" 
                       className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
                     >
-                      Seminars/Webinar/Mentorship
+                      Courses
                     </Link>
                   </MenubarItem>
+                  <div className="my-1 border-t border-gray-100" />
                   <MenubarItem asChild>
                     <Link 
-                      to="/courses?filter=Certificate%20Program" 
+                      to="/finishing-school" 
                       className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
                     >
-                      Certificate Program
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem asChild>
-                    <Link 
-                      to="/courses?filter=Corporate%20Training" 
-                      className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-                    >
-                      Corporate Training
-                    </Link>
-                  </MenubarItem>
-                  <MenubarItem asChild>
-                    <Link 
-                      to="/courses?filter=Instrumentation%20Hands-on" 
-                      className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-                    >
-                      Instrumentation Hands-on
+                      Finishing School
                     </Link>
                   </MenubarItem>
                 </MenubarContent>
@@ -277,6 +262,13 @@ const Header = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Instrumentation Hands-on
+                </Link>
+                <Link 
+                  to="/finishing-school" 
+                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Finishing School
                 </Link>
               </div>
               

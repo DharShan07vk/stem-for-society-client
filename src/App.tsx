@@ -73,6 +73,7 @@ import CareerCounsellingBookingFlow from "./pages/CareerCounsellingBookingFlow";
 import PsychologyBookingFlow from "./pages/PsychologyBookingFlow";
 import InstitutionBookingFlow from "./pages/InstitutionBookingFlow";
 import InstitutionOrIndividual from "./pages/InstitutionOrIndividual";
+import FinishingSchool from "./pages/FinishingSchool";
 function AppLayout() {
   return (
     <>
@@ -118,6 +119,7 @@ function App() {
                 <Route path="/partner-signin" element={<InstitutionLogin />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/course-detail/:id" element={<CourseDetail />} />
+                <Route path="/finishing-school" element={<FinishingSchool />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog-article" element={<BlogArticle />} />
                 <Route path="/blog-post/:id" element={<BlogPost />} />
