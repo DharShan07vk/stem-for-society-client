@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, User, Building2, ChevronLeft, ChevronRight } from "lucide-react";
 import { Calendar } from "@/components1/ui/calendar";
 import { Button } from "@/components1/ui/button";
@@ -253,7 +254,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
       }
 
       // Calculate amount based on service
-      const amount = mode === "individual" ? 200000 : 3000000; // in paise
+      const amount = mode === "individual" ? 300000 : 3000000; // in paise
 
       const options = {
         key: RZPY_KEYID,
@@ -294,9 +295,11 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
   if (!isOpen) return null;
 
   const services = mode === "individual" ? individualServices : institutionalServices;
+  const isSingleTheme = mode === "institutional" && formData.serviceInterest === "single-theme";
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+  // Use Portal to render popup at root level to avoid stacking context issues
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
       {/* Backdrop - non-clickable */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
@@ -317,11 +320,13 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-slate-900">
-            {mode === "individual" ? "Book Your Session" : "Partner With Us"}
+            {mode === "individual" ? "Book Your Session" : isSingleTheme ? "Discuss Custom Needs" : "Partner With Us"}
           </h2>
           <p className="text-slate-500 mt-1">
             {mode === "individual"
               ? "Take the first step towards your goals. Fill out the form below to get started."
+              : isSingleTheme
+              ? "Share your institution's requirements and we'll get back to you shortly."
               : "Tell us about your institution's needs. We'll build a custom plan for you."}
           </p>
         </div>
@@ -620,37 +625,65 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                 />
               </div>
             </div>
-          ) : (
-            // Institutional Form
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Designation */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Designation <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  placeholder="Principal"
-                  value={formData.designation}
-                  onChange={(e) => handleInputChange("designation", e.target.value)}
-                  className="h-12 rounded-xl border-slate-200"
-                />
+          ) : isSingleTheme ? (
+            // Single-Theme Simplified Form (only 6 fields, no calendar)
+            <div className="space-y-6">
+              {/* Row 1: Name, Designation */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="John Doe"
+                    value={formData.fullName}
+                    onChange={(e) => handleInputChange("fullName", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200 focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Designation <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="Principal"
+                    value={formData.designation}
+                    onChange={(e) => handleInputChange("designation", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
               </div>
 
-              {/* Department */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Department
-                </label>
-                <Input
-                  placeholder="Administration"
-                  value={formData.department}
-                  onChange={(e) => handleInputChange("department", e.target.value)}
-                  className="h-12 rounded-xl border-slate-200"
-                />
+              {/* Row 2: Contact Number, Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Contact Number <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="+91 9876543210"
+                    value={formData.contactNumber}
+                    onChange={(e) => handleInputChange("contactNumber", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="principal@school.edu"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
               </div>
 
-              {/* Institute Name */}
-              <div className="md:col-span-2">
+              {/* Row 3: Institute Name */}
+              <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Institute Name <span className="text-red-500">*</span>
                 </label>
@@ -662,38 +695,105 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                 />
               </div>
 
-              {/* Contact Number */}
+              {/* Row 4: Requirements */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Contact Number <span className="text-red-500">*</span>
+                  Requirements / Questions
                 </label>
-                <Input
-                  placeholder="+91 9876543210"
-                  value={formData.contactNumber}
-                  onChange={(e) => handleInputChange("contactNumber", e.target.value)}
-                  className="h-12 rounded-xl border-slate-200"
+                <Textarea
+                  placeholder="E.g., We are looking for a program for 200 11th-grade students..."
+                  value={formData.requirements}
+                  onChange={(e) => handleInputChange("requirements", e.target.value)}
+                  className="min-h-[120px] rounded-xl border-slate-200 resize-none"
                 />
               </div>
+            </div>
+          ) : (
+            // Full Institutional Form (with calendar and all details)
+            <div className="space-y-6">
+              {/* Row 1: Full Name, Designation */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="John Doe"
+                    value={formData.fullName}
+                    onChange={(e) => handleInputChange("fullName", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200 focus:border-blue-500"
+                  />
+                </div>
 
-              {/* Email (Official) */}
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Designation <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="Principal"
+                    value={formData.designation}
+                    onChange={(e) => handleInputChange("designation", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Institute Name, Department */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Institute Name <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="Lincoln High School"
+                    value={formData.instituteName}
+                    onChange={(e) => handleInputChange("instituteName", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Department
+                  </label>
+                  <Input
+                    placeholder="Administration"
+                    value={formData.department}
+                    onChange={(e) => handleInputChange("department", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+              </div>
+
+              {/* Row 3: Contact Number, Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Contact Number <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    placeholder="+91 9876543210"
+                    value={formData.contactNumber}
+                    onChange={(e) => handleInputChange("contactNumber", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="principal@school.edu"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+              </div>
+
+              {/* Row 4: Address */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Email (Official) <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  type="email"
-                  placeholder="principal@school.edu"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  className="h-12 rounded-xl border-slate-200"
-                />
-              </div>
-
-              {/* Address */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Address
-                </label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Address</label>
                 <Input
                   placeholder="Street Address"
                   value={formData.address}
@@ -702,33 +802,29 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                 />
               </div>
 
-              {/* City */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  City
-                </label>
-                <Input
-                  placeholder="Mumbai"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange("city", e.target.value)}
-                  className="h-12 rounded-xl border-slate-200"
-                />
+              {/* Row 5: State, City */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">State</label>
+                  <Input
+                    placeholder="Maharashtra"
+                    value={formData.state}
+                    onChange={(e) => handleInputChange("state", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">City</label>
+                  <Input
+                    placeholder="Mumbai"
+                    value={formData.city}
+                    onChange={(e) => handleInputChange("city", e.target.value)}
+                    className="h-12 rounded-xl border-slate-200"
+                  />
+                </div>
               </div>
 
-              {/* State */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  State
-                </label>
-                <Input
-                  placeholder="Maharashtra"
-                  value={formData.state}
-                  onChange={(e) => handleInputChange("state", e.target.value)}
-                  className="h-12 rounded-xl border-slate-200"
-                />
-              </div>
-
-              {/* Area of Interest */}
+              {/* Row 6: Area of Interest */}
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Area of Interest <span className="text-red-500">*</span>
@@ -750,45 +846,140 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                 </Select>
               </div>
 
-              {/* Preferred Date */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Preferred Date
-                </label>
-                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full h-12 rounded-xl border-slate-200 justify-start text-left font-normal",
-                        !formData.preferredDate && "text-slate-500"
-                      )}
+              {/* Row 7: Calendar (left) + Date/Time (right) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Calendar */}
+                <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+                  <div className="flex items-center justify-between mb-4">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1))}
+                      className="p-2 hover:bg-slate-100 rounded-full"
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.preferredDate ? (
-                        format(formData.preferredDate, "PPP")
-                      ) : (
-                        "Select date"
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={formData.preferredDate}
-                      onSelect={(date) => {
-                        handleInputChange("preferredDate", date);
-                        setCalendarOpen(false);
-                      }}
-                      disabled={(date) => date < new Date()}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                      <ChevronLeft className="h-5 w-5 text-slate-600" />
+                    </button>
+                    <h3 className="font-semibold text-slate-900">
+                      {currentMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1))}
+                      className="p-2 hover:bg-slate-100 rounded-full"
+                    >
+                      <ChevronRight className="h-5 w-5 text-slate-600" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1 mb-2 text-center">
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(day => (
+                      <div key={day} className="p-2 text-xs font-medium text-slate-500">{day}</div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1">
+                    {(() => {
+                      const today = new Date();
+                      const oneMonthFromToday = new Date(today);
+                      oneMonthFromToday.setMonth(today.getMonth() + 1);
+
+                      const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+                      const startDate = new Date(firstDay);
+                      startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+                      const days = [] as JSX.Element[];
+                      const currentDate = new Date(startDate);
+
+                      for (let i = 0; i < 42; i++) {
+                        const date = new Date(currentDate);
+                        const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
+                        const isSelected = selectedDate && formatDateForComparison(date) === formatDateForComparison(selectedDate);
+                        const isToday = formatDateForComparison(date) === formatDateForComparison(today);
+                        const isPastDate = date < new Date(new Date().setHours(0, 0, 0, 0));
+                        const isAfterOneMonth = date > oneMonthFromToday;
+                        const isDisabled = !isCurrentMonth || isPastDate || isAfterOneMonth;
+
+                        days.push(
+                          <button
+                            type="button"
+                            key={i}
+                            onClick={() => {
+                              if (!isDisabled) handleDateSelect(date);
+                            }}
+                            className={cn(
+                              "w-10 h-10 text-sm rounded-full transition-all flex items-center justify-center mx-auto",
+                              isDisabled && "text-slate-300 cursor-not-allowed",
+                              !isDisabled && isSelected && "bg-[#0389FF] text-white font-semibold",
+                              !isDisabled && !isSelected && isToday && "bg-blue-100 text-blue-600 font-semibold",
+                              !isDisabled && !isSelected && !isToday && isCurrentMonth && "hover:bg-slate-100 text-slate-900",
+                              !isCurrentMonth && "text-slate-300"
+                            )}
+                            disabled={isDisabled}
+                          >
+                            {date.getDate()}
+                          </button>
+                        );
+
+                        currentDate.setDate(currentDate.getDate() + 1);
+                      }
+
+                      return days;
+                    })()}
+                  </div>
+                </div>
+
+                {/* Date dropdown + time */}
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Date of Meeting</label>
+                    <Select
+                      value={selectedDate ? formatDateForComparison(selectedDate) : ""}
+                      onValueChange={handleDropdownDateSelect}
+                    >
+                      <SelectTrigger className="w-full h-12 bg-slate-50 border border-slate-200 rounded-lg">
+                        <SelectValue placeholder="Select Date" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {generateAvailableDates().map((date) => (
+                          <SelectItem key={date.value} value={date.value}>
+                            {date.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <h4 className="font-medium text-slate-900 mb-4">Available Time</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                      {availableTimes.map((time) => {
+                        const disabled = isTimeSlotPast(time);
+                        const isActive = formData.selectedTime === time;
+                        return (
+                          <button
+                            type="button"
+                            key={time}
+                            onClick={() => {
+                              if (!disabled) handleInputChange("selectedTime", time);
+                            }}
+                            className={cn(
+                              "px-3 py-3 rounded-lg text-sm border transition-all",
+                              disabled && "text-slate-400 border-slate-200 cursor-not-allowed",
+                              !disabled && isActive && "border-[#0389FF] bg-blue-50 text-[#0389FF] font-semibold",
+                              !disabled && !isActive && "border-slate-200 hover:border-[#0389FF] hover:bg-blue-50/50"
+                            )}
+                            disabled={disabled}
+                          >
+                            {time}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Requirements / Questions */}
-              <div className="md:col-span-2">
+              <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Requirements / Questions
                 </label>
@@ -848,7 +1039,8 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

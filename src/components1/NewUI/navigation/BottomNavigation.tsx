@@ -25,7 +25,6 @@ export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps)
   const institutionNavItems = [
     { id: "services", label: "Modules" },
     { id: "process", label: "Process" },
-    { id: "plans", label: "Curriculum" },
     { id: "faq", label: "FAQ" },
   ];
 

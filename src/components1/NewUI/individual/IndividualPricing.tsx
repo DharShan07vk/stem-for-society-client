@@ -25,7 +25,7 @@ export const IndividualPricing = () => {
             <h3 className="text-xl font-bold text-slate-900 mb-2 font-[Poppins]">Single Session</h3>
             <p className="text-slate-500 mb-6">Career or Wellness Consultation</p>
             <div className="text-4xl font-bold text-slate-900 mb-6">
-              ₹2,000 <span className="text-base font-normal text-slate-500">/ session</span>
+              ₹3,000 <span className="text-base font-normal text-slate-500">/ session</span>
             </div>
             <ul className="space-y-3 mb-8">
               <li className="flex gap-3 text-slate-700">

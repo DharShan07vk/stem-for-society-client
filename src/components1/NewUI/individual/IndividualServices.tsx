@@ -13,7 +13,7 @@ export const IndividualServices = () => {
       title: "Career Counselling & Guidance",
       subtitle: "FIND YOUR DIRECTION. CHOOSE WITH CLARITY.",
       description: "Your career should be an extension of your strengths, interests, and aspirations — not just a random choice. In our one-on-one career counselling sessions, you'll discover your natural talents, explore compatible career paths, and create an action plan that aligns with your goals.",
-      pricing: "Rs 2000 - Rs 30,000 / person",
+      pricing: "₹3000 per Session",
       outcome: "Personalized career roadmap, skill gap identification, and goal-based strategy.",
       includes: [
         "Career choice & Industry jobs",
@@ -34,7 +34,7 @@ export const IndividualServices = () => {
       title: "Mental Well-being",
       subtitle: "A SAFE SPACE TO TALK, HEAL, AND GROW.",
       description: "Your mental well-being matters as much as your success. Our counselling sessions create a safe, confidential space to talk about stress, anxiety, burnout, or any emotional challenges you face. We combine psychological insight with practical techniques.",
-      pricing: "₹2000 per session",
+      pricing: "₹3000 per session",
       outcome: "Better emotional regulation, clarity of thought, and improved daily functioning.",
       includes: [
         "Mindfulness techniques",
