@@ -2,8 +2,10 @@ import { Card } from "@/components1/ui/card";
 import { Badge } from "@/components1/ui/badge";
 import { Button } from "@/components1/ui/button";
 import { ArrowRight, Clock, MapPin, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FinishingSchoolCardProps {
+  courseId: string;
   image: string;
   universityLogo?: string;
   universityName?: string;
@@ -17,6 +19,7 @@ interface FinishingSchoolCardProps {
 }
 
 const FinishingSchoolCard = ({
+  courseId,
   image,
   universityLogo,
   universityName,
@@ -28,6 +31,8 @@ const FinishingSchoolCard = ({
   modeDescription,
   startDate,
 }: FinishingSchoolCardProps) => {
+  const navigate = useNavigate();
+
   return (
     <Card className="flex flex-col overflow-hidden rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 group">
       {/* Image Section */}
@@ -111,7 +116,7 @@ const FinishingSchoolCard = ({
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
           <Button
-           
+            onClick={() => navigate(`/finishing-school-detail/${courseId}`)}
             className="flex-1 bg-[#0F4C5C] hover:bg-[#0F4C5C]/90 text-white py-3 rounded-full font-medium text-sm transition-all duration-300"
           >
             Explore more

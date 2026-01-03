@@ -74,6 +74,8 @@ import PsychologyBookingFlow from "./pages/PsychologyBookingFlow";
 import InstitutionBookingFlow from "./pages/InstitutionBookingFlow";
 import InstitutionOrIndividual from "./pages/InstitutionOrIndividual";
 import FinishingSchool from "./pages/FinishingSchool";
+import FinishingSchoolDetail from "./pages/FinishingSchoolDetail";
+
 function AppLayout() {
   return (
     <>
@@ -120,6 +122,7 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/course-detail/:id" element={<CourseDetail />} />
                 <Route path="/finishing-school" element={<FinishingSchool />} />
+                <Route path="/finishing-school-detail/:courseId" element={<FinishingSchoolDetail />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog-article" element={<BlogArticle />} />
                 <Route path="/blog-post/:id" element={<BlogPost />} />

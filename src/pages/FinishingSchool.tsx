@@ -200,10 +200,6 @@ const FinishingSchool = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             {/* Page Title */}
             <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 bg-[#0D9488]/10 text-[#0D9488] px-4 py-2 rounded-full text-sm font-medium mb-4">
-                <GraduationCap className="w-4 h-4" />
-                Finishing School Programs
-              </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
                 Transform Your Career with{" "}
                 <span className="text-[#0D9488]">Industry-Ready Skills</span>
@@ -341,6 +337,7 @@ const FinishingSchool = () => {
                 {filteredCourses.map((course) => (
                   <FinishingSchoolCard
                     key={course.id}
+                    courseId={course.id}
                     image={course.image}
                     universityLogo={course.universityLogo}
                     universityName={course.universityName}
@@ -370,22 +367,7 @@ const FinishingSchool = () => {
               </div>
             )}
 
-            {/* CTA Section */}
-            <div className="bg-gradient-to-r from-[#0F4C5C] to-[#0D9488] rounded-3xl p-8 md:p-12 text-center text-white">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                Can't find what you're looking for?
-              </h2>
-              <p className="text-white/80 mb-6 max-w-2xl mx-auto">
-                Our counselors can help you find the perfect program based on your career goals and background.
-                Schedule a free consultation today.
-              </p>
-              <Button
-                onClick={() => navigate("/career-counselling")}
-                className="bg-white text-[#0F4C5C] hover:bg-white/90 rounded-full px-8 py-3 font-medium"
-              >
-                Book Free Consultation
-              </Button>
-            </div>
+
           </div>
         </section>
       </GridBackground>
