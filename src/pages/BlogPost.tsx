@@ -147,11 +147,11 @@ const BlogPost = () => {
 
         {/* Featured Image */}
         <div className="mb-8">
-          <div className="rounded-xl overflow-hidden">
+          <div className="rounded-xl overflow-hidden w-[840px] h-[462px] flex items-center justify-center">
             <img
               src={blogPost.coverImage}
               alt={blogPost.title}
-              className="w-full h-auto object-cover"
+              className="max-w-full max-h-full object-contain"
             />
           </div>
         </div>
