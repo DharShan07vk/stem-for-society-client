@@ -106,11 +106,12 @@ const HeroSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 max-w-7xl mx-auto">
           {stats.map((stat, index) => {
             const isMiddleCard = index === 1;
-            return (
-              <Card
-                key={index}
-                className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 transition-transform duration-300 transform-gpu hover:scale-105 hover:z-10 backdrop-blur-sm min-h-[200px] sm:min-h-56 ${isMiddleCard ? 'border-[#0389FF] bg-[#1288ef40]' : 'border-black/60'} ${index === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}
-                style={{ willChange: 'transform' }}>
+            const isThirdCard = index === 2;
+            
+            const cardElement = (
+                <Card
+                  className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl border-2 transition-transform duration-300 transform-gpu hover:scale-105 hover:z-10 backdrop-blur-sm h-full ${isMiddleCard ? 'border-[#0389FF] bg-[#1288ef40]' : 'border-black/60'} ${isThirdCard ? 'sm:col-span-2 lg:col-span-1 cursor-pointer' : ''}`}
+                  style={{ willChange: 'transform' }}>
                 <CardContent className="p-0 h-full flex flex-col justify-between">
                   <div className="flex items-center mb-2 sm:mb-3">
                     <Badge className={`rounded-full px-2 sm:px-3 py-1 text-xs sm:text-sm border-2 ${isMiddleCard ? 'border-white/60 bg-white/20 text-black' : 'border-black/60 text-black'}`}>
@@ -142,6 +143,16 @@ const HeroSection = () => {
 
                 </CardContent>
               </Card>
+            );
+            
+            return isThirdCard ? (
+              <Link key={index} to="/courses" className="block h-full min-h-[200px] sm:min-h-56">
+                {cardElement}
+              </Link>
+            ) : (
+              <div key={index} className="h-full min-h-[200px] sm:min-h-56">
+                {cardElement}
+              </div>
             );
           })}
         </div>

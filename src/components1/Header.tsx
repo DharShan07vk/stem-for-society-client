@@ -28,14 +28,18 @@ const Header = () => {
 
   return (
     <header className="relative shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-7xl  mx-auto px-4 sm:px-6 relative z-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <img 
-              src="/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png" 
+              src="/lovable-uploads/ceabc523-dba1-475b-b670-7ed6b88782a1.png" 
               alt="STEM for Society Logo" 
-              className="h-15 w-15 mt-7"
+              className="h-[67px] w-[67px]"
+              style={{ 
+                imageRendering: 'crisp-edges',
+                filter: 'brightness(0) saturate(100%) invert(39%) sepia(89%) saturate(2184%) hue-rotate(195deg) brightness(96%) contrast(101%)'
+              }}
             />
           </Link>
 
