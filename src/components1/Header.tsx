@@ -35,7 +35,7 @@ const Header = () => {
             <img 
               src="/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png" 
               alt="STEM for Society Logo" 
-              className="h-12 w-12"
+              className="h-15 w-15 mt-7"
             />
           </Link>
 
@@ -59,10 +59,10 @@ const Header = () => {
                 <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
                   <MenubarItem asChild>
                     <Link 
-                      to="/courses" 
+                      to="/" 
                       className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
                     >
-                      Courses
+                      Skill Development
                     </Link>
                   </MenubarItem>
                   <div className="my-1 border-t border-gray-100" />
@@ -93,39 +93,23 @@ const Header = () => {
   </MenubarTrigger>
 
   <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
-    <MenubarItem asChild>
-      <Link 
-        to="/mental-wellbeing" 
-        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-      >
-        Mental WellBeing
-      </Link>
-    </MenubarItem>
 
-    <MenubarItem asChild>
-      <Link 
-        to="/career-counselling" 
-        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-      >
-        Career Counselling
-      </Link>
-    </MenubarItem>
-
-    <MenubarItem asChild>
-      <Link 
-        to="/institution-pricing" 
-        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
-      >
-        Institution Plan & Pricing
-      </Link>
-    </MenubarItem>
     <div className="my-1 border-t border-gray-100" />
     <MenubarItem asChild>
       <Link 
-        to="/insituion-individual" 
+        to="/insituion-individual?mode=individual" 
         className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
       >
-        Individual/Institustional
+        Individual
+      </Link>
+    </MenubarItem>
+
+    <MenubarItem asChild>
+      <Link 
+        to="/insituion-individual?mode=institutional" 
+        className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
+      >
+        Institutional
       </Link>
     </MenubarItem>
   </MenubarContent>
