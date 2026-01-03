@@ -140,22 +140,6 @@ const HeroSection = () => {
                     ))}
                   </div>
 
-                  {stat.title === "Discover Our Courses" && (
-                    <div className="mt-3 sm:mt-4">
-                      <Link to="/courses">
-                       <Button
-  size="sm"
-  className="w-full rounded transition-all duration-300 text-sm sm:text-base py-2 sm:py-2.5"
-  style={{
-    backgroundColor: "#0389FF",
-    color: "white",
-  }}
->
-  Browse Courses
-</Button>
-                      </Link>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             );
