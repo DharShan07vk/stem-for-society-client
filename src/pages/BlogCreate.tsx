@@ -10,7 +10,7 @@ import BlogWrite from "../components/BlogWrite";
 function BlogCreate() {
   return (
     <div className="w-full my-4">
-      <div className="w-[80%] mx-auto flex flex-col">
+      <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 flex flex-col">
         <Link to={"../"}>
           <Button radius={999}>
             <ChevronLeft size={16} />
@@ -18,7 +18,7 @@ function BlogCreate() {
           </Button>
         </Link>
         <div className="mb-10 flex flex-col gap-5">
-          <Title order={2} mt={20}>
+          <Title order={2} className="mt-5 sm:mt-20">
             Write for the Community.
           </Title>
           <BlogStepperProvider>
