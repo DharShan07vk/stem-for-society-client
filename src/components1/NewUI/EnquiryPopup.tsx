@@ -27,7 +27,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 
-type EnquiryMode = "individual" | "institutional";
+export type EnquiryMode = "individual" | "institutional";
 
 type IndividualServiceType = 
   | "career-counselling-full"
