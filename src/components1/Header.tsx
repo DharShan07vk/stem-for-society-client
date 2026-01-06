@@ -232,35 +232,10 @@ const Header = () => {
           <div className="md:hidden py-4 bg-white/95 backdrop-blur-md rounded-3xl mt-2 shadow-xl">
             <div className="space-y-2 px-4">
               <div className="space-y-1">
-                <div className="px-4 py-2 text-sm font-medium text-gray-500">Courses/Trainings</div>
-                <Link 
-                  to="/courses?filter=Seminars%2FWebinar%2FMentorship" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Seminars/Webinar/Mentorship
-                </Link>
-                <Link 
-                  to="/courses?filter=Certificate%20Program" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Certificate Program
-                </Link>
-                <Link 
-                  to="/courses?filter=Corporate%20Training" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Corporate Training
-                </Link>
-                <Link 
-                  to="/courses?filter=Instrumentation%20Hands-on" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Instrumentation Hands-on
-                </Link>
+                <div className="px-4 py-2 text-sm font-medium text-gray-500">Academy</div>
+                <Link to = "/" className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium">
+                Skill Development 
+                </Link >
                 <Link 
                   to="/finishing-school" 
                   className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium"
@@ -269,59 +244,19 @@ const Header = () => {
                   Finishing School
                 </Link>
               </div>
-
-              <div className="space-y-1">
-                <div className="px-4 py-2 text-sm font-medium text-gray-500">Finishing School</div>
-                <Link
-                  to="/courses/finishing-school-bioinformatics"
-                  className="block px-4 py-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <div className="font-medium text-gray-900">Bioinformatics & Genomics & Data science</div>
-                  <div className="text-sm text-gray-500">PG program blending biological research with data analytics.</div>
-                </Link>
-                <Link
-                  to="/courses/finishing-school-genai"
-                  className="block px-4 py-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <div className="font-medium text-gray-900">Gen-AI in Life science & Healthcare</div>
-                  <div className="text-sm text-gray-500">Apply AI technologies to advance life sciences and healthcare.</div>
-                </Link>
-              </div>
               
               <div className="space-y-1">
                 <div className="px-4 py-2 text-sm font-medium text-gray-500">Services</div>
+                
                 <Link 
-                  to="/mental-wellbeing" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Mental WellBeing
-                </Link>
-                <Link 
-                  to="/career-counselling" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Career Counselling
-                </Link>
-                <Link 
-                  to="/institution-pricing" 
-                  className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Institution Plan & Pricing
-                </Link>
-                <Link 
-                  to="/insituion-individual" 
+                  to="/insituion-individual?mode=individual" 
                   className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Individual
                 </Link>
                 <Link 
-                  to="/insituion-individual" 
+                  to="/insituion-individual?mode=institutional" 
                   className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
