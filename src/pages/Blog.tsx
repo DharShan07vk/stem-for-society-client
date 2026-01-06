@@ -107,7 +107,7 @@ const Blog = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
+        <div className="relative overflow-hidden min-h-[180px] md:min-h-[280px]">
           {/* Grid background */}
           <div 
             className="absolute inset-0 opacity-50 pointer-events-none z-0"
@@ -129,9 +129,9 @@ const Blog = () => {
           {/* Content above grid */}
           <div className="relative z-10">
             <Header />
-            <div className="text-center mb-8 pt-4">
+            <div className="text-center mb-8 pt-2">
               <p className="text-base text-gray-600 mb-1">Explore Blogs</p>
-              <h1 className="text-2xl md:text-3xl font-bold text-[#0389FF] relative inline-block">
+              <h1 className="text-2xl md:text-3xl font-bold text-black relative inline-block">
                 <span className="relative">
                   Scientific Communication
                   <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
@@ -182,7 +182,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="relative overflow-hidden" style={{ minHeight: '280px' }}>
+      <div className="relative overflow-hidden min-h-[180px] md:min-h-[280px]">
         {/* Grid background */}
         <div 
           className="absolute inset-0 opacity-50 pointer-events-none z-0"
@@ -232,9 +232,9 @@ const Blog = () => {
           </div>
 
           {/* Page Title */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-2">
             <p className="text-base text-gray-600 mb-1">Explore Blogs</p>
-            <h1 className="text-2xl md:text-3xl font-bold text-[#0389FF] relative inline-block">
+            <h1 className="text-2xl md:text-3xl font-bold  relative inline-block">
               <span className="relative">
                 Scientific Communication
                 <span className="absolute bottom-1 left-0 w-full h-[30%] bg-yellow-300 -z-10"></span>
@@ -245,7 +245,7 @@ const Blog = () => {
       </div>
 
       {/* Description Section */}
-      <div className="w-[832px]  mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Left Content - Description */}
           <div className="lg:col-span-2 space-y-4">
@@ -268,7 +268,7 @@ const Blog = () => {
           {/* Right Content - Info Card */}
           <div className="lg:col-span-1">
             <div className="bg-[#E8F4FD] rounded-xl p-6 text-center">
-              <p className="text-[#0389FF] h-[150px] text-xl">
+              <p className="text-[#0389FF] min-h-[120px] sm:h-[150px] text-lg sm:text-xl">
                 Getting your article published typically takes about a day to get verified
               </p>
               <Link to="/blog-article">
@@ -358,7 +358,7 @@ const Blog = () => {
                       </h3>
 
                       {/* Author and Date */}
-                      <div className="flex items-center space-x-2 text-sm text-gray-500">
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
                         <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center">
                           <span className="text-white text-xs font-medium">
                             {(post.blogAuthor?.name || 'A').charAt(0).toUpperCase()}
@@ -375,11 +375,11 @@ const Blog = () => {
 
             {/* Pagination */}
             {totalItems > 0 && (
-              <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-200">
-                <p className="text-sm text-gray-600">
-                  Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems}
-                </p>
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-8 pt-6 border-t border-gray-200">
+                  <p className="text-sm text-gray-600 mb-3 sm:mb-0">
+                    Showing {startIndex + 1}-{Math.min(endIndex, totalItems)} of {totalItems}
+                  </p>
+                  <div className="flex items-center space-x-2">
                   <Button
                     variant="outline"
                     size="sm"
