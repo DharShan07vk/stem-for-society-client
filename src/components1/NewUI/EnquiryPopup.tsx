@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { X, User, Building2, ChevronLeft, ChevronRight } from "lucide-react";
+import { X, User, Building2, ChevronLeft, ChevronRight, CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components1/ui/calendar";
 import { Button } from "@/components1/ui/button";
 import { Input } from "@/components1/ui/input";
@@ -23,39 +23,67 @@ import { toast } from "react-toastify";
 import { api } from "@/lib/api";
 import { initializeRazorpay } from "@/lib/utils";
 import { RZPY_KEYID } from "@/Constants";
-import { CalendarIcon } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
-export type EnquiryMode = "individual" | "institutional";
 
-// Service options for Individual mode
-const individualServices = [
-  { value: "career-counselling-full", label: "Career Counselling & Guidance (Full)" },
-  { value: "career-counselling-session", label: "Career Counselling (Single Session)" },
-  { value: "mental-wellbeing", label: "Mental Well-being" },
-  { value: "cv-resume-prep", label: "CV/Resume Preparation" },
-  { value: "sop-lor-editing", label: "SOP/LOR Editing & Preparation" },
-  { value: "research-proposal", label: "Research Proposal Editing" },
-  { value: "pg-phd-application", label: "PG/PhD Abroad Application Guidance" },
-];
+type EnquiryMode = "individual" | "institutional";
 
-// Service options for Institutional mode
-const institutionalServices = [
-  { value: "comprehensive-package", label: "Comprehensive Package (Recommended)" },
-  { value: "career-counselling", label: "Career Counselling and Guidance" },
-  { value: "entrepreneurship", label: "Entrepreneurship" },
-  { value: "personality-development", label: "Attitude and Personality Development" },
-  { value: "mental-wellbeing", label: "Mental Well-being" },
-  { value: "digital-wellness", label: "Digital Wellness & Social Media Awareness" },
-  { value: "sex-education", label: "Sex Education" },
-  { value: "single-theme", label: "Single-Theme Program" },
-];
+type IndividualServiceType = 
+  | "career-counselling-full"
+  | "career-counselling-session"
+  | "mental-wellbeing"
+  | "cv-resume-prep"
+  | "sop-lor-editing"
+  | "research-proposal"
+  | "pg-phd-application";
 
-interface EnquiryPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  mode: EnquiryMode;
-  preSelectedService?: string;
+type InstitutionalServiceType =
+  | "comprehensive-package"
+  | "career-counselling"
+  | "entrepreneurship"
+  | "personality-development"
+  | "mental-wellbeing"
+  | "digital-wellness"
+  | "sex-education"
+  | "single-theme";
+
+type ServiceType = IndividualServiceType | InstitutionalServiceType;
+
+interface EnquiryBackendPayload {
+  type: EnquiryMode;
+  name: string;
+  mobile: string;
+  email: string;
+  serviceInterest: ServiceType;
+  selectedDate: string | null; // YYYY-MM-DD format
+  selectedTime: string | null;
+  
+  // Combined fields (used differently based on type)
+  OrganizationName?: string; // Individual org name OR Institution name (matches backend field name exactly)
+  designation?: string; // Individual profession OR Institutional designation
+  requirements?: string; // Institutional requirements
+  concerns?: string; // Individual concerns
+  
+  amount: number; // in paise
 }
+
+interface CreatePaymentResponse {
+  orderId: string;
+  amount: number;
+}
+
+interface GenericError {
+  error: string;
+  message: string;
+}
+
+interface GenericResponse<T> {
+  data: T;
+  message: string;
+  success: boolean;
+}
+
 
 interface FormData {
   // Common fields
@@ -82,7 +110,108 @@ interface FormData {
   requirements: string;
 }
 
+
+interface EnquiryPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mode: EnquiryMode;
+  preSelectedService?: string;
+}
+
+const individualServices = [
+  { value: "career-counselling-full", label: "Career Counselling & Guidance (Full)" },
+  { value: "career-counselling-session", label: "Career Counselling (Single Session)" },
+  { value: "mental-wellbeing", label: "Mental Well-being" },
+  { value: "cv-resume-prep", label: "CV/Resume Preparation" },
+  { value: "sop-lor-editing", label: "SOP/LOR Editing & Preparation" },
+  { value: "research-proposal", label: "Research Proposal Editing" },
+  { value: "pg-phd-application", label: "PG/PhD Abroad Application Guidance" },
+];
+
+const institutionalServices = [
+  { value: "comprehensive-package", label: "Comprehensive Package (Recommended)" },
+  { value: "career-counselling", label: "Career Counselling and Guidance" },
+  { value: "entrepreneurship", label: "Entrepreneurship" },
+  { value: "personality-development", label: "Attitude and Personality Development" },
+  { value: "mental-wellbeing", label: "Mental Well-being" },
+  { value: "digital-wellness", label: "Digital Wellness & Social Media Awareness" },
+  { value: "sex-education", label: "Sex Education" },
+  { value: "single-theme", label: "Single-Theme Program" },
+];
+
+// ============================================================================
+// CUSTOM HOOKS
+// ============================================================================
+
+function useSubmitEnquiry() {
+  return useMutation<
+    GenericResponse<CreatePaymentResponse>,
+    AxiosError<GenericError>,
+    EnquiryBackendPayload,
+    unknown
+  >({
+    mutationFn: async (data) => {
+      console.log(" Sending enquiry to backend:", data);
+      const response = await api().post("/enquiry/ind_inst", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    },
+    onError: (err) => {
+      console.error(" Enquiry submission error:", err);
+      const errorMsg = err.response?.data?.message || "Failed to submit enquiry";
+      toast.error(errorMsg);
+    },
+  });
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+
+const formatDateForComparison = (date: Date): string => {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+
+const mapFormDataToBackend = (formData: FormData, mode: EnquiryMode, amount: number): EnquiryBackendPayload => {
+  const basePayload: EnquiryBackendPayload = {
+    type: mode,
+    name: formData.fullName,
+    mobile: formData.contactNumber,
+    email: formData.email,
+    serviceInterest: formData.serviceInterest as ServiceType,
+    selectedDate: formData.preferredDate ? formatDateForComparison(formData.preferredDate) : null,
+    selectedTime: formData.selectedTime || null,
+    amount,
+  };
+
+  // Add mode-specific fields (matches backend schema exactly)
+  if (mode === "individual") {
+    return {
+      ...basePayload,
+      OrganizationName: formData.instituteOrOrganization || undefined,
+      designation: formData.profession || undefined, // profession → designation
+      concerns: formData.concern || undefined,
+    };
+  } else {
+    // institutional mode
+    return {
+      ...basePayload,
+      OrganizationName: formData.instituteOrOrganization || undefined,
+      designation: formData.designation || undefined,
+      requirements: formData.requirements || undefined,
+    };
+  }
+};
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
 const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopupProps) => {
+  // ========== STATE ==========
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     contactNumber: "",
@@ -103,11 +232,13 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
     requirements: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  
+  // ========== MUTATIONS ==========
+  const { mutateAsync: submitEnquiry, isPending: isSubmitting } = useSubmitEnquiry();
 
+  // ========== CONSTANTS ==========
   const availableTimes = [
     "10:30 AM",
     "11:30 AM",
@@ -117,14 +248,13 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
     "5:30 PM",
   ];
 
-  // Update service interest when preSelectedService changes
+  // ========== EFFECTS ==========
   useEffect(() => {
     if (preSelectedService) {
       setFormData(prev => ({ ...prev, serviceInterest: preSelectedService }));
     }
   }, [preSelectedService]);
 
-  // Reset form when popup opens
   useEffect(() => {
     if (isOpen) {
       setFormData(prev => ({
@@ -138,8 +268,9 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
     }
   }, [isOpen, preSelectedService]);
 
-  const formatDateForComparison = (date: Date) => {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  // ========== HANDLERS ==========
+  const handleInputChange = (field: keyof FormData, value: string | Date | undefined) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleDateSelect = (date: Date) => {
@@ -156,30 +287,34 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
     setCurrentMonth(new Date(date.getFullYear(), date.getMonth()));
   };
 
-  const generateAvailableDates = () => {
-    const dates = [] as { value: string; label: string }[];
-    const today = new Date();
-    const oneMonthFromToday = new Date(today);
-    oneMonthFromToday.setMonth(today.getMonth() + 1);
-
-    for (let i = 0; i < 30; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      if (date <= oneMonthFromToday) {
-        dates.push({
-          value: formatDateForComparison(date),
-          label: date.toLocaleDateString("en-US", {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          }),
-        });
+  // ========== VALIDATION ==========
+  const validateForm = (): boolean => {
+    const requiredFields = mode === "individual" 
+      ? ["fullName", "contactNumber", "email", "serviceInterest"]
+      : ["designation", "instituteName", "contactNumber", "email", "serviceInterest"];
+    
+    for (const field of requiredFields) {
+      if (!formData[field as keyof FormData]) {
+        toast.error(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
+        return false;
       }
     }
 
-    return dates;
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+
+    // Phone validation
+    const phoneRegex = /^[+]?[\d\s-]{10,}$/;
+    if (!phoneRegex.test(formData.contactNumber)) {
+      toast.error("Please enter a valid contact number (minimum 10 digits)");
+      return false;
+    }
+
+    return true;
   };
 
   const isTimeSlotPast = (timeSlot: string) => {
@@ -208,103 +343,88 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
     return slot <= currentWithBuffer;
   };
 
-  const handleInputChange = (field: keyof FormData, value: string | Date | undefined) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  // ========== DATA GENERATION ==========
+  const generateAvailableDates = () => {
+    const dates = [] as { value: string; label: string }[];
+    const today = new Date();
+    const oneMonthFromToday = new Date(today);
+    oneMonthFromToday.setMonth(today.getMonth() + 1);
 
-  const validateForm = (): boolean => {
-    const requiredFields = mode === "individual" 
-      ? ["fullName", "contactNumber", "email", "serviceInterest"]
-      : ["designation", "instituteName", "contactNumber", "email", "serviceInterest"];
-    
-    for (const field of requiredFields) {
-      if (!formData[field as keyof FormData]) {
-        toast.error(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
-        return false;
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+
+      if (date <= oneMonthFromToday) {
+        dates.push({
+          value: formatDateForComparison(date),
+          label: date.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+        });
       }
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error("Please enter a valid email address");
-      return false;
-    }
-
-    // Phone validation
-    const phoneRegex = /^[+]?[\d\s-]{10,}$/;
-    if (!phoneRegex.test(formData.contactNumber)) {
-      toast.error("Please enter a valid contact number");
-      return false;
-    }
-
-    return true;
+    return dates;
   };
 
-  const handlePayment = async () => {
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-
+  // ========== PAYMENT & SUBMISSION ==========
+  const handlePayment = useCallback(async () => {
     try {
-      // Send enquiry data to backend with mode (individual/institutional)
-      const amount = mode === "individual" ? 300000 : 3000000; // in paise
-      try {
-        const payload = {
-          type : mode,
-          name: formData.fullName,
-          mobile: formData.contactNumber,
-          email: formData.email,
-          serviceInterest: formData.serviceInterest,
-          selectedDate: formData.preferredDate ? formData.preferredDate.toISOString().split('T')[0] : null,
-          selectedTime: formData.selectedTime,
-          
-          OrganizationName: formData.instituteOrOrganization,
-          concerns: formData.concern,
-          designation: formData.designation,
-          requirements: formData.requirements,
-          amount : amount,
-        };
-
-        const order = await api().post("/enquiry/ind_inst", payload,
-        );
-        console.log("Enquiry sent successfully:", order);
-      } catch (err) {
-        // Non-fatal: log and continue to payment flow
-        console.error("Failed to send enquiry to backend:", err);
-      }
-
-      const res = await initializeRazorpay();
-      if (!res) {
-        toast.error("Razorpay SDK failed to load");
-        setIsSubmitting(false);
+      if (!validateForm()) {
         return;
       }
 
-      
+      const amount = mode === "individual" ? 300000 : 3000000; // in paise
+
+      // Map frontend form data to backend payload
+      const backendPayload = mapFormDataToBackend(formData, mode, amount);
+
+      console.log("📤 Submitting to backend:", backendPayload);
+
+      // Submit enquiry to backend
+      const response = await submitEnquiry(backendPayload);
+
+      if (!response || !response.data) {
+        toast.error("Failed to create payment order");
+        return;
+      }
+
+      const order = response.data;
+      console.log(" Enquiry submitted, order created:", order);
+
+      // Initialize Razorpay
+      const rzrpyInit = await initializeRazorpay();
+      if (!rzrpyInit) {
+        toast.error("Razorpay SDK failed to load");
+        return;
+      }
 
       const options = {
         key: RZPY_KEYID,
-        amount: amount,
+        amount: Number(order.amount) * 100,
         currency: "INR",
         name: "STEM for Society",
         description: mode === "individual" ? "Individual Enquiry" : "Institutional Enquiry",
-        handler: function (response: { razorpay_payment_id: string }) {
-          console.log("Payment successful:", response);
-          toast.success("Payment successful! We will contact you shortly.");
-          onClose();
-        },
+        order_id: order.orderId,
         prefill: {
-          name: formData.fullName || formData.designation,
+          name: formData.fullName,
           email: formData.email,
           contact: formData.contactNumber,
         },
         theme: {
           color: "#0389FF",
         },
+        handler: function (response: { razorpay_payment_id: string }) {
+          console.log("✅ Payment successful:", response);
+          toast.success("Payment successful! We will contact you shortly.");
+          onClose();
+        },
         modal: {
           ondismiss: function () {
-            setIsSubmitting(false);
+            console.log("⚠️ Payment cancelled by user");
           },
         },
       };
@@ -312,12 +432,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
       const paymentObject = new (window as any).Razorpay(options);
       paymentObject.open();
     } catch (error) {
-      console.error("Payment error:", error);
-      toast.error("Payment initialization failed");
-    } finally {
-      setIsSubmitting(false);
+      console.error("❌ Payment error:", error);
+      toast.error("Failed to process payment. Please try again.");
     }
-  };
+  }, [formData, mode, submitEnquiry]);
 
   if (!isOpen) return null;
 
@@ -1027,11 +1145,11 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
         </div>
 
         {/* Footer with Submit Button */}
-        <div className="sticky bottom-0 bg-white px-6 py-4 border-t border-gray-100">
+        <div className="sticky bottom-0 z-20 bg-white px-6 py-4 border-t border-gray-100">
           <Button
             onClick={handlePayment}
             disabled={isSubmitting}
-            className="w-full h-14 bg-[#0389FF] hover:bg-[#0389FF]/90 text-white rounded-xl font-semibold text-base shadow-lg shadow-blue-200 transition-all"
+            className=" z-50 w-full h-14 bg-[#0389FF] hover:bg-[#0389FF]/90 text-white rounded-xl font-semibold text-base shadow-lg shadow-blue-200 transition-all"
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">
