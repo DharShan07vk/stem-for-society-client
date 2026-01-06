@@ -20,6 +20,7 @@ import {
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "react-toastify";
+import { api } from "@/lib/api";
 import { initializeRazorpay } from "@/lib/utils";
 import { RZPY_KEYID } from "@/Constants";
 import { CalendarIcon } from "lucide-react";
@@ -246,6 +247,35 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
     setIsSubmitting(true);
 
     try {
+      // Send enquiry data to backend with mode (individual/institutional)
+      try {
+        const payload = {
+          mode,
+          fullName: formData.fullName,
+          contactNumber: formData.contactNumber,
+          email: formData.email,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          serviceInterest: formData.serviceInterest,
+          preferredDate: formData.preferredDate ? formData.preferredDate.toISOString() : null,
+          selectedTime: formData.selectedTime,
+          gender: formData.gender,
+          profession: formData.profession,
+          instituteOrOrganization: formData.instituteOrOrganization,
+          concern: formData.concern,
+          designation: formData.designation,
+          department: formData.department,
+          instituteName: formData.instituteName,
+          requirements: formData.requirements,
+        };
+
+        await api().post("/enquiry", payload);
+      } catch (err) {
+        // Non-fatal: log and continue to payment flow
+        console.error("Failed to send enquiry to backend:", err);
+      }
+
       const res = await initializeRazorpay();
       if (!res) {
         toast.error("Razorpay SDK failed to load");
