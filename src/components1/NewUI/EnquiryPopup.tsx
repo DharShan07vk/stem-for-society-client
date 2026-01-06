@@ -404,7 +404,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
 
       const options = {
         key: RZPY_KEYID,
-        amount: Number(order.amount) * 100,
+        amount: Number(order.amount),
         currency: "INR",
         name: "STEM for Society",
         description: mode === "individual" ? "Individual Enquiry" : "Institutional Enquiry",
@@ -418,13 +418,13 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
           color: "#0389FF",
         },
         handler: function (response: { razorpay_payment_id: string }) {
-          console.log("✅ Payment successful:", response);
+          console.log(" Payment successful:", response);
           toast.success("Payment successful! We will contact you shortly.");
           onClose();
         },
         modal: {
           ondismiss: function () {
-            console.log("⚠️ Payment cancelled by user");
+            console.log(" Payment cancelled by user");
           },
         },
       };
@@ -432,7 +432,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
       const paymentObject = new (window as any).Razorpay(options);
       paymentObject.open();
     } catch (error) {
-      console.error("❌ Payment error:", error);
+      console.error(" Payment error:", error);
       toast.error("Failed to process payment. Please try again.");
     }
   }, [formData, mode, submitEnquiry]);
