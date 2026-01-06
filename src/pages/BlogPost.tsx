@@ -69,7 +69,7 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header Section with Grid Background */}
-      <div className="relative overflow-hidden" style={{ minHeight: '120px' }}>
+      <div className="relative overflow-hidden min-h-[120px] md:min-h-[180px]">
         {/* Grid background */}
         <div 
           className="absolute inset-0 opacity-50 pointer-events-none z-0"
@@ -135,7 +135,7 @@ const BlogPost = () => {
         </h1>
 
         {/* Author Info */}
-        <div className="flex items-center space-x-3 mb-6">
+        <div className="flex flex-wrap items-center gap-2 mb-6">
           <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-white text-sm font-medium">
               {(blogPost.blogAuthor?.name || 'A').charAt(0).toUpperCase()}
@@ -147,11 +147,11 @@ const BlogPost = () => {
 
         {/* Featured Image */}
         <div className="mb-8">
-          <div className="rounded-xl overflow-hidden w-[840px] h-[462px] flex items-center justify-center">
+          <div className="rounded-xl overflow-hidden w-full h-auto max-h-[60vh] flex items-center justify-center">
             <img
               src={blogPost.coverImage}
               alt={blogPost.title}
-              className="max-w-full max-h-full object-contain"
+              className="w-full h-auto object-cover"
             />
           </div>
         </div>
