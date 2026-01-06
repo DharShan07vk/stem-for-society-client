@@ -212,7 +212,7 @@ const Blog = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center space-x-2 bg-[#0389FF] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
+                  className="flex items-center space-x-2 bg-[#00549FB8] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   <span>Back</span>
@@ -223,7 +223,7 @@ const Blog = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleShare}
-                className="flex items-center space-x-2 bg-[#0389FF] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
+                className="flex items-center space-x-2 bg-[#00549FB8] text-white border-[#0389FF] rounded-full px-4 hover:bg-[#0389FF]/90"
               >
                 <Share2 className="h-4 w-4" />
                 <span>Share</span>
