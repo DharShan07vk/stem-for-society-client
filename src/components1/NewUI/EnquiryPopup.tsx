@@ -248,29 +248,27 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
 
     try {
       // Send enquiry data to backend with mode (individual/institutional)
+      const amount = mode === "individual" ? 300000 : 3000000; // in paise
       try {
         const payload = {
-          mode,
-          fullName: formData.fullName,
-          contactNumber: formData.contactNumber,
+          type : mode,
+          name: formData.fullName,
+          mobile: formData.contactNumber,
           email: formData.email,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
           serviceInterest: formData.serviceInterest,
-          preferredDate: formData.preferredDate ? formData.preferredDate.toISOString() : null,
+          selectedDate: formData.preferredDate ? formData.preferredDate.toISOString().split('T')[0] : null,
           selectedTime: formData.selectedTime,
-          gender: formData.gender,
-          profession: formData.profession,
-          instituteOrOrganization: formData.instituteOrOrganization,
-          concern: formData.concern,
+          
+          OrganizationName: formData.instituteOrOrganization,
+          concerns: formData.concern,
           designation: formData.designation,
-          department: formData.department,
-          instituteName: formData.instituteName,
           requirements: formData.requirements,
+          amount : amount,
         };
 
-        await api().post("/enquiry", payload);
+        const order = await api().post("/enquiry/ind_inst", payload,
+        );
+        console.log("Enquiry sent successfully:", order);
       } catch (err) {
         // Non-fatal: log and continue to payment flow
         console.error("Failed to send enquiry to backend:", err);
@@ -283,8 +281,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
         return;
       }
 
-      // Calculate amount based on service
-      const amount = mode === "individual" ? 300000 : 3000000; // in paise
+      
 
       const options = {
         key: RZPY_KEYID,
@@ -329,7 +326,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
 
   // Use Portal to render popup at root level to avoid stacking context issues
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop - non-clickable */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
@@ -362,7 +359,12 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
         </div>
 
         {/* Form Content */}
-        <div className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+        <div className="px-6 py-6 overflow-y-auto max-h-[calc(90vh-200px)]"
+             style={{
+               position: 'relative',
+               zIndex: 1,
+             }}
+        >
           {mode === "individual" ? (
             // Individual Form (aligned rows + calendar/time)
             <div className="space-y-6">
@@ -386,10 +388,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                     value={formData.gender}
                     onValueChange={(value) => handleInputChange("gender", value)}
                   >
-                    <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                    <SelectTrigger className="h-12 rounded-xl border-slate-200 relative z-[100]">
                       <SelectValue placeholder="Select" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[9999]">
                       <SelectItem value="male">Male</SelectItem>
                       <SelectItem value="female">Female</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
@@ -416,10 +418,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                     value={formData.profession}
                     onValueChange={(value) => handleInputChange("profession", value)}
                   >
-                    <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                    <SelectTrigger className="h-12 rounded-xl border-slate-200 relative z-[100]">
                       <SelectValue placeholder="Student / Professional" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="z-[9999]">
                       <SelectItem value="student">Student</SelectItem>
                       <SelectItem value="professional">Professional</SelectItem>
                       <SelectItem value="fresher">Fresher</SelectItem>
@@ -449,7 +451,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                   </label>
                   <Input
                     type="email"
-                    placeholder="jane@example.com"
+                    placeholder="sfs@example.com"
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     className="h-12 rounded-xl border-slate-200"
@@ -499,10 +501,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                   value={formData.serviceInterest}
                   onValueChange={(value) => handleInputChange("serviceInterest", value)}
                 >
-                  <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                  <SelectTrigger className="h-12 rounded-xl border-slate-200 relative z-[100]">
                     <SelectValue placeholder="Select service" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[9999]">
                     {services.map((service) => (
                       <SelectItem key={service.value} value={service.value}>
                         {service.label}
@@ -601,10 +603,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                       value={selectedDate ? formatDateForComparison(selectedDate) : ""}
                       onValueChange={handleDropdownDateSelect}
                     >
-                      <SelectTrigger className="w-full h-12 bg-slate-50 border border-slate-200 rounded-lg">
+                      <SelectTrigger className="w-full h-12 bg-slate-50 border border-slate-200 rounded-lg relative z-[100]">
                         <SelectValue placeholder="Select Date" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="z-[9999]">
                         {generateAvailableDates().map((date) => (
                           <SelectItem key={date.value} value={date.value}>
                             {date.label}
@@ -719,8 +721,8 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                 </label>
                 <Input
                   placeholder="Lincoln High School"
-                  value={formData.instituteName}
-                  onChange={(e) => handleInputChange("instituteName", e.target.value)}
+                  value={formData.instituteOrOrganization}
+                  onChange={(e) => handleInputChange("instituteOrOrganization", e.target.value)}
                   className="h-12 rounded-xl border-slate-200"
                 />
               </div>
@@ -776,8 +778,8 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                   </label>
                   <Input
                     placeholder="Lincoln High School"
-                    value={formData.instituteName}
-                    onChange={(e) => handleInputChange("instituteName", e.target.value)}
+                    value={formData.instituteOrOrganization}
+                    onChange={(e) => handleInputChange("instituteOrOrganization", e.target.value)}
                     className="h-12 rounded-xl border-slate-200"
                   />
                 </div>
@@ -863,10 +865,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                   value={formData.serviceInterest}
                   onValueChange={(value) => handleInputChange("serviceInterest", value)}
                 >
-                  <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                  <SelectTrigger className="h-12 rounded-xl border-slate-200 relative z-[100]">
                     <SelectValue placeholder="Select program" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="z-[9999]">
                     {services.map((service) => (
                       <SelectItem key={service.value} value={service.value}>
                         {service.label}
@@ -965,10 +967,10 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
                       value={selectedDate ? formatDateForComparison(selectedDate) : ""}
                       onValueChange={handleDropdownDateSelect}
                     >
-                      <SelectTrigger className="w-full h-12 bg-slate-50 border border-slate-200 rounded-lg">
+                      <SelectTrigger className="w-full h-12 bg-slate-50 border border-slate-200 rounded-lg relative z-[100]">
                         <SelectValue placeholder="Select Date" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="z-[9999]">
                         {generateAvailableDates().map((date) => (
                           <SelectItem key={date.value} value={date.value}>
                             {date.label}
