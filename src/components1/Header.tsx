@@ -35,7 +35,7 @@ const Header = () => {
             <img 
               src="/lovable-uploads/ceabc523-dba1-475b-b670-7ed6b88782a1.png" 
               alt="STEM for Society Logo" 
-              className="h-[67px] w-[67px]"
+              className="h-[67px] w-[67px] pt-2"
               style={{ 
                 imageRendering: 'crisp-edges',
                 filter: 'brightness(0) saturate(100%) invert(39%) sepia(89%) saturate(2184%) hue-rotate(195deg) brightness(96%) contrast(101%)'
