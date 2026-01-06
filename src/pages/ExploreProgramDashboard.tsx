@@ -11,20 +11,15 @@ const ExploreProgramDashboard = () => {
       category: "Students (UG/PG/PhD), Job Seekers",
       title: "Career Counselling",
       description: "Get expert guidance to plan your academic and professional journey with confidence.",
-      route: "/career-counselling"
+      route: "/insituion-individual?mode=individual"
     },
     {
       category: "Students, Researchers, Young Professionals",
       title: "Mental Wellbeings Counselling",
       description: "Access personalized mental wellness support to thrive in both studies and life.",
-      route: "/mental-wellbeing"
+      route: "/insituion-individual?mode=individual"
     },
-    {
-      category: "Institution Faculty, Educators, Trainers",
-      title: "Institution Faculty Development",
-      description: "Empowering educators through curated training, upskilling, and teaching innovation.",
-      route: "/institution-pricing"
-    },
+   
     {
       category: "College Students, Campus Leaders",
       title: "Ambassador Program",
@@ -32,7 +27,7 @@ const ExploreProgramDashboard = () => {
       route: "/campus-ambassador"
     }
   ];
-
+  
   const handleServiceClick = (route: string) => {
     navigate(route);
   };
