@@ -63,7 +63,7 @@ const Header = () => {
                 <MenubarContent className="bg-white backdrop-blur-md shadow-xl rounded-3xl p-3 min-w-[240px] z-50 mt-2 border-0">
                   <MenubarItem asChild>
                     <Link 
-                      to="/" 
+                      to="/skill-development" 
                       className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
                     >
                       Skill Development
@@ -233,9 +233,9 @@ const Header = () => {
             <div className="space-y-2 px-4">
               <div className="space-y-1">
                 <div className="px-4 py-2 text-sm font-medium text-gray-500">Academy</div>
-                <Link to = "/" className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium">
-                Skill Development 
-                </Link >
+                <Link to="/skill-development" className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
+                Skill Development
+                </Link>
                 <Link 
                   to="/finishing-school" 
                   className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium"

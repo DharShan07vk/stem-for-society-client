@@ -75,6 +75,7 @@ import InstitutionBookingFlow from "./pages/InstitutionBookingFlow";
 import InstitutionOrIndividual from "./pages/InstitutionOrIndividual";
 import FinishingSchool from "./pages/FinishingSchool";
 import FinishingSchoolDetail from "./pages/FinishingSchoolDetail";
+import SkillDevelopment from "./pages/SkillDevelopment";
 
 function AppLayout() {
   return (
@@ -121,6 +122,7 @@ function App() {
                 <Route path="/partner-signin" element={<InstitutionLogin />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/course-detail/:id" element={<CourseDetail />} />
+                <Route path="/skill-development" element={<SkillDevelopment />} />
                 <Route path="/finishing-school" element={<FinishingSchool />} />
                 <Route path="/finishing-school-detail/:courseId" element={<FinishingSchoolDetail />} />
                 <Route path="/blog" element={<Blog />} />
