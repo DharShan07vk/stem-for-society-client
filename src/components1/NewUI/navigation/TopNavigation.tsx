@@ -32,15 +32,15 @@ export const TopNavigation = ({ mode, setMode }: TopNavigationProps) => {
         </button>
         <button
           role="tab"
-          aria-selected={mode === "institutional"}
-          onClick={() => setMode("institutional")}
+          aria-selected={mode === "institution"}
+          onClick={() => setMode("institution")}
           className={`relative text-sm font-medium flex items-center gap-2 px-4 py-2 rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 z-10 ${
-            mode === "institutional"
+            mode === "institution"
               ? "text-white"
               : "text-slate-500 hover:text-slate-900"
           }`}
         >
-          {mode === "institutional" && (
+          {mode === "institution" && (
             <div className="absolute inset-0 bg-slate-900 rounded-full shadow-md -z-10" style={{ opacity: 1 }} />
           )}
           <Building2 className="w-4 h-4 relative z-10" aria-hidden="true" />

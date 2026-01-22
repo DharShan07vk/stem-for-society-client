@@ -291,10 +291,11 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
   const validateForm = (): boolean => {
     const requiredFields = mode === "individual" 
       ? ["fullName", "contactNumber", "email", "serviceInterest"]
-      : ["designation", "instituteName", "contactNumber", "email", "serviceInterest"];
+      : ["designation", "instituteOrOrganization", "contactNumber", "email", "serviceInterest"];
     
     for (const field of requiredFields) {
       if (!formData[field as keyof FormData]) {
+        console.log(field);
         toast.error(`Please fill in ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`);
         return false;
       }

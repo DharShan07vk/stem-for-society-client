@@ -24,7 +24,7 @@ import InstitutionalCTA from "@/components1/NewUI/institutional/InstitutionalCTA
 // Enquiry Popup
 import EnquiryPopup, { EnquiryMode } from "@/components1/NewUI/EnquiryPopup";
 
-export type Mode = "individual" | "institutional";
+export type Mode = "individual" | "institution";
 
 // Context for enquiry popup
 interface EnquiryContextType {
@@ -43,7 +43,7 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const modeParam = searchParams.get("mode");
-  const mode: Mode = (modeParam === "institutional" || modeParam === "individual") 
+  const mode: Mode = (modeParam === "institution" || modeParam === "individual") 
     ? modeParam 
     : "individual";
 
