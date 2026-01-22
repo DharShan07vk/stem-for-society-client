@@ -29,15 +29,15 @@ const Footer = () => {
             <div>
               <h4 className="font-semibold mb-2">PROGRAMS</h4>
               <ul className="space-y-1 text-blue-100">
-                <li><a href="/courses" className="hover:text-white">Explore Courses</a></li>
-                <li><a href="/mental-wellbeing" className="hover:text-white">Psychology counselling</a></li>
+                <li><a href="/skill-development" className="hover:text-white">skill-development</a></li>
+                <li><a href="/mental-wellbeing" className="hover:text-white">Mental Wellbeing</a></li>
                 <li><a href="/career-counselling" className="hover:text-white">Career counselling</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-2">FOR INSTITUTIONS</h4>
               <ul className="space-y-1 text-blue-100">
-                <li><a href="/institution-pricing" className="hover:text-white">Plans and pricings</a></li>
+                <li><a href="/insituion-individual" className="hover:text-white">Plans and pricings</a></li>
                 <li><a href="/campus-ambassador" className="hover:text-white">Campus Ambassador Program</a></li>
               </ul>
             </div>
