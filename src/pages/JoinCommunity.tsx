@@ -1,6 +1,6 @@
 import { Alert } from "@mantine/core";
 import { Link } from "react-router-dom";
-import Footer from "../components/Footer";
+// import Footer from "../components/Footer";
 
 export default function JoinCommunity() {
   return (
@@ -43,7 +43,7 @@ export default function JoinCommunity() {
           />
         </Alert>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
