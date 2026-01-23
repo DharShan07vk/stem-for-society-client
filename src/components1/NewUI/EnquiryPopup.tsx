@@ -27,7 +27,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 
-export type EnquiryMode = "individual" | "institutional";
+export type EnquiryMode = "individual" | "institution";
 
 type IndividualServiceType = 
   | "career-counselling-full"
@@ -378,17 +378,44 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
         return;
       }
 
+      const isSingleThemeSubmission = mode === "institution" && formData.serviceInterest === "single-theme";
+
+      // For single-theme enquiries, don't process payment
+      if (isSingleThemeSubmission) {
+        const amount = 0; // No payment for single-theme
+
+        // Map frontend form data to backend payload
+        const backendPayload = mapFormDataToBackend(formData, mode, amount);
+
+        console.log("📤 Submitting single-theme enquiry to backend (no payment):", backendPayload);
+
+        // Submit enquiry to backend
+        const response = await submitEnquiry(backendPayload);
+
+        if (!response) {
+          toast.error("Failed to submit enquiry");
+          return;
+        }
+
+        console.log(" Single-theme enquiry submitted successfully:", response);
+        toast.success("Thank you for your interest! We will contact you shortly.");
+        onClose();
+        return;
+      }
+
+      // For other enquiries, process payment
       const amount = mode === "individual" ? 300000 : 3000000; // in paise
 
       // Map frontend form data to backend payload
       const backendPayload = mapFormDataToBackend(formData, mode, amount);
 
-      console.log("📤 Submitting to backend:", backendPayload);
+      console.log("📤 Submitting enquiry to backend:", backendPayload);
 
       // Submit enquiry to backend
       const response = await submitEnquiry(backendPayload);
 
       if (!response || !response.data) {
+        
         toast.error("Failed to create payment order");
         return;
       }
@@ -441,7 +468,7 @@ const EnquiryPopup = ({ isOpen, onClose, mode, preSelectedService }: EnquiryPopu
   if (!isOpen) return null;
 
   const services = mode === "individual" ? individualServices : institutionalServices;
-  const isSingleTheme = mode === "institutional" && formData.serviceInterest === "single-theme";
+  const isSingleTheme = mode === "institution" && formData.serviceInterest === "single-theme";
 
   // Use Portal to render popup at root level to avoid stacking context issues
   return createPortal(

@@ -207,7 +207,7 @@ const Login = () => {
                     : "opacity-0 -translate-y-5"
                 } ${isGoogleSigningIn ? 'opacity-30' : ''}`}
               >
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white text-center px-4 leading-tight">
+                <h1 className="text-xl md:text-4xl lg:text-2xl font-bold text-white text-center px-4 leading-tight">
                   Let's Innovate, Incubate and Impact the world together!
                 </h1>
               </div>

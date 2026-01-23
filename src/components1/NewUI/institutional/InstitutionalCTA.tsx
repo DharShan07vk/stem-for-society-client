@@ -45,11 +45,11 @@ export const InstitutionalCTA = () => {
         </div>
       </section>
 
-      {/* Enquiry Popup with institutional mode and calendar/time picker */}
+      {/* Enquiry Popup with institution mode and calendar/time picker */}
       <EnquiryPopup
         isOpen={isEnquiryOpen}
         onClose={closeEnquiry}
-        mode="institutional"
+        mode="institution"
         preSelectedService="single-theme"
       />
     </>
