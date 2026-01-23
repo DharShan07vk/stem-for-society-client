@@ -51,7 +51,6 @@ import RefundPolicy from "./pages/RefundPolicy";
 import SignUp from "./pages/Signup";
 import Training from "./pages/Training";
 import TrainingSpotlight from "./pages/TrainingSpotlight";
-import JoinCommunity from "./pages/JoinCommunity";
 import CareerCounselling from "./pages/CareerCounselling";
 import AdminCareerCounselling from "./pages/admin/AdminCareerCounselling";
 import ExploreProgramDashboard from "./pages/ExploreProgramDashboard";
@@ -115,7 +114,6 @@ function App() {
                 {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/refund-policy" element={<RefundPolicy />} /> */}
                 <Route path = "/insituion-individual" element={<InstitutionOrIndividual />} />
-                <Route path="/join-community" element={<JoinCommunity />} />
                 <Route path="/partner-role" element={<PartnerRole />} />
                 <Route path="/campus-ambassador-signup" element={<CampusAmbassadorSignup />} />
                 <Route path="/partner-institution-signup" element={<InstitutionPortal />} />

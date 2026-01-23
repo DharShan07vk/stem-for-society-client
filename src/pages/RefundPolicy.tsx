@@ -1,4 +1,4 @@
-import Footer from "../components/Footer";
+import Footer from "../components1/Footer";
 
 export default function RefundPolicy() {
   return (
