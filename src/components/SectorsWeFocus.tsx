@@ -18,7 +18,7 @@ const sectors = [
 export default function SectorsWeFocus() {
   return (
     <div className="flex flex-col gap-3 justify-center p-4 my-12">
-      <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800">
+      <h2 className="text-3xl font-semibold text-center mb-8 text-gray-800 font-instrument">
         Sectors we focus
       </h2>
       <div className="grid grid-rows-3 gap-5 lg:gap-8 text-center">

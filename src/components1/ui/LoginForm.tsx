@@ -46,7 +46,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
     <div className="w-full max-w-md">
       {/* Header */}
       <div className="text-center mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-[#202224] mb-2">
+        <h1 className="text-3xl md:text-4xl  text-[#202224] mb-2">
           Login as Student
         </h1>
         <p className="text-[#202224] text-lg">

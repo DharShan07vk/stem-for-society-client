@@ -88,10 +88,10 @@ function AppLayout() {
 }
 
 const theme = createTheme({
-  fontFamily:
-    "apple-system, BlinkMacSystemFont, Inter, Verdana, Segoe UI, Roboto, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji",
-  fontFamilyMonospace: "Monaco, Courier, monospace",
-  headings: { fontFamily: "Greycliff CF, sans-serif" },
+  // Use NPM-provided Poppins font globally
+  fontFamily: "'Poppins', sans-serif",
+  fontFamilyMonospace: "'Poppins', sans-serif",
+  headings: { fontFamily: "'Poppins', sans-serif" },
 });
 
 function App() {

@@ -6,8 +6,8 @@ export default {
 		extend: {},
 		fontFamily: {
 			sans:['Poppins', ...defaultTheme.fontFamily.sans],
-        instrument: ['"Instrument Serif"', 'serif'],
-      },
+			instrument: ['"Instrument Serif"', 'serif'],
+		},
 	},
 	plugins: [],
 }
