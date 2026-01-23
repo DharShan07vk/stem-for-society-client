@@ -13,6 +13,7 @@
     "start": "vite preview --port $PORT"
   },
   "dependencies": {
+    "@fontsource/poppins": "^5.2.7",
     "@gfazioli/mantine-marquee": "^2.0.8",
     "@hookform/resolvers": "^3.9.0",
     "@iconify/react": "^6.0.2",

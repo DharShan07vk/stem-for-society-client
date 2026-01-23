@@ -28,8 +28,8 @@ export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps)
     { id: "faq", label: "FAQ" },
   ];
 
-  const navItems = mode === "institutional" ? institutionNavItems : individualNavItems;
-  const ctaButtonText = mode === "institutional" ? "Partner With Us" : "Get Started";
+  const navItems = mode === "institution" ? institutionNavItems : individualNavItems;
+  const ctaButtonText = mode === "institution" ? "Partner With Us" : "Get Started";
 
   return (
     <>
