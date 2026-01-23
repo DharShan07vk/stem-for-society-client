@@ -21,7 +21,7 @@ const modules = [
     title: "Career Counselling and Guidance",
     subtitle: "FROM CONFUSION TO CLARITY",
     description: "Help students move from confusion to clarity. Provide actionable roadmaps for higher education and careers.",
-    price: "₹20,000",
+    price: "₹30,000",
     keyModules: ["Career Awareness", "Career Readiness", "Career Assessment"],
     gains: [
       "Clarity about streams, specializations, and future study options",
@@ -39,7 +39,7 @@ const modules = [
     title: "Entrepreneurship",
     subtitle: "FROM IDEA TO IMPACT",
     description: "Ignite the entrepreneurial spirit. Learn to find business ideas, pitch like a pro, and master branding and storytelling.",
-    price: "₹20,000",
+    price: "₹30,000",
     keyModules: ["Finding Business Ideas", "Pitching Like a Pro", "Branding & Storytelling", "Entrepreneurial Mindset"],
     gains: [
       "Practical framework for launching ventures",
@@ -57,7 +57,7 @@ const modules = [
     title: "Attitude and Personality Development",
     subtitle: "SHAPE CONFIDENT INDIVIDUALS",
     description: "Shape confident, grounded and emotionally intelligent individuals.",
-    price: "₹20,000",
+    price: "₹30,000",
     keyModules: ["Personality Development", "Critical Thinking", "Team Building", "Communication Skills", "Leadership 101"],
     gains: [
       "Better self-image and interpersonal skills",
@@ -75,7 +75,7 @@ const modules = [
     title: "Mental Well-being",
     subtitle: "FOUNDATION OF SUCCESS",
     description: "Because mental health is foundational to academic success.",
-    price: "₹20,000",
+    price: "₹30,000",
     keyModules: ["Stress and Burnout", "Resilience Building", "Procrastination and Motivation", "Handling Emotions"],
     gains: [
       "Tools for managing exam pressure and academic stress",
@@ -93,7 +93,7 @@ const modules = [
     title: "Digital Wellness & Social Media Awareness",
     subtitle: "MINDFUL TECHNOLOGY USE",
     description: "Help students use technology mindfully instead of being consumed by it.",
-    price: "₹20,000",
+    price: "₹30,000",
     keyModules: ["Digital Detox", "Social Media Awareness"],
     gains: [
       "Awareness of screen addiction and its impact",
@@ -111,7 +111,7 @@ const modules = [
     title: "Sex Education",
     subtitle: "VALUES-SENSITIVE LEARNING",
     description: "Age-appropriate, scientifically accurate, and values-sensitive learning.",
-    price: "₹20,000",
+    price: "₹30,000",
     keyModules: ["Menstrual Hygiene", "Handling Relationships", "Human Development", "Sex Education 101"],
     gains: [
       "Correct information about reproductive health and bodily changes",
