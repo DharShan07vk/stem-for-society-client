@@ -19,7 +19,7 @@ import AdminHome from "./pages/admin/AdminHome";
 import AdminInstitutionRegistrations from "./pages/admin/AdminInstitutionPlan";
 import AdminPartners from "./pages/admin/AdminParnters";
 import AdminPartnerDetails from "./pages/admin/AdminPartnerDetails";
-import AdminPsychology from "./pages/admin/AdminPsychology";
+import AdminIndividual from "./pages/admin/AdminIndividual";
 import AdminSchedules from "./pages/admin/AdminSchedules";
 import AdminSignIn from "./pages/admin/AdminSignIn";
 import AdminStudentDetails from "./pages/admin/AdminStudentDetails";
@@ -162,7 +162,7 @@ function App() {
                   path="applications"
                   element={<AdminApplicationsLayout />}
                 >
-                  <Route index element={<AdminPsychology />} />
+                  <Route index element={<AdminIndividual />} />
                   <Route
                     path="career-counselling"
                     element={<AdminCareerCounselling />}
