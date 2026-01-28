@@ -1,7 +1,7 @@
-import { Alert, Badge, Button, Input, Modal } from "@mantine/core";
+import { Alert, Badge, Button, Input, Modal, Text, Paper, Group } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { Search } from "lucide-react";
+import { Search, Download } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Errorbox from "../../components/Errorbox";
@@ -14,33 +14,28 @@ import {
   GenericResponse,
 } from "../../lib/types";
 import { formatDate, mutationErrorHandler } from "../../lib/utils";
-import LabelAndValue from "../../components/LabelAndValue";
 
 type AdminInsitutionPlans = {
   id: string;
-  addressId: number;
-  schoolName: string;
-  contactName: string;
-  contactMobile: string;
-  contactEmail: string;
-  studentsCount: number | null;
+  name : string,
+  email: string;
+  mobile: string;
+  type:string;
+  designation: string;
+  organizationName: string;
+  requirements: string;
+  concerns: string;
+  serviceInterest: string;
+  createdAt: Date | null;
+  updatedAt: Date | null;
   selectedDate: string;
   selectedTime: string;
-  address: {
-    id: number;
-    addressLine1: string;
-    addressLine2: string | null;
-    city: string;
-    district: string | null;
-    state: string;
-    pincode: string;
-  };
   transactions: {
     id: string;
+    Id : string;
     createdAt: Date | null;
     updatedAt: Date | null;
     plan: "Basics" | "Premium";
-    institutionId: string;
     transactionId: string;
     transaction: EnquiryTransactionType;
   }[];
@@ -71,19 +66,19 @@ export default function AdminInstitutionRegistrations() {
     if (!data) return [];
     return data.data.filter(
       (registration) =>
-        registration.schoolName
+        registration.organizationName
           .toLowerCase()
           .includes(search?.toLowerCase() || "") ||
-        registration.contactName
+        registration.name
           ?.toLowerCase()
           .includes(search?.toLowerCase() || "") ||
-        registration.contactMobile
+        registration.mobile
           .toLowerCase()
           .includes(search?.toLowerCase() || "") ||
-        registration.contactEmail
+        registration.email
           .toLowerCase()
           .includes(search?.toLowerCase() || "") ||
-        registration.address.city
+        registration.designation
           .toLowerCase()
           .includes(search?.toLowerCase() || ""),
     );
@@ -102,19 +97,78 @@ export default function AdminInstitutionRegistrations() {
     return <Errorbox message={error.message} />;
   }
 
+  const exportToCSV = () => {
+    if (!filteredInstitutionRegistrations.length) return;
+    
+    const headers = [
+      "S.No", "Organization", "Name", "Email", "Mobile", "Designation", "Type",
+      "Registered On", "Session Date", "Session Time", "Amount", "Payment Status",
+      "Service Interest", "Requirements", "Concerns", "Transaction ID"
+    ];
+    
+    const rows = filteredInstitutionRegistrations.map((r, i) => [
+      i + 1,
+      r.organizationName,
+      r.name,
+      r.email,
+      r.mobile,
+      r.designation || "N/A",
+      r.type || "N/A",
+      formatDate(r.createdAt),
+      r.selectedDate,
+      r.selectedTime,
+      r.transactions?.[0]?.transaction.amount || "N/A",
+      r.transactions?.[0]?.transaction.status || "N/A",
+      r.serviceInterest || "N/A",
+      r.requirements || "N/A",
+      r.concerns || "N/A",
+      r.transactions?.[0]?.transaction.orderId || "N/A",
+    ]);
+    
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+    
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `institution-registrations-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="flex flex-col items-center gap-4 w-full p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Institution registrations</h1>
-        <Input
-          leftSection={<Search size={16} />}
-          radius={999}
-          classNames={{ wrapper: "ml-auto w-64" }}
-          placeholder="Search for name, city, mobile, etc..."
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="control-bar w-full mb-4 flex justify-between items-center gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-semibold">
+            Institution Registrations
+          </h1>
+          <Text size="sm" c="dimmed">
+            Total: {filteredInstitutionRegistrations.length} registrations
+          </Text>
+        </div>
+        <Group>
+          <Input
+            leftSection={<Search size={16} />}
+            radius="md"
+            placeholder="Search name, organization, mobile..."
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ minWidth: "250px" }}
+          />
+          <Button 
+            leftSection={<Download size={16} />}
+            variant="outline"
+            onClick={exportToCSV}
+            disabled={!filteredInstitutionRegistrations.length}
+          >
+            Export to XLS
+          </Button>
+        </Group>
       </div>
       <div className="w-full">
         {!data ? (
@@ -123,13 +177,12 @@ export default function AdminInstitutionRegistrations() {
           <Table
             headers={[
               { render: "S.No", className: "w-[10%]" },
-              { render: "Insitution" },
-              { render: "Address" },
-              { render: "Contact" },
-              { render: "Plan" },
-              { render: "Selected Date & Time" },
+              { render: "Organization" },
+              { render: "Contact Person" },
+              { render: "Contact Info" },
+              { render: "Payment" },
+              { render: "Session Date" },
               { render: "Details" },
-             
             ]}
             classNames={{
               root: "bg-white rounded-lg shadow",
@@ -142,46 +195,70 @@ export default function AdminInstitutionRegistrations() {
                   className: "w-[10%]",
                 },
                 {
-                  render: r.schoolName,
-                },
-                {
                   render: (
-                    <>
-                      {r.address?.addressLine1}
-                      {r.address?.addressLine2 &&
-                        ", " + r.address?.addressLine2}
-                      <br />
-                      {r.address?.district}
-                      {r.address?.city && ", " + r.address?.city}
-                      {r.address?.state && ", " + r.address?.state}
-                      {r.address?.pincode && " - " + r.address?.pincode}
-                    </>
-                  ),
-                },
-                {
-                  render: (
-                    <div className="grid">
-                      {r.contactName}
-                      <span className="truncate">
-                        ({r.contactEmail} - {r.contactMobile})
-                      </span>
+                    <div>
+                      <div className="font-medium text-gray-900">{r.organizationName}</div>
+                      {r.type && (
+                        <div className="text-xs text-gray-500">{r.type}</div>
+                      )}
                     </div>
                   ),
-                  className: "max-w-[40%]",
                 },
                 {
-                  render: r.transactions?.[0]?.plan || "No Plan",
+                  render: (
+                    <div>
+                      <div className="font-medium text-gray-900">{r.name}</div>
+                      {r.designation && (
+                        <div className="text-xs text-gray-500">{r.designation}</div>
+                      )}
+                    </div>
+                  ),
                 },
                 {
-                  render : r.selectedDate + " " + r.selectedTime,
+                  render: (
+                    <div className="text-sm">
+                      <div className="text-gray-900">{r.email}</div>
+                      <div className="text-gray-600">{r.mobile}</div>
+                    </div>
+                  ),
+                },
+                {
+                  render: (
+                    <div className="text-sm">
+                      <div className="font-semibold text-gray-900">
+                        ₹{r.transactions?.[0]?.transaction.amount || "N/A"}
+                      </div>
+                      <Badge 
+                        size="sm" 
+                        color={
+                          r.transactions?.[0]?.transaction.status === "success" 
+                            ? "green" 
+                            : r.transactions?.[0]?.transaction.status === "pending"
+                            ? "yellow"
+                            : "red"
+                        }
+                      >
+                        {r.transactions?.[0]?.transaction.status || "N/A"}
+                      </Badge>
+                    </div>
+                  ),
+                },
+                {
+                  render: (
+                    <div className="text-sm">
+                      <div className="font-medium text-gray-900">{r.selectedDate}</div>
+                      <div className="text-gray-600">{r.selectedTime}</div>
+                    </div>
+                  ),
                 },
                 {
                   render: (
                     <Button
-                      radius={999}
+                      size="xs"
+                      variant="light"
                       onClick={() => setActiveInstituteId(r.id)}
                     >
-                      Click
+                      View
                     </Button>
                   ),
                 },
@@ -194,16 +271,14 @@ export default function AdminInstitutionRegistrations() {
       {/* Modal for details */}
       <Modal
         centered
-        classNames={{
-          title: "font-medium",
-        }}
-        size={"1200"}
-        title={
-          data?.data.find((inst) => inst.id === activeInstituteId)?.schoolName +
-          " details"
-        }
-        onClose={() => setActiveInstituteId(null)}
         opened={!!activeInstituteId}
+        onClose={() => setActiveInstituteId(null)}
+        title={
+          <Text fw={600}>
+            Institution Registration Details
+          </Text>
+        }
+        size="1000px"
       >
         {(() => {
           const currentInst = data?.data.find(
@@ -211,105 +286,135 @@ export default function AdminInstitutionRegistrations() {
           );
           if (!currentInst)
             return <Alert color="red" title="Invalid institution selected" />;
+          
           return (
-            <div className="grid gap-6">
-              <div className="flex gap-3">
-                <LabelAndValue
-                  label="Institution Name"
-                  value={currentInst.schoolName}
-                />
-                <LabelAndValue
-                  label="Address"
-                  value={
-                    <>
-                      {currentInst.address?.addressLine1}
-                      {currentInst.address?.addressLine2 &&
-                        ", " + currentInst.address?.addressLine2}
-                      <br />
-                      {currentInst.address?.district}
-                      {currentInst.address?.city &&
-                        ", " + currentInst.address?.city}
-                      {currentInst.address?.state &&
-                        ", " + currentInst.address?.state}
-                      {currentInst.address?.pincode &&
-                        " - " + currentInst.address?.pincode}
-                    </>
-                  }
-                />
+            <div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+                {/* Organization & Payment Information */}
+                <Paper p="md" withBorder>
+                  <Text size="sm" fw={600} mb="sm" c="blue">
+                    Organization & Payment
+                  </Text>
+                  <div style={{ fontSize: "13px" }}>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Organization:</Text> <Text span fw={500}>{currentInst.organizationName}</Text></div>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Type:</Text> <Text span fw={500}>{currentInst.type || "N/A"}</Text></div>
+                    <div style={{ marginBottom: "8px" }}>
+                      <Text span c="dimmed">Amount:</Text> <Text span fw={700}>₹{currentInst.transactions?.[0]?.transaction.amount || "N/A"}</Text>
+                    </div>
+                    <div style={{ marginBottom: "8px" }}>
+                      <Text span c="dimmed">Payment Status:</Text> {" "}
+                      <Badge 
+                        size="sm" 
+                        color={
+                          currentInst.transactions?.[0]?.transaction.status === "success" 
+                            ? "green" 
+                            : currentInst.transactions?.[0]?.transaction.status === "pending"
+                            ? "yellow"
+                            : "red"
+                        }
+                      >
+                        {currentInst.transactions?.[0]?.transaction.status || "N/A"}
+                      </Badge>
+                    </div>
+                    <div><Text span c="dimmed">Service Interest:</Text> <Text span fw={500}>{currentInst.serviceInterest || "N/A"}</Text></div>
+                  </div>
+                </Paper>
+
+                {/* Contact Information */}
+                <Paper p="md" withBorder>
+                  <Text size="sm" fw={600} mb="sm" c="green">
+                    Contact Information
+                  </Text>
+                  <div style={{ fontSize: "13px" }}>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Contact Name:</Text> <Text span fw={500}>{currentInst.name}</Text></div>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Email:</Text> <Text span fw={500}>{currentInst.email}</Text></div>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Mobile:</Text> <Text span fw={500}>{currentInst.mobile}</Text></div>
+                    <div><Text span c="dimmed">Designation:</Text> <Text span fw={500}>{currentInst.designation || "N/A"}</Text></div>
+                  </div>
+                </Paper>
+
+                {/* Session Information */}
+                <Paper p="md" withBorder>
+                  <Text size="sm" fw={600} mb="sm" c="purple">
+                    Session & Timeline
+                  </Text>
+                  <div style={{ fontSize: "13px" }}>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Session Date:</Text> <Text span fw={500}>{currentInst.selectedDate}</Text></div>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Session Time:</Text> <Text span fw={500}>{currentInst.selectedTime}</Text></div>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Registered On:</Text> <Text span fw={500}>{formatDate(currentInst.createdAt)}</Text></div>
+                    {currentInst.updatedAt && (
+                      <div><Text span c="dimmed">Last Updated:</Text> <Text span fw={500}>{formatDate(currentInst.updatedAt)}</Text></div>
+                    )}
+                  </div>
+                </Paper>
+
+                {/* Additional Details */}
+                <Paper p="md" withBorder>
+                  <Text size="sm" fw={600} mb="sm" c="orange">
+                    Additional Details
+                  </Text>
+                  <div style={{ fontSize: "13px" }}>
+                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Requirements:</Text> <Text span fw={500}>{currentInst.requirements || "N/A"}</Text></div>
+                    <div><Text span c="dimmed">Concerns:</Text> <Text span fw={500}>{currentInst.concerns || "N/A"}</Text></div>
+                  </div>
+                </Paper>
               </div>
-              <div className="flex gap-3">
-                <LabelAndValue
-                  label="Contact name"
-                  value={currentInst.contactName}
-                />
-                <LabelAndValue
-                  label="Contact mobile"
-                  value={currentInst.contactMobile}
-                />
-                <LabelAndValue
-                  label="Contact email"
-                  value={currentInst.contactEmail}
-                />
-              </div>
-              <div className="flex gap-3">
-                <LabelAndValue
-                  label="Plan chosen"
-                  value={
-                    <Badge color="dark">
-                      {currentInst.transactions?.[0]?.plan || "No Plan"}
-                    </Badge>
-                  }
-                />
-                <LabelAndValue
-                  label="Students count"
-                  value={currentInst.studentsCount ?? 0}
-                />
-              </div>
-              <div className="grid overflow-auto">
-                <Table
-                  classNames={{
-                    root: "w-full",
-                    body: "text-sm",
-                  }}
-                  headers={[
-                    { render: "S.No", className: "w-[10%]" },
-                    { render: "Amount" },
-                    { render: "Txn No." },
-                    { render: "Order Id" },
-                    { render: "Payment Id" },
-                    { render: "Status" },
-                    { render: "Paid on" },
-                  ]}
-                  rows={currentInst.transactions?.map((trans, i) => ({
-                    id: trans.id,
-                    cells: [
-                      {
-                        render: i + 1,
-                      },
-                      {
-                        render: trans.transaction.amount,
-                      },
-                      {
-                        render: trans.transaction.txnNo,
-                      },
-                      {
-                        render: trans.transaction.orderId,
-                      },
-                      {
-                        render: trans.transaction.paymentId ?? (
-                          <i className="text-gray-500">No data</i>
-                        ),
-                      },
-                      {
-                        render: <Badge>{trans.transaction.status}</Badge>,
-                      },
-                      {
-                        render: formatDate(trans.updatedAt),
-                      },
-                    ],
-                  })) || []}
-                />
-              </div>
+
+              {/* Transaction Details Table */}
+              {currentInst.transactions && currentInst.transactions.length > 0 && (
+                <Paper p="md" withBorder>
+                  <Text size="sm" fw={600} mb="sm" c="blue">
+                    Transaction Details
+                  </Text>
+                  <div className="overflow-auto">
+                    <Table
+                      classNames={{
+                        root: "w-full",
+                        body: "text-sm",
+                      }}
+                      headers={[
+                        { render: "S.No", className: "w-[10%]" },
+                        { render: "Amount" },
+                        { render: "Txn No." },
+                        { render: "Order Id" },
+                        { render: "Payment Id" },
+                        { render: "Status" },
+                        { render: "Paid on" },
+                      ]}
+                      rows={currentInst.transactions?.map((trans, i) => ({
+                        id: trans.id,
+                        cells: [
+                          {
+                            render: i + 1,
+                          },
+                          {
+                            render: "₹" + trans.transaction.amount,
+                          },
+                          {
+                            render: trans.transaction.txnNo || (
+                              <i className="text-gray-500">N/A</i>
+                            ),
+                          },
+                          {
+                            render: trans.transaction.orderId,
+                          },
+                          {
+                            render: trans.transaction.paymentId ?? (
+                              <i className="text-gray-500">No data</i>
+                            ),
+                          },
+                          {
+                            render: <Badge>{trans.transaction.status}</Badge>,
+                          },
+                          {
+                            render: formatDate(trans.updatedAt),
+                          },
+                        ],
+                      })) || []}
+                    />
+                  </div>
+                </Paper>
+              )}
             </div>
           );
         })()}

@@ -2,13 +2,12 @@ import { Tabs } from "@mantine/core";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 
 const tabs = [
-  { url: "/admin/applications", title: "Psychology Counselling" },
+  { url: "/admin/applications", title: "Individual Applications" },
   {
-    url: "/admin/applications/career-counselling",
-    title: "Career Counselling",
+    url: "/admin/applications/institutions",
+    title: "Institution Applications",
   },
   { url: "/admin/applications/ca-programs", title: "Campus Ambassador" },
-  { url: "/admin/applications/institutions", title: "Institution Plans" },
 ];
 
 export default function AdminApplicationsLayout() {
