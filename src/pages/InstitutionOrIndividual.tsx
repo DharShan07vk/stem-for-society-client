@@ -9,7 +9,7 @@ import BottomNavigation from "@/components1/NewUI/navigation/BottomNavigation";
 import IndividualHero from "@/components1/NewUI/individual/IndividualHero";
 import IndividualServices from "@/components1/NewUI/individual/IndividualServices";
 import IndividualJourney from "@/components1/NewUI/individual/IndividualJourney";
-import IndividualPricing from "@/components1/NewUI/individual/IndividualPricing";
+// import IndividualPricing from "@/components1/NewUI/individual/IndividualPricing";
 import IndividualFAQ from "@/components1/NewUI/individual/IndividualFAQ";
 import IndividualCTA from "@/components1/NewUI/individual/IndividualCTA";
 
@@ -121,7 +121,7 @@ const Index = () => {
               <IndividualHero />
               <IndividualServices />
               <IndividualJourney />
-              <IndividualPricing />
+              {/* <IndividualPricing /> */}
               <IndividualFAQ />
               <IndividualCTA />
             </div>
