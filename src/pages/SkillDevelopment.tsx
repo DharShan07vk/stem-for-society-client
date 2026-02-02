@@ -202,12 +202,12 @@ const SkillDevelopment = () => {
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
                 Quick Skill Boosts with <span className="text-[#0D9488]">Short Practical Courses</span>
               </h1>
-              <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+              {/* <p className="text-gray-600 text-lg max-w-3xl mx-auto">
                 Short, hands-on programs to rapidly upskill for industry roles — practical projects, expert mentors, and career-focused outcomes.
-              </p>
+              </p> */}
             </div>
 
-            {/* Stats Section */}
+            {/* Stats Section
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 max-w-4xl mx-auto">
               <div className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-[#0D9488]/10 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -237,7 +237,7 @@ const SkillDevelopment = () => {
                 <p className="text-2xl font-bold text-gray-900">40+</p>
                 <p className="text-gray-500 text-sm">Industry Mentors</p>
               </div>
-            </div>
+            </div> */}
 
             {/* Filters Section */}
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-8">
