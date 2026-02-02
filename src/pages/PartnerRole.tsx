@@ -53,17 +53,17 @@ const PartnerRole = () => {
                 {/* Header */}
                 <div className="text-center mb-8">
                   <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-                    Select your Role
-                  </h1>
+                    
+                  
                   <p className="text-gray-600 text-lg">
-                    Log in as a student, ambassador, or partner institution.
-                  </p>
+                    Log in as a partner institution.
+                  </p></h1>
                 </div>
 
                 {/* Role Selection Cards */}
                 <div className="space-y-6">
                   {/* Partner - Individual */}
-                  <Link to="/campus-ambassador" className="block">
+                  {/* <Link to="/campus-ambassador" className="block">
                     <div className="bg-white border border-gray-200 rounded-lg p-6 hover:bg-gray-50 hover:border-blue-300 transition-all duration-200 hover:shadow-md cursor-pointer group relative">
                       <ArrowWithTail />
                       <div className="pr-8">
@@ -75,7 +75,7 @@ const PartnerRole = () => {
                         </p>
                       </div>
                     </div>
-                  </Link>
+                  </Link> */}
 
                   {/* Partner - Institution */}
                   <Link to="/partner-institution-signup" className="block">

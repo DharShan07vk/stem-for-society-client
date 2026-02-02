@@ -80,7 +80,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center mt-6 pt-4 border-t border-blue-300 text-blue-100 text-xs">
           <div className="text-center md:text-left">
-            217 Broadway, Floor 9, New York, NY 10007 • 844-402-4344 • support@tomorrowhealth.com
+            217 Broadway, Floor 9, New York, NY 10007 • 844-402-4344 • info@stemforsociety.com
           </div>
           <div className="flex gap-3 mt-3 md:mt-0">
             <a href="https://twitter.com/EmpoweringSci" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105">
