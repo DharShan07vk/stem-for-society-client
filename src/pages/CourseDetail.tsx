@@ -13,6 +13,7 @@ import { formatDate, mutationErrorHandler, initializeRazorpay } from "@/lib/util
 import Loading from "@/components/Loading";
 import Errorbox from "@/components/Errorbox";
 import { useUser } from "@/lib/hooks";
+import { Rating, Textarea } from "@mantine/core";
 import { RZPY_KEYID } from "@/Constants";
 import type { StudentTraining } from "./Courses";
 import { FaLinkedin } from "react-icons/fa";
@@ -92,6 +93,54 @@ const CourseDetails = () => {
     const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
     return `${diffWeeks} weeks`;
   };
+  // Rating and Feedback Component
+function RatingAndFeedback({
+  id,
+  data,
+  disabled,
+}: {
+  id: string;
+  data: StudentTraining;
+  disabled?: boolean;
+}) {
+  const [rating, setRating] = useState<number>(
+    data.ratings ? data.ratings[0]?.rating : 0
+  );
+  const [feedback, setFeedback] = useState<string>(
+    data.ratings ? data.ratings[0]?.feedback : ""
+  );
+  const mutation = useSubmitFeedback(id);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutation.mutate({ rating, feedback });
+  };
+
+  return (
+    <div className="space-y-4">
+      <h4 className="text-lg font-semibold text-gray-900">Rate & Review</h4>
+      <Rating
+        value={rating}
+        onChange={setRating}
+        className={disabled ? "opacity-80 pointer-events-none" : ""}
+      />
+      <Textarea
+        rows={5}
+        value={feedback}
+        className={disabled ? "opacity-80 pointer-events-none" : ""}
+        onChange={(event) => setFeedback(event.currentTarget.value)}
+        placeholder="Enter feedback to apply for certificate"
+      />
+      <Button
+        onClick={handleSubmit}
+        disabled={data.ratings?.length > 0 || mutation.isPending}
+        className="bg-[#0389FF] hover:bg-[#0389FF]/90 text-white"
+      >
+        {data.ratings?.length > 0 ? "Already submitted" : "Submit feedback"}
+      </Button>
+    </div>
+  );
+}
 
   // Get mode text
   const getModeText = () => {
@@ -446,6 +495,15 @@ const CourseDetails = () => {
                       Share on LinkedIn
                     </Button>
                   </>
+                )}
+                {training.displayFeedback && (
+                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                    <RatingAndFeedback
+                      data={training}
+                      id={id!}
+                      disabled={training.ratings?.length > 0}
+                    />
+                  </div>
                 )}
               </div>
             )}
