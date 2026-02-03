@@ -1,8 +1,8 @@
 export const courseCategories = [
-  "Seminars/Webinar/Mentorship",
-  "Certificate Program",
-  "Corporate Training Program",
-  "Instrumentation Hands-on",
+  "Class 8 - 10",
+  "Class 11 - 12",
+  "Undergraduate",
+  "Postgraduate",
 ];
 
 export type CourseCategoriesType =

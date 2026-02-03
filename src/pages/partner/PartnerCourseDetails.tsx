@@ -187,7 +187,7 @@ export default function PartnerCourseDetails() {
                 </span>
               </span>
               <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base">
-                <Link2 /> Registration Link:{" "}
+                <Link2 /> Meeting Link:{" "}
                 <span className="location text-black font-semibold">
                   {event.link || "N/A"}
                 </span>

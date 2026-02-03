@@ -25,13 +25,13 @@ type PartnerCreateCourseForm = {
   title: string;
   description: string;
   cover: File | null;
-  trainingLink: string;
+  courseType: "Skill Development" | "Finishing School";
   location: string;
   meetingLink: string;
   startDate: Date | null;
   endDate: Date | null;
   cost: number;
-  category: CourseCategoriesType | null;
+  category: string | null;
   mode: "ONLINE" | "OFFLINE" | "HYBRID";
   whoIsItFor: string[];
   whatYouWillLearn: string[];
@@ -53,9 +53,9 @@ function useCreateCourse() {
       if (data.cover) {
         formData.append("cover", data.cover);
       }
-      formData.append("trainingLink", data.trainingLink);
+      formData.append("course_type", data.courseType);
       formData.append("location", data.location);
-      formData.append("meetingLink", data.meetingLink);
+      formData.append("trainingLink", data.meetingLink);
       formData.append("type", data.mode);
       formData.append("category", data.category);
       formData.append("startDate", data.startDate?.toISOString() || "");
@@ -93,7 +93,7 @@ export default function PartnerCreateCourse() {
     title: "",
     description: "",
     cover: null,
-    trainingLink: "",
+    courseType: "Skill Development",
     location: "",
     meetingLink: "",
     startDate: null,
@@ -226,6 +226,21 @@ export default function PartnerCreateCourse() {
             value={formData.cover}
             onChange={handleFileInputChange}
           />
+
+          <div className="flex items-center lg:w-2/3 w-full gap-3">
+            <span className="text-sm font-medium">Course Type</span>
+            <SegmentedControl
+              data={["Skill Development", "Finishing School"]}
+              value={formData.courseType}
+              onChange={(val) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  courseType: val as "Skill Development" | "Finishing School",
+                  category: null,
+                }))
+              }
+            />
+          </div>
 
           <div className="flex w-full lg:w-2/3 gap-2">
             <DateTimePicker
@@ -378,19 +393,35 @@ export default function PartnerCreateCourse() {
             </div>
           </div>
 
-          <Select
-            data={courseCategories}
-            clearable={false}
-            onChange={(value) =>
-              setFormData((prev) => ({
-                ...prev,
-                category: value as PartnerCreateCourseForm["category"],
-              }))
-            }
-            label="Choose category"
-            className="lg:w-2/3 w-full"
-            value={formData.category}
-          />
+          {formData.courseType === "Finishing School" ? (
+            <Select
+              data={courseCategories}
+              clearable={false}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  category: value,
+                }))
+              }
+              label="Choose category"
+              className="lg:w-2/3 w-full"
+              value={formData.category}
+            />
+          ) : (
+            <TextInput
+              label=" Choose Category"
+              placeholder="Enter category (e.g., Web Development, Data Science)"
+              size="sm"
+              className="lg:w-2/3 w-full"
+              value={formData.category || ""}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  category: e.target.value,
+                }))
+              }
+            />
+          )}
           <TextInput
             label="Registration Cost"
             placeholder="Enter cost of registration"
