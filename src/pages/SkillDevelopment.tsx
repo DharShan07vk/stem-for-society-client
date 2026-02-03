@@ -14,117 +14,89 @@ import Header from "@/components1/Header";
 import Footer from "@/components1/Footer";
 import GridBackground from "@/components1/GridBackground";
 import FinishingSchoolCard from "@/components1/FinishingSchoolCard";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import dayjs from "dayjs";
+import { api } from "@/lib/api";
+import { GenericError, GenericResponse } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
+import Loading from "@/components/Loading";
+import Errorbox from "@/components/Errorbox";
 
-// Course data interface
-interface SkillCourse {
+// Student training data structure (imported from Courses.tsx pattern)
+export type StudentTraining = {
   id: string;
-  image: string;
-  universityLogo?: string;
-  universityName?: string;
-  badge: string;
   title: string;
-  description: string;
-  duration: string;
-  mode: string;
-  modeDescription: string;
+  coverImg: string;
   startDate: string;
-  category: string;
-  level: string;
-}
+  endDate: string;
+  description: string;
+  createdAt: string;
+  category?: string;
+  course_type?: string;
+  instructor: {
+    firstName: string;
+    lastName?: string;
+    institutionName?: string;
+  };
+  link?: string;
+  cost: string;
+  location?: string;
+  isEnrolled: boolean;
+  displayFeedback: boolean;
+  ratings: {
+    feedback: string;
+    rating: number;
+    completedOn: string;
+  }[];
+  enrolments: {
+    id: string;
+    userId: string;
+    trainingId: string;
+    completedOn: string | null;
+    createdAt: string;
+    updatedAt?: string;
+    certificateNo?: string;
+    certificate?: string;
+    transactions?: {
+      amount: string;
+      status: string;
+    }[];
+  }[];
+  type: "ONLINE" | "OFFLINE" | "HYBRID";
+  lessons: {
+    id: string;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    title: string;
+    location: string | null;
+    type: "ONLINE" | "OFFLINE";
+    trainingId: string | null;
+    content: string | null;
+    video: string | null;
+    lastDate: Date | null;
+  }[];
+};
 
-// Short-term skill development course samples (reduced durations)
-const skillDevelopmentCourses: SkillCourse[] = [
-  {
-    id: "1",
-    image: "https://tse1.mm.bing.net/th/id/OIP.H77lzR28If23YLTwfBIFGAHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Micro Course",
-    title: "Intro to Bioinformatics & Data Skills",
-    description: "Fast-track fundamentals of bioinformatics and data analysis to start applying computational biology techniques quickly.",
-    duration: "12 weeks",
-    mode: "Hybrid",
-    modeDescription: "Online + Short workshops",
-    startDate: "Mar'25",
-    category: "life-sciences",
-    level: "micro",
-  },
-  {
-    id: "2",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Micro Course",
-    title: "Applied Gen-AI for Life Sciences",
-    description: "Hands-on modules showing how to apply generative AI tools for real-world life-science problems.",
-    duration: "8 weeks",
-    mode: "Online",
-    modeDescription: "Live sessions + projects",
-    startDate: "Apr'25",
-    category: "healthcare",
-    level: "micro",
-  },
-  {
-    id: "3",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Short Certificate",
-    title: "Clinical Research Essentials",
-    description: "Compact coverage of trial design, regulatory basics, and analysis for immediate application in research roles.",
-    duration: "6 weeks",
-    mode: "Online",
-    modeDescription: "Self-paced + community",
-    startDate: "May'25",
-    category: "healthcare",
-    level: "certificate",
-  },
-  {
-    id: "4",
-    image: "https://th.bing.com/th/id/OIP.9xv8gmnTjDUVXAvJYUGHSwHaDt?w=345&h=175&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Micro Course",
-    title: "Drug Development Fundamentals",
-    description: "Quick practical overview of drug discovery and key development milestones for cross-functional teams.",
-    duration: "10 weeks",
-    mode: "Hybrid",
-    modeDescription: "Online + workshop",
-    startDate: "Jun'25",
-    category: "pharmaceutical",
-    level: "micro",
-  },
-  {
-    id: "5",
-    image: "https://www.e3melbusiness.com/assets/images/Leadership-in-Healthcare-Management.jpg",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Short Program",
-    title: "Healthcare Leadership Essentials",
-    description: "Practical leadership and operations modules tailored for healthcare professionals aiming for rapid impact.",
-    duration: "8 weeks",
-    mode: "Online",
-    modeDescription: "Weekend-intensive",
-    startDate: "May'25",
-    category: "healthcare",
-    level: "executive",
-  },
-  {
-    id: "6",
-    image: "https://royed.in/wp-content/uploads/2018/05/Latam-drug-regulatory-affairs-1.png",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Short Certificate",
-    title: "Medical Device Compliance Basics",
-    description: "Focused coverage of regulatory essentials for med-device teams and newcomers to compliance roles.",
-    duration: "4 weeks",
-    mode: "Online",
-    modeDescription: "Self-paced",
-    startDate: "Apr'25",
-    category: "medical-devices",
-    level: "certificate",
-  },
-];
+// Fetch only Skill Development courses
+function useSkillDevelopmentCourses() {
+  return useQuery<StudentTraining[], AxiosError<GenericError>>({
+    queryKey: ["trainings", "skill-development"],
+    queryFn: async () => {
+      const response = await api().get<GenericResponse<StudentTraining[]>>("/trainings/skill-developments");
+      console.log("🚀 Skill Development courses:", response.data);
+      if (!response.data?.data?.length) return [];
+      
+      // Filter for Skill Development courses only
+
+      
+      return response.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
+}
 
 // Filter state interface
 interface FilterState {
@@ -136,6 +108,7 @@ interface FilterState {
 
 const SkillDevelopment = () => {
   const navigate = useNavigate();
+  const { data: courses, isLoading, error } = useSkillDevelopmentCourses();
   
   const [filters, setFilters] = useState<FilterState>({
     category: "",
@@ -161,33 +134,43 @@ const SkillDevelopment = () => {
 
   // Filter courses based on selected filters
   const filteredCourses = useMemo(() => {
-    return skillDevelopmentCourses.filter(course => {
-      const matchesSearch = !filters.searchQuery || 
-        course.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+    if (!courses) return [];
+    
+    return courses.filter((course) => {
+      const searchTerm = filters.searchQuery.toLowerCase();
+      const matchesSearch = !searchTerm || 
+        course.title.toLowerCase().includes(searchTerm) ||
+        course.description?.toLowerCase().includes(searchTerm) ||
+        course.category?.toLowerCase().includes(searchTerm);
       
       const matchesCategory = !filters.category || filters.category === "all" ||
-        course.category === filters.category;
+        course.category?.toLowerCase().includes(filters.category.toLowerCase());
       
-      const matchesLevel = !filters.level || filters.level === "all" ||
-        course.level === filters.level;
+      // For level, we can check category or add a level field if backend provides it
+      const matchesLevel = !filters.level || filters.level === "all";
       
       const matchesMode = !filters.mode || filters.mode === "all" ||
-        course.mode.toLowerCase() === filters.mode.toLowerCase();
+        course.type?.toLowerCase() === filters.mode.toLowerCase();
       
       return matchesSearch && matchesCategory && matchesLevel && matchesMode;
     });
-  }, [filters]);
+  }, [courses, filters]);
 
-  // Handle course explore
-  const handleExplore = (courseId: string) => {
-    navigate(`/course-detail/${courseId}`);
+  // Calculate duration from start and end dates
+  const calculateDuration = (startDate: string, endDate: string) => {
+    const start = dayjs(startDate);
+    const end = dayjs(endDate);
+    const weeks = end.diff(start, 'week');
+    const months = end.diff(start, 'month');
+    
+    if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''}`;
+    }
+    return `${weeks} week${weeks > 1 ? 's' : ''}`;
   };
 
-  // Handle brochure download
-  const handleDownloadBrochure = (course: SkillCourse) => {
-    console.log("Downloading brochure for:", course.title);
-  };
+  if (isLoading) return <Loading />;
+  if (error) return <Errorbox message={error.message} />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -335,16 +318,16 @@ const SkillDevelopment = () => {
                   <FinishingSchoolCard
                     key={course.id}
                     courseId={course.id}
-                    image={course.image}
-                    universityLogo={course.universityLogo}
-                    universityName={course.universityName}
-                    badge={course.badge}
+                    image={course.coverImg}
+                    universityLogo={undefined}
+                    universityName={course.instructor?.institutionName || `${course.instructor?.firstName || ''} ${course.instructor?.lastName || ''}`.trim()}
+                    badge={course.category || 'Course'}
                     title={course.title}
                     description={course.description}
-                    duration={course.duration}
-                    mode={course.mode}
-                    modeDescription={course.modeDescription}
-                    startDate={course.startDate}                    
+                    duration={calculateDuration(course.startDate, course.endDate)}
+                    mode={course.type}
+                    modeDescription={course.type === "ONLINE" ? "Live Online Sessions" : course.type === "HYBRID" ? "Online + Offline" : "In-Person"}
+                    startDate={formatDate(course.startDate)}                    
                   />
                 ))}
               </div>

@@ -116,7 +116,7 @@ const FinishingSchoolCard = ({
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
           <Button
-            onClick={() => navigate(`/finishing-school-detail/${courseId}`)}
+            onClick={() => navigate(`/academy-detail/${courseId}`)}
             className="flex-1 bg-[#0F4C5C] hover:bg-[#0F4C5C]/90 text-white py-3 rounded-full font-medium text-sm transition-all duration-300"
           >
             Explore more

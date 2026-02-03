@@ -6,96 +6,82 @@ import { Calendar, Clock, CheckCircle2, Users, BookOpen, Award } from "lucide-re
 import Header from "@/components1/Header";
 import Footer from "@/components1/Footer";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { api } from "@/lib/api";
+import { GenericError, GenericResponse } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
+import Loading from "@/components/Loading";
+import Errorbox from "@/components/Errorbox";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-// Course data (this should match the data from FinishingSchool.tsx)
-const courseData: { [key: string]: any } = {
-  "1": {
-    title: "Bioinformatics & Genomics & Data Science",
-    subtitle: "Post Graduate Specialization",
-    description: "This online program is designed to help you advance your career with cutting-edge skills in Bioinformatics, Genomics & Data Science. From understanding the fundamentals to mastering complex data analytics, you'll gain practical knowledge and hands-on experience for a successful and enriching career in life sciences.",
-    image: "https://tse1.mm.bing.net/th/id/OIP.H77lzR28If23YLTwfBIFGAHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
-    language: "English",
-    mode: "Hybrid",
-    delivery: "Live",
-    duration: "1 year",
-    startDate: "Sep 2026",
-    price: 50000,
-    currency: "INR",
-    whoIsItFor: [
-      "Fresh graduates looking to specialize in bioinformatics",
-      "Working professionals seeking career advancement",
-      "Researchers wanting to integrate data science with biology",
-      "Students interested in genomics and computational biology",
-    ],
-    whatYouLearn: [
-      "Foundation in bioinformatics and genomics",
-      "Advanced data science techniques for biological data",
-      "Machine learning applications in genomics",
-      "Practical tools and software used in the industry",
-      "Research methodologies and project management",
-      "Industry best practices and case studies",
-    ],
-  },
-  "2": {
-    title: "Gen-AI in Life Science & Healthcare",
-    subtitle: "Post Graduate Specialization",
-    description: "The PG program in AI in Life Sciences integrates artificial intelligence with biological research, equipping students to innovate in healthcare and biotech. You'll learn to apply AI technologies to advance life sciences and improve patient outcomes through practical projects and industry exposure.",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    language: "English",
-    mode: "Hybrid",
-    delivery: "Live",
-    duration: "1 year",
-    startDate: "Feb 2026",
-    price: 55000,
-    currency: "INR",
-    whoIsItFor: [
-      "Life science graduates interested in AI applications",
-      "Healthcare professionals looking to leverage AI",
-      "Data scientists wanting to specialize in healthcare",
-      "Researchers exploring AI in medical research",
-    ],
-    whatYouLearn: [
-      "Fundamentals of AI and machine learning",
-      "AI applications in drug discovery and development",
-      "Healthcare data analytics and predictive modeling",
-      "Deep learning for medical imaging",
-      "Ethical considerations in AI healthcare applications",
-      "Real-world case studies and projects",
-    ],
-  },
-  "3": {
-    title: "Advanced Clinical Research & Data Analytics",
-    subtitle: "Professional Certificate",
-    description: "Master the fundamentals of clinical research combined with data analytics skills. Learn regulatory requirements, trial design, and statistical analysis for healthcare research through comprehensive modules and practical assignments.",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    language: "English",
-    mode: "Online",
-    delivery: "Self-paced",
-    duration: "6 months",
-    startDate: "Mar 2026",
-    price: 30000,
-    currency: "INR",
-    whoIsItFor: [
-      "Healthcare professionals transitioning to clinical research",
-      "Fresh graduates interested in pharmaceutical research",
-      "Data analysts looking to specialize in healthcare",
-      "Medical students exploring research opportunities",
-    ],
-    whatYouLearn: [
-      "Clinical trial design and methodology",
-      "Regulatory affairs and compliance (ICH-GCP)",
-      "Statistical analysis for clinical data",
-      "Data management and quality assurance",
-      "Medical writing and documentation",
-      "Industry certifications and career guidance",
-    ],
-  },
+dayjs.extend(utc);
+
+// Student training data structure
+export type StudentTraining = {
+  id: string;
+  title: string;
+  coverImg: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  createdAt: string;
+  category?: string;
+  course_type?: string;
+  instructor: {
+    firstName: string;
+    lastName?: string;
+    institutionName?: string;
+  };
+  link?: string;
+  cost: string;
+  location?: string;
+  isEnrolled: boolean;
+  displayFeedback: boolean;
+  ratings: {
+    feedback: string;
+    rating: number;
+    completedOn: string;
+  }[];
+  enrolments: {
+    id: string;
+    userId: string;
+    trainingId: string;
+    completedOn: string | null;
+    createdAt: string;
+    updatedAt?: string;
+    certificateNo?: string;
+    certificate?: string;
+    transactions?: {
+      amount: string;
+      status: string;
+    }[];
+  }[];
+  type: "ONLINE" | "OFFLINE" | "HYBRID";
+  whoIsItFor?: string[];
+  whatYouWillLearn?: string[];
 };
 
-const FinishingSchoolDetail = () => {
+// Hook to fetch single training
+function useTraining(id?: string) {
+  return useQuery<GenericResponse<StudentTraining>, AxiosError<GenericError>>({
+    queryKey: ["trainings", id],
+    queryFn: async () => {
+      const response = await api().get(`/trainings/${id}`);
+      return response.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    enabled: !!id,
+  });
+}
+
+const AcademyDetail = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
-  const course = courseData[courseId || "1"];
+  const { data: trainingData, isLoading, error } = useTraining(courseId);
+  
+  const course = trainingData?.data;
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -103,12 +89,59 @@ const FinishingSchoolDetail = () => {
     mobile: "",
   });
 
+  // Calculate duration from start and end dates
+  const calculateDuration = () => {
+    if (!course?.startDate || !course?.endDate) return "6 months";
+    const start = dayjs(course.startDate);
+    const end = dayjs(course.endDate);
+    const weeks = end.diff(start, 'week');
+    const months = end.diff(start, 'month');
+    
+    if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''}`;
+    }
+    return `${weeks} week${weeks > 1 ? 's' : ''}`;
+  };
+
+  // Get mode text
+  const getModeText = () => {
+    if (!course?.type) return "Hybrid";
+    return course.type.charAt(0) + course.type.slice(1).toLowerCase();
+  };
+
+  // Get formatted time range
+  const getTimeRange = () => {
+    if (!course?.startDate || !course?.endDate) return "10:00 AM - 12:00 PM";
+    const startTime = dayjs.utc(course.startDate).format("hh:mm A");
+    const endTime = dayjs.utc(course.endDate).format("hh:mm A");
+    return `${startTime} - ${endTime}`;
+  };
+
+  // Default values for incase of missing data
+  const whoIsItFor = course?.whoIsItFor || [
+    "Fresh graduates looking to specialize",
+    "Working professionals seeking career advancement",
+    "Researchers wanting to advance their skills",
+    "Students interested in the field",
+  ];
+
+  const whatYouLearn = course?.whatYouWillLearn || [
+    "Foundation and fundamentals",
+    "Advanced techniques and methodologies",
+    "Practical tools and software",
+    "Research methodologies and project management",
+    "Industry best practices and case studies",
+  ];
+
+  if (isLoading) return <Loading />;
+  if (error) return <Errorbox message={error.message} />;
+
   if (!course) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">Course not found</h2>
-          <Button onClick={() => navigate("/finishing-school")}>Back to Courses</Button>
+          <Button onClick={() => navigate("/")}>Back to Courses</Button>
         </div>
       </div>
     );
@@ -141,19 +174,19 @@ const FinishingSchoolDetail = () => {
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
                 {course.title}
               </h1>
-              <p className="text-gray-600 mb-4">{course.subtitle}</p>
+              <p className="text-gray-600 mb-4">{course.category || 'Professional Program'}</p>
               <div className="flex flex-wrap gap-4 text-sm">
                 <span className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full">
                   <BookOpen className="w-4 h-4" />
-                  {course.language}
+                  English
                 </span>
                 <span className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full">
                   <Award className="w-4 h-4" />
-                  {course.mode}
+                  {getModeText()}
                 </span>
                 <span className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full">
                   <Users className="w-4 h-4" />
-                  {course.delivery}
+                  Live
                 </span>
               </div>
             </div>
@@ -167,7 +200,7 @@ const FinishingSchoolDetail = () => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Date</p>
-                    <p className="text-base font-semibold text-gray-900">{course.startDate}</p>
+                    <p className="text-base font-semibold text-gray-900">{formatDate(course.startDate)}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -176,7 +209,7 @@ const FinishingSchoolDetail = () => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 font-medium">Time</p>
-                    <p className="text-base font-semibold text-gray-900">10:00 AM - 12:00 PM</p>
+                    <p className="text-base font-semibold text-gray-900">{getTimeRange()}</p>
                   </div>
                 </div>
               </div>
@@ -198,7 +231,7 @@ const FinishingSchoolDetail = () => {
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Who is it for?</h3>
               <ul className="space-y-3">
-                {course.whoIsItFor.map((item: string, index: number) => (
+                {whoIsItFor.map((item: string, index: number) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-[#0D9488] flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{item}</span>
@@ -211,7 +244,7 @@ const FinishingSchoolDetail = () => {
             <div className="bg-gray-50 rounded-2xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">What You'll Learn?</h3>
               <ul className="space-y-3">
-                {course.whatYouLearn.map((item: string, index: number) => (
+                {whatYouLearn.map((item: string, index: number) => (
                   <li key={index} className="flex items-start gap-3">
                     <CheckCircle2 className="w-5 h-5 text-[#0389FF] flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">{item}</span>
@@ -223,7 +256,7 @@ const FinishingSchoolDetail = () => {
             {/* Course Image */}
             <div className="rounded-2xl overflow-hidden">
               <img
-                src={course.image}
+                src={course.coverImg || "/course-images/default.jpg"}
                 alt={course.title}
                 className="w-full h-[300px] object-cover"
               />
@@ -236,7 +269,7 @@ const FinishingSchoolDetail = () => {
               <div className="text-center mb-6">
                 <p className="text-lg mb-2">With</p>
                 <p className="text-4xl font-bold">
-                  ₹{course.price.toLocaleString()}
+                  ₹{Number(course.cost || 0).toLocaleString()}
                 </p>
                 <p className="text-lg mt-2">confirm your seat</p>
               </div>
@@ -302,12 +335,12 @@ const FinishingSchoolDetail = () => {
           <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
             <BookOpen className="w-12 h-12 text-[#0D9488] mx-auto mb-3" />
             <h4 className="font-bold text-gray-900 mb-2">Duration</h4>
-            <p className="text-gray-600">{course.duration}</p>
+            <p className="text-gray-600">{calculateDuration()}</p>
           </div>
           <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
             <Calendar className="w-12 h-12 text-[#0389FF] mx-auto mb-3" />
             <h4 className="font-bold text-gray-900 mb-2">Start Date</h4>
-            <p className="text-gray-600">{course.startDate}</p>
+            <p className="text-gray-600">{formatDate(course.startDate)}</p>
           </div>
           <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
             <Award className="w-12 h-12 text-[#F59E0B] mx-auto mb-3" />
@@ -322,4 +355,4 @@ const FinishingSchoolDetail = () => {
   );
 };
 
-export default FinishingSchoolDetail;
+export default AcademyDetail;
