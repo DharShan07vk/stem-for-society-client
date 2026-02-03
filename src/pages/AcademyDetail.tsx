@@ -444,50 +444,50 @@ const AcademyDetail = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Header Section */}
-        <div className="bg-white rounded-2xl p-6 md:p-8 mb-6 shadow-sm">
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
-            <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8 mb-6 md:mb-8 shadow-sm">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 md:gap-6 lg:gap-8">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3 break-words">
                 {course.title}
               </h1>
-              <p className="text-gray-600 mb-4">{course.category || 'Professional Program'}</p>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <span className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full">
-                  <BookOpen className="w-4 h-4" />
+              <p className="text-gray-600 mb-3 md:mb-4 text-sm md:text-base">{course.category || 'Professional Program'}</p>
+              <div className="flex flex-wrap gap-2 md:gap-3 text-xs md:text-sm">
+                <span className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-1.5 md:py-2 bg-gray-100 rounded-full whitespace-nowrap">
+                  <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   English
                 </span>
-                <span className="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full">
-                  <Award className="w-4 h-4" />
+                <span className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-1.5 md:py-2 bg-blue-100 text-blue-700 rounded-full whitespace-nowrap">
+                  <Award className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   {getModeText()}
                 </span>
-                <span className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full">
-                  <Users className="w-4 h-4" />
+                <span className="flex items-center gap-1.5 md:gap-2 px-2.5 md:px-4 py-1.5 md:py-2 bg-green-100 text-green-700 rounded-full whitespace-nowrap">
+                  <Users className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   Live
                 </span>
               </div>
             </div>
 
             {/* Date and Time Display (Static) */}
-            <div className="w-full lg:w-80 space-y-4">
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-[#0D9488] rounded-full flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
+            <div className="w-full lg:w-80 flex-shrink-0 space-y-2 md:space-y-3">
+              <div className="bg-gray-50 rounded-xl p-3 md:p-4 border border-gray-200">
+                <div className="flex items-center gap-2 md:gap-3 mb-2 md:mb-3">
+                  <div className="w-8 md:w-10 h-8 md:h-10 bg-[#0D9488] rounded-full flex items-center justify-center flex-shrink-0">
+                    <Calendar className="w-4 md:w-5 h-4 md:h-5 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs text-gray-500 font-medium">Date</p>
-                    <p className="text-base font-semibold text-gray-900">{formatDate(course.startDate)}</p>
+                    <p className="text-sm md:text-base font-semibold text-gray-900 truncate">{formatDate(course.startDate)}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#0389FF] rounded-full flex items-center justify-center">
-                    <Clock className="w-5 h-5 text-white" />
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-8 md:w-10 h-8 md:h-10 bg-[#0389FF] rounded-full flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-4 md:w-5 h-4 md:h-5 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs text-gray-500 font-medium">Time</p>
-                    <p className="text-base font-semibold text-gray-900">{getTimeRange()}</p>
+                    <p className="text-sm md:text-base font-semibold text-gray-900 truncate">{getTimeRange()}</p>
                   </div>
                 </div>
               </div>
@@ -496,154 +496,135 @@ const AcademyDetail = () => {
         </div>
 
         {/* Session Overview */}
-        <div className="bg-white rounded-2xl p-6 md:p-8 mb-6 shadow-sm">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">Session Overview</h2>
-          <p className="text-gray-600 leading-relaxed">{course.description}</p>
+        <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8 mb-6 md:mb-8 shadow-sm">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">Session Overview</h2>
+          <p className="text-gray-600 leading-relaxed text-sm md:text-base">{course.description}</p>
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
           {/* Left Column */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Who is it for? */}
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Who is it for?</h3>
-              <ul className="space-y-3">
+            <div className="bg-gray-50 rounded-2xl p-4 md:p-6">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-3 md:mb-4">Who is it for?</h3>
+              <ul className="space-y-2 md:space-y-3">
                 {whoIsItFor.map((item: string, index: number) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#0D9488] flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
+                  <li key={index} className="flex items-start gap-2 md:gap-3">
+                    <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-[#0D9488] flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700 text-sm md:text-base">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* What You'll Learn */}
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">What You'll Learn?</h3>
-              <ul className="space-y-3">
+            <div className="bg-gray-50 rounded-2xl p-4 md:p-6">
+              <h3 className="text-base md:text-lg font-bold text-gray-900 mb-3 md:mb-4">What You'll Learn?</h3>
+              <ul className="space-y-2 md:space-y-3">
                 {whatYouLearn.map((item: string, index: number) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[#0389FF] flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
+                  <li key={index} className="flex items-start gap-2 md:gap-3">
+                    <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-[#0389FF] flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700 text-sm md:text-base">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Course Image */}
-            <div className="rounded-2xl overflow-hidden">
-              <img
-                src={course.coverImg || "/course-images/default.jpg"}
-                alt={course.title}
-                className="w-full h-[300px] object-cover"
-              />
-            </div>
+            
           </div>
 
           {/* Right Column - Booking Form / Enrollment Status */}
-          <div className="lg:sticky lg:top-6 h-fit">
+          <div className=" lg:top-6 pb-6 h-fit space-y-3 md:space-y-4">
             {!userData ? (
               <>
-                <div className="bg-gradient-to-br from-[#0D9488] to-[#0389FF] rounded-2xl p-8 text-white shadow-xl">
-                  <div className="text-center mb-6">
-                    <p className="text-lg mb-2">With</p>
-                    <p className="text-4xl font-bold">
+                <div className="bg-gradient-to-br from-[#0D9488] to-[#0389FF] rounded-2xl p-4 md:p-6 lg:p-8 text-white shadow-xl">
+                  <div className="text-center mb-4 md:mb-6">
+                    <p className="text-sm md:text-base opacity-90 mb-2">With</p>
+                    <p className="text-3xl md:text-4xl font-bold">
                       ₹{Number(course.cost || 0).toLocaleString()}
                     </p>
-                    <p className="text-lg mt-2">confirm your seat</p>
+                    <p className="text-sm md:text-base opacity-90 mt-2">confirm your seat</p>
                   </div>
 
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="flex items-center gap-2">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-6 mb-4 md:mb-6">
+                    <div className="flex items-center justify-between mb-3 md:mb-4">
+                      <span className="flex items-center gap-2 text-sm md:text-base">
                         Personal details
                       </span>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 md:space-y-4">
                       <Input
                         placeholder="Full Name"
                         value={formData.fullName}
                         onChange={(e) => handleInputChange("fullName", e.target.value)}
-                        className="h-12 bg-white text-gray-900 rounded-xl"
+                        className="h-10 md:h-12 bg-white text-gray-900 rounded-xl text-sm"
                       />
                       <Input
                         type="email"
                         placeholder="Email"
                         value={formData.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="h-12 bg-white text-gray-900 rounded-xl"
+                        className="h-10 md:h-12 bg-white text-gray-900 rounded-xl text-sm"
                       />
                       <Input
                         type="tel"
                         placeholder="Mobile number"
                         value={formData.mobile}
                         onChange={(e) => handleInputChange("mobile", e.target.value)}
-                        className="h-12 bg-white text-gray-900 rounded-xl"
+                        className="h-10 md:h-12 bg-white text-gray-900 rounded-xl text-sm"
                       />
                     </div>
                   </div>
 
                   <Button
                     onClick={() => navigate("/login")}
-                    className="w-full h-14 bg-white text-[#0D9488] hover:bg-gray-100 rounded-xl font-bold text-lg shadow-lg"
+                    className="w-full h-10 md:h-12 bg-white text-[#0D9488] hover:bg-gray-100 rounded-xl font-semibold md:font-bold text-sm md:text-base shadow-lg"
                   >
                     Login to Continue
                   </Button>
                 </div>
-
-                {/* Terms & Conditions */}
-                <div className="bg-white rounded-2xl p-6 mt-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Terms & Conditions</h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Class link shared on session day (join early for tech checks)</li>
-                    <li>• Fee is non-refundable and non-transferable</li>
-                    <li>• Active internet connection required</li>
-                  </ul>
-                  <p className="text-xs text-gray-500 mt-4">
-                    By continuing, you agree to share your info with STEM for Society & the course provider, as per data protection laws.
-                  </p>
-                </div>
               </>
             ) : !isEnrolled() ? (
               <>
-                <div className="bg-gradient-to-br from-[#0D9488] to-[#0389FF] rounded-2xl p-8 text-white shadow-xl">
-                  <div className="text-center mb-6">
-                    <p className="text-lg mb-2">With</p>
-                    <p className="text-4xl font-bold">
+                <div className="bg-gradient-to-br from-[#0D9488] to-[#0389FF] rounded-2xl p-4 md:p-6 lg:p-8 text-white shadow-xl">
+                  <div className="text-center mb-4 md:mb-6">
+                    <p className="text-sm md:text-base opacity-90 mb-2">With</p>
+                    <p className="text-3xl md:text-4xl font-bold">
                       ₹{Number(course.cost || 0).toLocaleString()}
                     </p>
-                    <p className="text-lg mt-2">confirm your seat</p>
+                    <p className="text-sm md:text-base opacity-90 mt-2">confirm your seat</p>
                   </div>
 
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="flex items-center gap-2">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:p-6 mb-4 md:mb-6">
+                    <div className="flex items-center justify-between mb-3 md:mb-4">
+                      <span className="flex items-center gap-2 text-sm md:text-base">
                         Personal details
                       </span>
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 md:space-y-4">
                       <Input
                         placeholder="Full Name"
                         value={formData.fullName}
                         onChange={(e) => handleInputChange("fullName", e.target.value)}
-                        className="h-12 bg-white text-gray-900 rounded-xl"
+                        className="h-10 md:h-12 bg-white text-gray-900 rounded-xl text-sm"
                       />
                       <Input
                         type="email"
                         placeholder="Email"
                         value={formData.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="h-12 bg-white text-gray-900 rounded-xl"
+                        className="h-10 md:h-12 bg-white text-gray-900 rounded-xl text-sm"
                       />
                       <Input
                         type="tel"
                         placeholder="Mobile number"
                         value={formData.mobile}
                         onChange={(e) => handleInputChange("mobile", e.target.value)}
-                        className="h-12 bg-white text-gray-900 rounded-xl"
+                        className="h-10 md:h-12 bg-white text-gray-900 rounded-xl text-sm"
                       />
                     </div>
                   </div>
@@ -651,30 +632,17 @@ const AcademyDetail = () => {
                   <Button
                     onClick={handleContinue}
                     disabled={isPending}
-                    className="w-full h-14 bg-white text-[#0D9488] hover:bg-gray-100 rounded-xl font-bold text-lg shadow-lg"
+                    className="w-full h-10 md:h-12 bg-white text-[#0D9488] hover:bg-gray-100 rounded-xl font-semibold md:font-bold text-sm md:text-base shadow-lg"
                   >
                     {isPending ? "Processing..." : "Continue"}
                   </Button>
                 </div>
-
-                {/* Terms & Conditions */}
-                <div className="bg-white rounded-2xl p-6 mt-6 shadow-sm">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">Terms & Conditions</h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li>• Class link shared on session day (join early for tech checks)</li>
-                    <li>• Fee is non-refundable and non-transferable</li>
-                    <li>• Active internet connection required</li>
-                  </ul>
-                  <p className="text-xs text-gray-500 mt-4">
-                    By continuing, you agree to share your info with STEM for Society & the course provider, as per data protection laws.
-                  </p>
-                </div>
               </>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {/* Already Enrolled Card */}
-                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-8 text-white shadow-xl">
-                  <div className="text-center mb-6">
+                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-4 md:p-6 lg:p-8 text-white shadow-xl">
+                  <div className="text-center mb-4 md:mb-6">
                     <CheckCircle2 className="w-16 h-16 mx-auto mb-4" />
                     <h3 className="text-2xl font-bold mb-2">You're Enrolled!</h3>
                     <p className="text-green-100">You have successfully registered for this course</p>
@@ -682,7 +650,7 @@ const AcademyDetail = () => {
 
                   {/* Enrollment Details */}
                   {course.enrolments?.length > 0 && (
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 md:p-4 mb-3 md:mb-4">
                       <p className="text-sm mb-2">
                         Enrolled on:{" "}
                         <span className="font-semibold">
@@ -709,7 +677,7 @@ const AcademyDetail = () => {
                   {course.link && (
                     <Button
                       variant="outline"
-                      className="w-full bg-white text-green-600 hover:bg-green-50 border-0 h-12 rounded-xl font-semibold"
+                      className="w-full bg-white text-green-600 hover:bg-green-50 border-0 h-10 md:h-12 rounded-xl font-semibold text-sm md:text-base"
                     >
                       <a 
                         href={course.link} 
@@ -726,7 +694,7 @@ const AcademyDetail = () => {
 
                 {/* Certificate Section */}
                 {course.enrolments?.[0]?.certificate && (
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border-2 border-green-500">
+                  <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border-2 border-green-500">
                     <div className="space-y-4">
                       <div className="text-center">
                         <Award className="w-12 h-12 text-green-600 mx-auto mb-3" />
@@ -737,20 +705,20 @@ const AcademyDetail = () => {
                           You have successfully completed the training and earned a certificate!
                         </p>
                       </div>
-                      <div className="flex flex-col gap-3">
-                        <Button className="bg-green-600 hover:bg-green-700 text-white h-12 rounded-xl">
+                      <div className="flex flex-col gap-2 md:gap-3">
+                        <Button className="bg-green-600 hover:bg-green-700 text-white h-10 md:h-12 rounded-xl text-sm md:text-base">
                           <Link
                             target="_blank"
                             to={course.enrolments[0].certificate}
                             className="flex items-center justify-center space-x-2 w-full"
                           >
-                            <Award className="h-4 w-4" />
+                            <Award className="h-3.5 md:h-4 w-3.5 md:w-4" />
                             <span>Download Certificate</span>
                           </Link>
                         </Button>
                         <Button 
                           variant="outline"
-                          className="border-green-600 text-green-600 hover:bg-green-50 h-12 rounded-xl"
+                          className="border-green-600 text-green-600 hover:bg-green-50 h-10 md:h-12 rounded-xl text-sm md:text-base"
                         >
                           <Link
                             target="_blank"
@@ -768,7 +736,7 @@ const AcademyDetail = () => {
 
                 {/* Feedback Section */}
                 {course.displayFeedback && (
-                  <div className="bg-white rounded-2xl p-6 shadow-sm">
+                  <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm">
                     <RatingAndFeedback
                       data={course}
                       id={courseId!}
@@ -781,22 +749,35 @@ const AcademyDetail = () => {
           </div>
         </div>
 
+        {/* Terms & Conditions - Full Width */}
+        <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8 mb-8 md:mb-12 shadow-sm">
+          <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">Terms & Conditions</h3>
+          <ul className="space-y-2 text-sm md:text-base text-gray-600 mb-4">
+            <li>• Class link shared on session day (join early for tech checks)</li>
+            <li>• Fee is non-refundable and non-transferable</li>
+            <li>• Active internet connection required</li>
+          </ul>
+          <p className="text-xs md:text-sm text-gray-500">
+            By continuing, you agree to share your info with STEM for Society & the course provider, as per data protection laws.
+          </p>
+        </div>
+
         {/* Program Details */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
-            <BookOpen className="w-12 h-12 text-[#0D9488] mx-auto mb-3" />
-            <h4 className="font-bold text-gray-900 mb-2">Duration</h4>
-            <p className="text-gray-600">{calculateDuration()}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-6">
+          <div className="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm">
+            <BookOpen className="w-8 md:w-12 h-8 md:h-12 text-[#0D9488] mx-auto mb-2 md:mb-3" />
+            <h4 className="font-bold text-gray-900 mb-1 md:mb-2 text-sm md:text-base">Duration</h4>
+            <p className="text-gray-600 text-xs md:text-sm">{calculateDuration()}</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
-            <Calendar className="w-12 h-12 text-[#0389FF] mx-auto mb-3" />
-            <h4 className="font-bold text-gray-900 mb-2">Start Date</h4>
-            <p className="text-gray-600">{formatDate(course.startDate)}</p>
+          <div className="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm">
+            <Calendar className="w-8 md:w-12 h-8 md:h-12 text-[#0389FF] mx-auto mb-2 md:mb-3" />
+            <h4 className="font-bold text-gray-900 mb-1 md:mb-2 text-sm md:text-base">Start Date</h4>
+            <p className="text-gray-600 text-xs md:text-sm">{formatDate(course.startDate)}</p>
           </div>
-          <div className="bg-white rounded-2xl p-6 text-center shadow-sm">
-            <Award className="w-12 h-12 text-[#F59E0B] mx-auto mb-3" />
-            <h4 className="font-bold text-gray-900 mb-2">Certification</h4>
-            <p className="text-gray-600">Industry Recognized</p>
+          <div className="bg-white rounded-2xl p-4 md:p-6 text-center shadow-sm">
+            <Award className="w-8 md:w-12 h-8 md:h-12 text-[#F59E0B] mx-auto mb-2 md:mb-3" />
+            <h4 className="font-bold text-gray-900 mb-1 md:mb-2 text-sm md:text-base">Certification</h4>
+            <p className="text-gray-600 text-xs md:text-sm">Industry Recognized</p>
           </div>
         </div>
       </div>
