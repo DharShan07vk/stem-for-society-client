@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components1/ui/select";
-import { Search, SlidersHorizontal, RotateCcw, GraduationCap, Briefcase, Users, Award } from "lucide-react";
+import { Search, SlidersHorizontal, RotateCcw } from "lucide-react";
 import Header from "@/components1/Header";
 import Footer from "@/components1/Footer";
 import GridBackground from "@/components1/GridBackground";

@@ -27,8 +27,8 @@ const Header = () => {
   };
 
   return (
-    <header className="relative shadow-sm">
-      <div className="max-w-7xl  mx-auto px-4 sm:px-6 relative z-10">
+    <header className="relative shadow-sm z-50">
+      <div className="max-w-7xl  mx-auto px-4 sm:px-6 relative">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
@@ -176,13 +176,12 @@ const Header = () => {
     </button>
 
     {dropdownOpen && (
-      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
+      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border">
         <Link
-          to="/courses"
+          to="/courses?me=true"
           className="block px-4 py-2 hover:bg-gray-100"
           onClick={() => {
             setDropdownOpen(false);
-            setFilterByMe(true); // same as old header
           }}
         >
           My trainings
