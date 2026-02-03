@@ -47,7 +47,7 @@ function Home() {
       <ProgramsOffered/>
      <WhyChooseUs />
        <Partners/>
-       <UpcomingSessions/>
+       {/* <UpcomingSessions/> */}
       <ReviewCards/>
       <FAQ />
       <Footer />
