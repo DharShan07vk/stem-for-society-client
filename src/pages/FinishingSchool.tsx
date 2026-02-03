@@ -14,117 +14,89 @@ import Header from "@/components1/Header";
 import Footer from "@/components1/Footer";
 import GridBackground from "@/components1/GridBackground";
 import FinishingSchoolCard from "@/components1/FinishingSchoolCard";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import dayjs from "dayjs";
+import { api } from "@/lib/api";
+import { GenericError, GenericResponse } from "@/lib/types";
+import { formatDate } from "@/lib/utils";
+import Loading from "@/components/Loading";
+import Errorbox from "@/components/Errorbox";
 
-// Course data interface
-interface FinishingSchoolCourse {
+// Student training data structure (imported from Courses.tsx pattern)
+export type StudentTraining = {
   id: string;
-  image: string;
-  universityLogo?: string;
-  universityName?: string;
-  badge: string;
   title: string;
-  description: string;
-  duration: string;
-  mode: string;
-  modeDescription: string;
+  coverImg: string;
   startDate: string;
-  category: string;
-  level: string;
-}
+  endDate: string;
+  description: string;
+  createdAt: string;
+  category?: string;
+  course_type?: string;
+  instructor: {
+    firstName: string;
+    lastName?: string;
+    institutionName?: string;
+  };
+  link?: string;
+  cost: string;
+  location?: string;
+  isEnrolled: boolean;
+  displayFeedback: boolean;
+  ratings: {
+    feedback: string;
+    rating: number;
+    completedOn: string;
+  }[];
+  enrolments: {
+    id: string;
+    userId: string;
+    trainingId: string;
+    completedOn: string | null;
+    createdAt: string;
+    updatedAt?: string;
+    certificateNo?: string;
+    certificate?: string;
+    transactions?: {
+      amount: string;
+      status: string;
+    }[];
+  }[];
+  type: "ONLINE" | "OFFLINE" | "HYBRID";
+  lessons: {
+    id: string;
+    createdAt: Date | null;
+    updatedAt: Date | null;
+    title: string;
+    location: string | null;
+    type: "ONLINE" | "OFFLINE";
+    trainingId: string | null;
+    content: string | null;
+    video: string | null;
+    lastDate: Date | null;
+  }[];
+};
 
-// Sample course data for Finishing School programs
-const finishingSchoolCourses: FinishingSchoolCourse[] = [
-  {
-    id: "1",
-    image: "https://tse1.mm.bing.net/th/id/OIP.H77lzR28If23YLTwfBIFGAHaE7?rs=1&pid=ImgDetMain&o=7&rm=3",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Post Graduate specialization",
-    title: "Bioinformatics & Genomics & Data Science",
-    description: "Advance your career with our PG program in Bioinformatics, Genomics & Data Science, blending biological research with powerful data analytics.",
-    duration: "1 year",
-    mode: "Hybrid",
-    modeDescription: "Online + In-person",
-    startDate: "Sep'25",
-    category: "life-sciences",
-    level: "postgraduate",
-  },
-  {
-    id: "2",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Post Graduate specialization",
-    title: "Gen-AI in Life Science & Healthcare",
-    description: "The PG program in AI in Life Sciences integrates artificial intelligence with biological research, equipping students to innovate in healthcare and biotech. Graduates are prepared to apply AI technologies to advance life sciences and improve patient outcomes.",
-    duration: "1 year",
-    mode: "Hybrid",
-    modeDescription: "Online + In-person",
-    startDate: "Feb'26",
-    category: "healthcare",
-    level: "postgraduate",
-  },
-  {
-    id: "3",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Professional Certificate",
-    title: "Advanced Clinical Research & Data Analytics",
-    description: "Master the fundamentals of clinical research combined with data analytics skills. Learn regulatory requirements, trial design, and statistical analysis for healthcare research.",
-    duration: "6 months",
-    mode: "Online",
-    modeDescription: "Self-paced Learning",
-    startDate: "Mar'25",
-    category: "healthcare",
-    level: "certificate",
-  },
-  {
-    id: "4",
-    image: "https://th.bing.com/th/id/OIP.9xv8gmnTjDUVXAvJYUGHSwHaDt?w=345&h=175&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Post Graduate specialization",
-    title: "Pharmaceutical Sciences & Drug Development",
-    description: "Comprehensive program covering drug discovery, development processes, regulatory affairs, and quality assurance in the pharmaceutical industry.",
-    duration: "1 year",
-    mode: "Hybrid",
-    modeDescription: "Online + In-person",
-    startDate: "Jul'25",
-    category: "pharmaceutical",
-    level: "postgraduate",
-  },
-  {
-    id: "5",
-    image: "https://www.e3melbusiness.com/assets/images/Leadership-in-Healthcare-Management.jpg",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Executive Program",
-    title: "Healthcare Management & Leadership",
-    description: "Develop leadership skills tailored for healthcare organizations. Learn strategic planning, operations management, and healthcare policy implementation.",
-    duration: "8 months",
-    mode: "Online",
-    modeDescription: "Weekend Classes",
-    startDate: "Apr'25",
-    category: "healthcare",
-    level: "executive",
-  },
-  {
-    id: "6",
-    image: "https://royed.in/wp-content/uploads/2018/05/Latam-drug-regulatory-affairs-1.png",
-    universityLogo: "/lovable-uploads/b29296a1-1faf-45dc-a273-07bdab44992a.png",
-    universityName: "STEM University",
-    badge: "Professional Certificate",
-    title: "Medical Device Regulatory Affairs",
-    description: "Specialized program focusing on medical device regulations, quality management systems, and compliance requirements across global markets.",
-    duration: "4 months",
-    mode: "Online",
-    modeDescription: "Self-paced Learning",
-    startDate: "May'25",
-    category: "medical-devices",
-    level: "certificate",
-  },
-];
+// Fetch only Skill Development courses
+function useSkillDevelopmentCourses() {
+  return useQuery<StudentTraining[], AxiosError<GenericError>>({
+    queryKey: ["trainings", "finishing-school"],
+    queryFn: async () => {
+      const response = await api().get<GenericResponse<StudentTraining[]>>("/trainings/finishing-schools");
+      console.log("🚀 Skill Development courses:", response.data);
+      if (!response.data?.data?.length) return [];
+      
+      // Filter for Skill Development courses only
+
+      
+      return response.data.data;
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
+}
 
 // Filter state interface
 interface FilterState {
@@ -136,6 +108,7 @@ interface FilterState {
 
 const FinishingSchool = () => {
   const navigate = useNavigate();
+  const { data: courses, isLoading, error } = useSkillDevelopmentCourses();
   
   const [filters, setFilters] = useState<FilterState>({
     category: "",
@@ -161,34 +134,43 @@ const FinishingSchool = () => {
 
   // Filter courses based on selected filters
   const filteredCourses = useMemo(() => {
-    return finishingSchoolCourses.filter(course => {
-      const matchesSearch = !filters.searchQuery || 
-        course.title.toLowerCase().includes(filters.searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(filters.searchQuery.toLowerCase());
+    if (!courses) return [];
+    
+    return courses.filter((course) => {
+      const searchTerm = filters.searchQuery.toLowerCase();
+      const matchesSearch = !searchTerm || 
+        course.title.toLowerCase().includes(searchTerm) ||
+        course.description?.toLowerCase().includes(searchTerm) ||
+        course.category?.toLowerCase().includes(searchTerm);
       
       const matchesCategory = !filters.category || filters.category === "all" ||
-        course.category === filters.category;
+        course.category?.toLowerCase().includes(filters.category.toLowerCase());
       
-      const matchesLevel = !filters.level || filters.level === "all" ||
-        course.level === filters.level;
+      // For level, we can check category or add a level field if backend provides it
+      const matchesLevel = !filters.level || filters.level === "all";
       
       const matchesMode = !filters.mode || filters.mode === "all" ||
-        course.mode.toLowerCase() === filters.mode.toLowerCase();
+        course.type?.toLowerCase() === filters.mode.toLowerCase();
       
       return matchesSearch && matchesCategory && matchesLevel && matchesMode;
     });
-  }, [filters]);
+  }, [courses, filters]);
 
-  // Handle course explore
-  const handleExplore = (courseId: string) => {
-    navigate(`/course-detail/${courseId}`);
+  // Calculate duration from start and end dates
+  const calculateDuration = (startDate: string, endDate: string) => {
+    const start = dayjs(startDate);
+    const end = dayjs(endDate);
+    const weeks = end.diff(start, 'week');
+    const months = end.diff(start, 'month');
+    
+    if (months > 0) {
+      return `${months} month${months > 1 ? 's' : ''}`;
+    }
+    return `${weeks} week${weeks > 1 ? 's' : ''}`;
   };
 
-  // Handle brochure download
-  const handleDownloadBrochure = (course: FinishingSchoolCourse) => {
-    // Placeholder for brochure download functionality
-    console.log("Downloading brochure for:", course.title);
-  };
+  if (isLoading) return <Loading />;
+  if (error) return <Errorbox message={error.message} />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -205,8 +187,7 @@ const FinishingSchool = () => {
                 <span className="text-[#0D9488]">Industry-Ready Skills</span>
               </h1>
               {/* <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-                Bridge the gap between academy and industry with our specialized finishing school programs. 
-                Gain practical skills, industry certifications, and hands-on experience to accelerate your professional journey.
+                Short, hands-on programs to rapidly upskill for industry roles — practical projects, expert mentors, and career-focused outcomes.
               </p> */}
             </div>
 
@@ -216,29 +197,29 @@ const FinishingSchool = () => {
                 <div className="w-12 h-12 bg-[#0D9488]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <GraduationCap className="w-6 h-6 text-[#0D9488]" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900">15+</p>
-                <p className="text-gray-500 text-sm">Programs Available</p>
+                <p className="text-2xl font-bold text-gray-900">30+</p>
+                <p className="text-gray-500 text-sm">Short Courses</p>
               </div>
               <div className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-[#0389FF]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Briefcase className="w-6 h-6 text-[#0389FF]" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900">90%</p>
-                <p className="text-gray-500 text-sm">Placement Rate</p>
+                <p className="text-2xl font-bold text-gray-900">85%</p>
+                <p className="text-gray-500 text-sm">Job-Ready Outcomes</p>
               </div>
               <div className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-[#F59E0B]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Users className="w-6 h-6 text-[#F59E0B]" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900">5000+</p>
-                <p className="text-gray-500 text-sm">Alumni Network</p>
+                <p className="text-2xl font-bold text-gray-900">2000+</p>
+                <p className="text-gray-500 text-sm">Learners Trained</p>
               </div>
               <div className="bg-white rounded-2xl p-5 text-center shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-[#8B5CF6]/10 rounded-full flex items-center justify-center mx-auto mb-3">
                   <Award className="w-6 h-6 text-[#8B5CF6]" />
                 </div>
-                <p className="text-2xl font-bold text-gray-900">50+</p>
-                <p className="text-gray-500 text-sm">Industry Partners</p>
+                <p className="text-2xl font-bold text-gray-900">40+</p>
+                <p className="text-gray-500 text-sm">Industry Mentors</p>
               </div>
             </div> */}
 
@@ -260,11 +241,11 @@ const FinishingSchool = () => {
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="life-sciences">Life Sciences</SelectItem>
-                    <SelectItem value="healthcare">Healthcare</SelectItem>
-                    <SelectItem value="pharmaceutical">Pharmaceutical</SelectItem>
-                    <SelectItem value="medical-devices">Medical Devices</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="class 8 - 10">Class 8-10</SelectItem>
+                    <SelectItem value="class 11 - 12">Class 11-12</SelectItem>
+                    <SelectItem value="Undergraduate">UnderGraduate</SelectItem>
+                    <SelectItem value="Postgraduate">Postgraduate</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -278,8 +259,8 @@ const FinishingSchool = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Levels</SelectItem>
+                    <SelectItem value="micro">Micro</SelectItem>
                     <SelectItem value="certificate">Certificate</SelectItem>
-                    <SelectItem value="postgraduate">Post Graduate</SelectItem>
                     <SelectItem value="executive">Executive</SelectItem>
                   </SelectContent>
                 </Select>
@@ -305,7 +286,7 @@ const FinishingSchool = () => {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Search programs..."
+                    placeholder="Search courses..."
                     value={filters.searchQuery}
                     onChange={(e) => handleFilterChange("searchQuery", e.target.value)}
                     className="pl-10 h-10 bg-gray-50 border-gray-200 rounded-xl focus:ring-[#0D9488] focus:border-[#0D9488]"
@@ -327,7 +308,7 @@ const FinishingSchool = () => {
             {/* Results Count */}
             <div className="flex items-center justify-between mb-6">
               <p className="text-gray-600">
-                Showing <span className="font-semibold text-gray-900">{filteredCourses.length}</span> programs
+                Showing <span className="font-semibold text-gray-900">{filteredCourses.length}</span> courses
               </p>
             </div>
 
@@ -338,16 +319,16 @@ const FinishingSchool = () => {
                   <FinishingSchoolCard
                     key={course.id}
                     courseId={course.id}
-                    image={course.image}
-                    universityLogo={course.universityLogo}
-                    universityName={course.universityName}
-                    badge={course.badge}
+                    image={course.coverImg}
+                    universityLogo={undefined}
+                    universityName={course.instructor?.institutionName || `${course.instructor?.firstName || ''} ${course.instructor?.lastName || ''}`.trim()}
+                    badge={course.category || 'Course'}
                     title={course.title}
                     description={course.description}
-                    duration={course.duration}
-                    mode={course.mode}
-                    modeDescription={course.modeDescription}
-                    startDate={course.startDate}                    
+                    duration={calculateDuration(course.startDate, course.endDate)}
+                    mode={course.type}
+                    modeDescription={course.type === "ONLINE" ? "Live Online Sessions" : course.type === "HYBRID" ? "Online + Offline" : "In-Person"}
+                    startDate={formatDate(course.startDate)}                    
                   />
                 ))}
               </div>
@@ -356,7 +337,7 @@ const FinishingSchool = () => {
                 <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="w-10 h-10 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No programs found</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No courses found</h3>
                 <p className="text-gray-500 mb-4">Try adjusting your filters or search query</p>
                 <Button
                   onClick={handleResetFilters}

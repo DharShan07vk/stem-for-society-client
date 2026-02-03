@@ -156,6 +156,15 @@ const SkillDevelopment = () => {
     });
   }, [courses, filters]);
 
+  // Extract unique categories from courses
+  const uniqueCategories = useMemo(() => {
+    if (!courses) return [];
+    const categories = courses
+      .map(course => course.category)
+      .filter((category): category is string => !!category);
+    return Array.from(new Set(categories)).sort();
+  }, [courses]);
+
   // Calculate duration from start and end dates
   const calculateDuration = (startDate: string, endDate: string) => {
     const start = dayjs(startDate);
@@ -241,10 +250,11 @@ const SkillDevelopment = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="life-sciences">Life Sciences</SelectItem>
-                    <SelectItem value="healthcare">Healthcare</SelectItem>
-                    <SelectItem value="pharmaceutical">Pharmaceutical</SelectItem>
-                    <SelectItem value="medical-devices">Medical Devices</SelectItem>
+                    {uniqueCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
 
