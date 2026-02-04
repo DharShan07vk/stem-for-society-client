@@ -249,21 +249,7 @@ const FinishingSchool = () => {
                   </SelectContent>
                 </Select>
 
-                {/* Level Dropdown */}
-                <Select
-                  value={filters.level}
-                  onValueChange={(value) => handleFilterChange("level", value)}
-                >
-                  <SelectTrigger className="w-[160px] h-10 bg-white text-gray-700 font-medium border-gray-200 rounded-xl">
-                    <SelectValue placeholder="Program Level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Levels</SelectItem>
-                    <SelectItem value="micro">Micro</SelectItem>
-                    <SelectItem value="certificate">Certificate</SelectItem>
-                    <SelectItem value="executive">Executive</SelectItem>
-                  </SelectContent>
-                </Select>
+            
 
                 {/* Mode Dropdown */}
                 <Select
