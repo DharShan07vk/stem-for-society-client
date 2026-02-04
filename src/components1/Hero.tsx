@@ -122,7 +122,7 @@ const HeroSection = () => {
                   <h3 className={`font text-xl sm:text-2xl mb-1 sm:mb-2 text-left text-black`}>{stat.title}</h3>
                   <p className={`text-xs sm:text-sm mb-2 sm:mb-3 text-left leading-relaxed text-gray-600`}>{stat.description}</p>
                   
-                  {stat.hasAvatars && (
+                  {/* {stat.hasAvatars && (
                     <div className="flex items-center mb-2 sm:mb-3">
                       <div className="flex -space-x-2">
                         <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-300 border-2 border-white"></div>
@@ -130,7 +130,7 @@ const HeroSection = () => {
                         <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-purple-400 border-2 border-white"></div>
                       </div>
                     </div>
-                  )}
+                  )} */}
                   
                   <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-6 text-left items-center">
                     {stat.stats.map((item, idx) => (
@@ -146,7 +146,7 @@ const HeroSection = () => {
             );
             
             return isThirdCard ? (
-              <Link key={index} to="/courses" className="block h-full min-h-[200px] sm:min-h-56">
+              <Link key={index} to="/skill-development" className="block h-full min-h-[200px] sm:min-h-56">
                 {cardElement}
               </Link>
             ) : (
