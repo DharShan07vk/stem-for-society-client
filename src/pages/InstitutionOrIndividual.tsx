@@ -8,7 +8,7 @@ import BottomNavigation from "@/components1/NewUI/navigation/BottomNavigation";
 // Individual View Components
 import IndividualHero from "@/components1/NewUI/individual/IndividualHero";
 import IndividualServices from "@/components1/NewUI/individual/IndividualServices";
-import IndividualJourney from "@/components1/NewUI/individual/IndividualJourney";
+// import IndividualJourney from "@/components1/NewUI/individual/IndividualJourney";
 // import IndividualPricing from "@/components1/NewUI/individual/IndividualPricing";
 import IndividualFAQ from "@/components1/NewUI/individual/IndividualFAQ";
 import IndividualCTA from "@/components1/NewUI/individual/IndividualCTA";
@@ -16,8 +16,8 @@ import IndividualCTA from "@/components1/NewUI/individual/IndividualCTA";
 // Institutional View Components
 import InstitutionalHero from "@/components1/NewUI/institutional/InstitutionalHero";
 import InstitutionalModules from "@/components1/NewUI/institutional/InstitutionalModules";
-import HowWePartner from "@/components1/NewUI/institutional/HowWePartner";
-import InstitutionalPricing from "@/components1/NewUI/institutional/InstitutionalPricing";
+// import HowWePartner from "@/components1/NewUI/institutional/HowWePartner";
+// import InstitutionalPricing from "@/components1/NewUI/institutional/InstitutionalPricing";
 import InstitutionalFAQ from "@/components1/NewUI/institutional/InstitutionalFAQ";
 import InstitutionalCTA from "@/components1/NewUI/institutional/InstitutionalCTA";
 
@@ -120,7 +120,7 @@ const Index = () => {
             <div className="transition-opacity duration-300">
               <IndividualHero />
               <IndividualServices />
-              <IndividualJourney />
+              {/* <IndividualJourney /> */}
               {/* <IndividualPricing /> */}
               <IndividualFAQ />
               <IndividualCTA />
@@ -130,7 +130,7 @@ const Index = () => {
             <div className="transition-opacity duration-300">
               <InstitutionalHero />
               <InstitutionalModules />
-              <HowWePartner />
+              {/* <HowWePartner /> */}
               <InstitutionalFAQ />
               <InstitutionalCTA />
             </div>

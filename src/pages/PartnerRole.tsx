@@ -128,17 +128,7 @@ const PartnerRole = () => {
               </div>
 
               <div className="space-y-4 mb-6">
-                <Link to="/campus-ambassador" className="block">
-                  <div className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer relative">
-                    <ArrowWithTail />
-                    <div className="pr-10">
-                      <h3 className="font-bold text-gray-800 text-sm sm:text-base mb-2">Become a Campus Ambassador</h3>
-                      <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
-                        Promote STEM programs within your campus and build your leadership profile.
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+
 
                 <Link to="/partner-institution-signup" className="block">
                   <div className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer relative">
@@ -154,8 +144,8 @@ const PartnerRole = () => {
               </div>
 
               <div className="text-center pb-4">
-                <Link to="/login" className="text-blue-600 hover:text-blue-700 hover:underline font-semibold text-sm">
-                  Back to Login
+                <Link to="/" className="text-blue-600 hover:text-blue-700 hover:underline font-semibold text-sm">
+                  Back to Home
                 </Link>
               </div>
             </div>

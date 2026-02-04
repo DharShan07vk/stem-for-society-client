@@ -68,8 +68,8 @@ export const IndividualHero = () => {
           </div>
 
           {/* Right Image */}
-          <div className="relative h-[450px] sm:h-[550px] lg:h-[600px] w-full flex items-center justify-center lg:justify-end perspective-[2000px] group mt-8 lg:mt-0 px-[80px] py-[0px]">
-            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl shadow-blue-900/20 border border-slate-100">
+          <div className="relative h-[450px] sm:h-[550px] lg:h-[600px] w-full flex items-center justify-center lg:justify-end perspective-[2000px] group mt-8 lg:mt-0 px-[80px] py-[0px] sm:block hidden">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl shadow-blue-900/20 border border-slate-100 ">
               <img
                 src="https://images.unsplash.com/photo-1565598494553-5685d762031c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkZW50JTIwY2FyZWVyJTIwY291bnNlbGluZyUyMG9uZSUyMG9uJTIwb25lfGVufDF8fHx8MTc2NTgwMjc1N3ww&ixlib=rb-4.1.0&q=80&w=1080"
                 alt="Individual Growth"

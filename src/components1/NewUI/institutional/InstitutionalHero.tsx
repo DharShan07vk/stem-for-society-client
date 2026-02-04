@@ -68,7 +68,33 @@ export const InstitutionalHero = () => {
           </div>
 
           {/* Right Image */}
-          <div className="relative h-[450px] sm:h-[550px] lg:h-[600px] w-full flex items-center justify-center lg:justify-end perspective-[2000px] group mt-8 lg:mt-0 px-[80px] py-[0px]">
+          <div className="relative h-[450px] sm:h-[550px] lg:h-[600px] w-full flex items-center justify-center lg:justify-end perspective-[2000px] group mt-8 lg:mt-0 px-[80px] py-[0px] md:block hidden
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          ">
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl shadow-emerald-900/20 border border-slate-100">
               <img
                 src={StdInClass}
