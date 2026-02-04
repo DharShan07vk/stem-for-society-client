@@ -28,7 +28,7 @@ const Login = () => {
     },
   });
 
-  // Google sign-in function - with proper cancellation handling
+  // Google sign-in function - direct login without phone verification
   const handleGoogleSignIn = async () => {
     try {
       // Disable all background activities
@@ -41,20 +41,11 @@ const Login = () => {
       const firstName = (firebaseUser.displayName?.split(' ')[0] || 'GoogleUser').padEnd(5, 'X');
       const lastName = firebaseUser.displayName?.split(' ').slice(1).join(' ') || '';
       
-      // Generate unique mobile number from Firebase UID
-      const generateUniqueeMobile = (uid: string): string => {
-        const uidNumbers = uid.replace(/[^0-9]/g, '').substring(0, 9);
-        const mobile = `7${uidNumbers.padEnd(9, '0').substring(0, 9)}`;
-        return mobile;
-      };
-      
-      const uniqueMobile = generateUniqueeMobile(firebaseUser.uid);
-      
       // CLEAR PREVIOUS SESSION DATA BEFORE NEW LOGIN
       queryClient.clear();
       localStorage.clear();
       
-      // Always try registration first (will fail silently if user exists)
+      // Always try registration first without mobile (will fail silently if user exists)
       fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,7 +54,7 @@ const Login = () => {
           firstName, lastName,
           password: googlePassword,
           confirmPassword: googlePassword,
-          mobile: uniqueMobile,
+          // No mobile field - will be added during signup if needed
         }),
       }).catch(() => {}); // Ignore registration errors
       

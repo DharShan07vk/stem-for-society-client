@@ -1,4 +1,5 @@
 # Logs
+PROJECT_AUDIT_REPORT.MD
 logs
 *.log
 npm-debug.log*
