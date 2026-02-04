@@ -101,7 +101,7 @@ function useSkillDevelopmentCourses() {
 // Filter state interface
 interface FilterState {
   category: string;
-  level: string;
+ 
   mode: string;
   searchQuery: string;
 }
@@ -112,7 +112,7 @@ const SkillDevelopment = () => {
   
   const [filters, setFilters] = useState<FilterState>({
     category: "",
-    level: "",
+ 
     mode: "",
     searchQuery: "",
   });
@@ -126,7 +126,7 @@ const SkillDevelopment = () => {
   const handleResetFilters = () => {
     setFilters({
       category: "",
-      level: "",
+     
       mode: "",
       searchQuery: "",
     });
@@ -147,12 +147,12 @@ const SkillDevelopment = () => {
         course.category?.toLowerCase().includes(filters.category.toLowerCase());
       
       // For level, we can check category or add a level field if backend provides it
-      const matchesLevel = !filters.level || filters.level === "all";
+   
       
       const matchesMode = !filters.mode || filters.mode === "all" ||
         course.type?.toLowerCase() === filters.mode.toLowerCase();
       
-      return matchesSearch && matchesCategory && matchesLevel && matchesMode;
+      return matchesSearch && matchesCategory && matchesMode;
     });
   }, [courses, filters]);
 
@@ -258,21 +258,8 @@ const SkillDevelopment = () => {
                   </SelectContent>
                 </Select>
 
-                {/* Level Dropdown */}
-                <Select
-                  value={filters.level}
-                  onValueChange={(value) => handleFilterChange("level", value)}
-                >
-                  <SelectTrigger className="w-[160px] h-10 bg-white text-gray-700 font-medium border-gray-200 rounded-xl">
-                    <SelectValue placeholder="Program Level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Levels</SelectItem>
-                    <SelectItem value="micro">Micro</SelectItem>
-                    <SelectItem value="certificate">Certificate</SelectItem>
-                    <SelectItem value="executive">Executive</SelectItem>
-                  </SelectContent>
-                </Select>
+            
+    
 
                 {/* Mode Dropdown */}
                 <Select
