@@ -130,7 +130,7 @@ const Blog = () => {
           <div className="relative z-10">
             <Header />
             <div className="text-center mb-8 pt-2">
-              <p className="text-base text-gray-600 mb-1">Explore Blogs</p>
+              {/* <p className="text-base text-gray-600 mb-1">Explore Blogs</p> */}
               <h1 className="text-2xl md:text-3xl font-bold text-black relative inline-block">
                 <span className="relative">
                   Scientific Communication
@@ -313,7 +313,7 @@ const Blog = () => {
                   </Button>
                 </Link>
                 
-                <Link to="/courses">
+                {/* <Link to="/courses">
                   <Button 
                     variant="outline" 
                     className="bg-white hover:bg-gray-50 border-gray-300 h-12 px-8 rounded-full flex items-center"
@@ -321,7 +321,7 @@ const Blog = () => {
                     <BookOpen className="w-5 h-5 mr-2" />
                     Explore Courses
                   </Button>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>

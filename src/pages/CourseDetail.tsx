@@ -343,13 +343,13 @@ function RatingAndFeedback({
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         {/* Back Button */}
-        <div className="mb-6">
+        <div className="mb-6 md:mb-8">
           <Button
             onClick={() => navigate(-1)}
             variant="outline"
-            className="flex items-center gap-2 text-gray-600 border-gray-200 hover:bg-gray-100"
+            className="flex items-center gap-2 text-gray-600 border-gray-200 hover:bg-gray-100 rounded-lg"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -357,36 +357,36 @@ function RatingAndFeedback({
         </div>
 
         {/* Header Section */}
-        <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8 mb-6 shadow-sm">
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
-            <div className="flex-1">
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+        <div className="bg-white rounded-2xl p-4 md:p-6 lg:p-8 mb-6 md:mb-8 shadow-sm">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-6 lg:gap-8">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3 break-words">
                 {training.title}
               </h1>
-              <p className="text-gray-600 mb-4">{training.category || 'Professional Program'}</p>
-              <div className="flex flex-wrap gap-3 text-sm">
-                <span className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-full">
-                  <Calendar className="w-4 h-4 text-[#0D9488]" />
-                  {formatDate(training.startDate)}
+              <p className="text-gray-600 mb-4 text-sm md:text-base">{training.category || 'Professional Program'}</p>
+              <div className="flex flex-wrap gap-2 md:gap-3 text-xs md:text-sm">
+                <span className="flex items-center gap-1.5 px-2.5 md:px-3 py-1.5 md:py-2 bg-gray-100 rounded-full whitespace-nowrap">
+                  <Calendar className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#0D9488] flex-shrink-0" />
+                  <span className="truncate">{formatDate(training.startDate)}</span>
                 </span>
-                <span className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-full">
-                  <MapPin className="w-4 h-4 text-[#0389FF]" />
-                  {getModeText()}
+                <span className="flex items-center gap-1.5 px-2.5 md:px-3 py-1.5 md:py-2 bg-gray-100 rounded-full whitespace-nowrap">
+                  <MapPin className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#0389FF] flex-shrink-0" />
+                  <span className="truncate">{getModeText()}</span>
                 </span>
-                <span className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-full">
-                  <User className="w-4 h-4 text-[#F59E0B]" />
-                  {instructorName}
+                <span className="flex items-center gap-1.5 px-2.5 md:px-3 py-1.5 md:py-2 bg-gray-100 rounded-full whitespace-nowrap">
+                  <User className="w-3.5 h-3.5 md:w-4 md:h-4 text-[#F59E0B] flex-shrink-0" />
+                  <span className="truncate">{instructorName}</span>
                 </span>
               </div>
             </div>
 
             {/* Image */}
-            <div className="w-full lg:w-80">
+            <div className="w-full lg:w-80 flex-shrink-0">
               <div className="rounded-2xl overflow-hidden shadow-sm">
                 <img
                   src={training.coverImg || "/course-images/default.jpg"}
                   alt={training.title}
-                  className="w-full h-48 md:h-64 object-cover"
+                  className="w-full h-40 sm:h-48 md:h-64 lg:h-72 object-cover"
                 />
               </div>
             </div>
@@ -394,24 +394,24 @@ function RatingAndFeedback({
         </div>
 
         {/* Description and Register */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Description */}
             <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm">
-              <h2 className="text-xl font-bold text-gray-900 mb-3">About</h2>
-              <p className="text-gray-600 leading-relaxed">{training.description}</p>
+              <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-3 md:mb-4">About</h2>
+              <p className="text-gray-600 leading-relaxed text-sm md:text-base">{training.description}</p>
             </div>
 
             {/* Topics Section */}
             {training.lessons && training.lessons.length > 0 && (
               <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Topics Covered</h2>
-                <ul className="space-y-2">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-4">Topics Covered</h2>
+                <ul className="space-y-2 md:space-y-3">
                   {training.lessons.map((lesson, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-[#0D9488] flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{lesson.title}</span>
+                      <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-[#0D9488] flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700 text-sm md:text-base">{lesson.title}</span>
                     </li>
                   ))}
                 </ul>
@@ -419,60 +419,60 @@ function RatingAndFeedback({
             )}
 
             {/* Instructor Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               <div className="bg-gray-50 rounded-2xl p-4 md:p-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Instructor</h3>
-                <p className="text-lg font-semibold text-gray-900">{instructorName}</p>
+                <h3 className="text-xs md:text-sm font-medium text-gray-500 mb-2">Instructor</h3>
+                <p className="text-base md:text-lg font-semibold text-gray-900 break-words">{instructorName}</p>
               </div>
               <div className="bg-gray-50 rounded-2xl p-4 md:p-6">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Institution</h3>
-                <p className="text-lg font-semibold text-gray-900">{institutionName}</p>
+                <h3 className="text-xs md:text-sm font-medium text-gray-500 mb-2">Institution</h3>
+                <p className="text-base md:text-lg font-semibold text-gray-900 break-words">{institutionName}</p>
               </div>
             </div>
           </div>
 
           {/* Right Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-3 md:space-y-4">
             {/* Registration Section */}
             {!userData ? (
-              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm text-center">
-                <p className="text-gray-600 mb-4">Sign in to enroll in this course</p>
+              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm text-center sticky top-4 lg:top-6">
+                <p className="text-gray-600 mb-4 text-sm md:text-base">Sign in to enroll in this course</p>
                 <Button
                   onClick={() => navigate("/login")}
-                  className="w-full bg-[#0D9488] text-white hover:bg-teal-600 rounded-xl h-12 font-semibold"
+                  className="w-full bg-[#0D9488] text-white hover:bg-teal-600 rounded-xl h-10 md:h-12 font-semibold text-sm md:text-base"
                 >
                   Sign In
                 </Button>
               </div>
             ) : !isEnrolled() ? (
-              <div className="bg-gradient-to-br from-[#0D9488] to-[#0389FF] rounded-2xl p-6 text-white shadow-sm">
+              <div className="bg-gradient-to-br from-[#0D9488] to-[#0389FF] rounded-2xl p-4 md:p-6 text-white shadow-sm sticky top-4 lg:top-6">
                 <div className="mb-4">
-                  <p className="text-lg opacity-90 mb-1">Price</p>
-                  <p className="text-3xl font-bold">
+                  <p className="text-sm md:text-base opacity-90 mb-1">Price</p>
+                  <p className="text-2xl md:text-3xl font-bold">
                     ₹{Number(training.cost || 0).toLocaleString()}
                   </p>
                 </div>
                 <Button
                   onClick={handleRegister}
                   disabled={isPending}
-                  className="w-full bg-white text-[#0D9488] hover:bg-gray-100 rounded-xl h-12 font-semibold"
+                  className="w-full bg-white text-[#0D9488] hover:bg-gray-100 rounded-xl h-10 md:h-12 font-semibold text-sm md:text-base"
                 >
                   {isPending ? "Processing..." : "Enroll Now"}
                 </Button>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm space-y-4">
+              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm space-y-3 md:space-y-4">
                 <div className="flex items-center gap-2 text-green-600">
-                  <CheckCircle className="w-5 h-5" />
-                  <span className="font-semibold">Already Enrolled</span>
+                  <CheckCircle className="w-4 md:w-5 h-4 md:h-5 flex-shrink-0" />
+                  <span className="font-semibold text-sm md:text-base">Already Enrolled</span>
                 </div>
 
                 {training.link && (
                   <Button
                     onClick={() => window.open(training.link, "_blank")}
-                    className="w-full bg-[#0D9488] text-white hover:bg-teal-600 rounded-xl h-12 font-semibold"
+                    className="w-full bg-[#0D9488] text-white hover:bg-teal-600 rounded-xl h-10 md:h-12 font-semibold text-sm md:text-base"
                   >
-                    <ExternalLink className="w-4 h-4 mr-2" />
+                    <ExternalLink className="w-3.5 md:w-4 h-3.5 md:h-4 mr-2" />
                     Access Course
                   </Button>
                 )}
@@ -481,23 +481,23 @@ function RatingAndFeedback({
                   <>
                     <Button
                       onClick={() => window.open(training.enrolments?.[0]?.certificate, "_blank")}
-                      className="w-full bg-green-600 text-white hover:bg-green-700 rounded-xl h-12 font-semibold"
+                      className="w-full bg-green-600 text-white hover:bg-green-700 rounded-xl h-10 md:h-12 font-semibold text-sm md:text-base"
                     >
-                      <Award className="w-4 h-4 mr-2" />
+                      <Award className="w-3.5 md:w-4 h-3.5 md:h-4 mr-2" />
                       Download Certificate
                     </Button>
                     <Button
                       variant="outline"
                       onClick={() => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${training.enrolments?.[0]?.certificate}&text=I completed ${training.title} on STEM for Society!`, "_blank")}
-                      className="w-full border-[#0D9488] text-[#0D9488] rounded-xl h-12 font-semibold"
+                      className="w-full border-[#0D9488] text-[#0D9488] hover:bg-teal-50 rounded-xl h-10 md:h-12 font-semibold text-sm md:text-base"
                     >
-                      <FaLinkedin className="w-4 h-4 mr-2" />
+                      <FaLinkedin className="w-3.5 md:w-4 h-3.5 md:h-4 mr-2" />
                       Share on LinkedIn
                     </Button>
                   </>
                 )}
                 {training.displayFeedback && (
-                  <div className="bg-white border border-gray-200 rounded-lg p-4">
+                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
                     <RatingAndFeedback
                       data={training}
                       id={id!}
@@ -509,18 +509,18 @@ function RatingAndFeedback({
             )}
 
             {/* Course Info */}
-            <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
+            <div className="bg-gray-50 rounded-2xl p-4 md:p-6 space-y-3">
               <div>
-                <p className="text-xs text-gray-500 font-medium">Duration</p>
-                <p className="text-sm font-semibold text-gray-900">{calculateDuration()}</p>
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Duration</p>
+                <p className="text-sm md:text-base font-semibold text-gray-900 mt-1">{calculateDuration()}</p>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Mode</p>
-                <p className="text-sm font-semibold text-gray-900">{getModeText()}</p>
+              <div className="border-t border-gray-200 pt-3">
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Mode</p>
+                <p className="text-sm md:text-base font-semibold text-gray-900 mt-1">{getModeText()}</p>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">Certificate</p>
-                <p className="text-sm font-semibold text-gray-900">Yes, Upon Completion</p>
+              <div className="border-t border-gray-200 pt-3">
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Certificate</p>
+                <p className="text-sm md:text-base font-semibold text-gray-900 mt-1">Yes, Upon Completion</p>
               </div>
             </div>
           </div>
