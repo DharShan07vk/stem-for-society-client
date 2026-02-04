@@ -1,4 +1,4 @@
-import { Badge, Button, NumberInput, Rating } from "@mantine/core";
+import { Badge, Button, NumberInput, Rating, Paper, Text } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -167,331 +167,457 @@ export default function AdminTrainingSpotlight() {
   const training = data?.data;
 
   return (
-    <div className="w-full mt-4">
-      <div className="max-w-7xl h-full mx-auto flex flex-col px-4">
-        {!training || Object.keys(training).length === 0 ? (
-          <Errorbox message="No data! Must be an invalid link. Please refresh or go back and try again" />
-        ) : (
-          <>
-            <div className=" flex flex-col gap-2">
-              <div className="w-full">
-                <Button
-                  radius={999}
-                  onClick={() => navigate(-1)}
-                  className="flex items-center gap-2"
-                >
-                  <ChevronLeft size={16} />
-                  Back
-                </Button>
-              </div>
-              <h3 className="mt-2 text-xl md:text-3xl flex items-center gap-2 font-semibold">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="flex items-center gap-4 mb-4">
+        <Button
+          variant="subtle"
+          leftSection={<ChevronLeft size={18} />}
+          radius="md"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </div>
+
+      {!training || Object.keys(training).length === 0 ? (
+        <Errorbox message="No data! Must be an invalid link. Please refresh or go back and try again" />
+      ) : (
+        <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <div className="flex items-center gap-3 mb-4 sm:mb-0">
+              <h1 className="text-3xl font-bold text-gray-900">
                 {training.title}
-                <Badge
-                  variant="dot"
-                  color={!training.category ? "gray" : "blue"}
-                  className={
-                    !training.category ? "text-gray-600" : "text-blue-500"
-                  }
-                >
-                  {training.category || "Uncategorized"}
-                </Badge>
-              </h3>
-              <div className="mt-5 flex gap-4">
-                <img
-                  src={training.coverImg ?? undefined}
-                  alt={training.title}
-                  className="w-2/3 object-contain aspect-video rounded-lg"
-                />
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-lg font-semibold">Instructor details</h3>
-                  <p className="flex flex-col font-semibold">
-                    <span className="text-sm font-normal">Instructor</span>
-                    {training.instructor.firstName +
-                      " " +
-                      (training.instructor.lastName ?? "")}
-                  </p>
-                  <p className="flex flex-col font-semibold">
-                    <span className="text-sm font-normal">Institution</span>
-                    {training.instructor.institutionName + ", "}
-                    <p>{training.instructor.address.addressLine1}</p>
-                    <p>{training.instructor.address.addressLine2 ?? ""}</p>
-                    <p>{training.instructor.address.city}</p>
-                    <p>{training.instructor.address.state}</p>
-                    <p>{training.instructor.address.pincode}</p>
-                  </p>
-                  <span className="text-sm"></span>
-                </div>
-              </div>
-              <span className="mt-2 text-xl md:text-lg">
-                {training.description || "No description available"}
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Created on{" "}
-                <span className="date ml-2 text-black font-semibold">
-                  {formatDate(training.createdAt)}
-                </span>
-              </span>
-              <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base mb-1">
-                <FaLocationDot /> Mode:{" "}
-                <span className=" text-black font-normal">
-                  <Badge variant="dot" color={location ? "red" : "green"}>
-                    {training.type ??
-                      (training.location ? "Offline" : "Online")}
-                  </Badge>
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Location:{" "}
-                <span className="location text-black font-semibold">
-                  {training.location || "N/A"}
-                </span>
-              </span>
-              <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base">
-                <Link2 /> Meeting Link:{" "}
-                <span className="location text-black font-semibold">
-                  {training.link || "N/A"}
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Cost:{" "}
-                <span className="location text-black font-semibold">
-                  ₹ {training.cost || "N/A"}
-                </span>
-              </span>
-              <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base">
-                <Calendar size={18} />
-                Dates:{" "}
-                <span className="location text-black font-semibold">
-                  {formatDate(training.startDate) +
-                    " to " +
-                    formatDate(training.endDate)}
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Payout:{" "}
-                <span className="location text-black font-semibold">
-                  {training.cut}%
-                </span>
-              </span>
+              </h1>
+              <Badge
+                variant="light"
+                color={!training.category ? "gray" : "blue"}
+                size="lg"
+              >
+                {training.category || "Uncategorized"}
+              </Badge>
             </div>
-            <div className="flex justify-start gap-4 mt-5">
-              {!training.approvedBy ? (
-                <div className="flex flex-col gap-1 w-full">
-                  <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                    Assigned Dates:{" "}
-                  </span>
-                  <div className="flex items-end w-2/3 gap-3">
-                    <DateTimePicker
-                      label="Start date and time"
-                      placeholder="Start date and time"
-                      value={formData.startDate}
-                      onChange={(value) => handleDateChange("startDate", value)}
-                      leftSection={<Calendar size={14} />}
-                      className="w-1/3"
-                    />
-                    <DateTimePicker
-                      label="End date and time"
-                      placeholder="End date and time"
-                      value={formData.endDate}
-                      onChange={(value) => handleDateChange("endDate", value)}
-                      leftSection={<Calendar size={14} />}
-                      className="w-1/3"
-                    />
-                  </div>
-
-                  <div className="mt-3">
-                    <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                      Profit cut:{" "}
-                    </span>
-                    <NumberInput
-                      description="This is the percentage of profit that will be provided to the instructor, after this training ends (Whole numbers only)"
-                      step={1}
-                      w={200}
-                      value={formData.cut}
-                      min={10}
-                      defaultValue={10}
-                      max={90}
-                      onChange={(num) =>
-                        setFormData((prev) => ({ ...prev, cut: Number(num) }))
-                      }
-                    />
-                    {formData.cut !== 0 && (
-                      <>
-                        <p className="font-medium text-gray-600">
-                          Payout {formData.cut}% for this course
-                        </p>
-                        <span className="text-sm text-gray-500">
-                          If 10 people register for this course for ₹
-                          {training.cost}, then after{" "}
-                          {formatDate(formData.endDate ?? training.endDate)}
-                          :{" "}
-                        </span>
-                        <br />
-                        <span className="text-sm text-gray-500">
-                          Instructor earns{" "}
-                          {currencyFormatter.format(
-                            (Number(training.cost) *
-                              10 *
-                              Number(formData.cut)) /
-                              100,
-                          )}{" "}
-                          <br />
-                          Platform earns{" "}
-                          {currencyFormatter.format(
-                            (Number(training.cost) *
-                              10 *
-                              (100 - Number(formData.cut))) /
-                              100,
-                          )}{" "}
-                        </span>
-                      </>
-                    )}
-                  </div>
-                  <Button
-                    radius={999}
-                    w={300}
-                    mt={12}
-                    variant="filled"
-                    color="green"
-                    className="text-xs sm:text-sm md:text-base"
-                    onClick={() =>
-                      mutate({
-                        decision: "approve",
-                        startDate: formData.startDate ?? training.startDate,
-                        endDate: formData.endDate ?? training.endDate,
-                        cut: formData.cut!,
-                      })
-                    }
-                    disabled={isPending || isLoading}
-                  >
-                    Approve
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  radius={999}
-                  variant="filled"
-                  color="red"
-                  className="text-xs sm:text-sm md:text-base"
-                  onClick={() => mutate({ decision: "deny" })}
-                  disabled={isPending || isLoading}
-                >
-                  Reject
-                </Button>
-              )}
-            </div>
-
             {training.approvedBy && (
-              <>
-                <h3 className="text-xl font-medium mt-6">Students enrolled</h3>
+              <Button
+                radius="md"
+                variant="filled"
+                color="red"
+                onClick={() => mutate({ decision: "deny" })}
+                disabled={isPending || isLoading}
+                size="md"
+              >
+                Reject Training
+              </Button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2 space-y-6">
+              {training.coverImg && (
+                <img
+                  src={training.coverImg}
+                  alt={training.title}
+                  className="w-full object-cover aspect-video rounded-lg"
+                />
+              )}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Description
+                </h3>
+                <Text size="md" className="text-gray-700 leading-relaxed">
+                  {training.description || "No description available"}
+                </Text>
+              </div>
+            </div>
+
+            <div className="lg:col-span-1">
+              <Paper p="md" withBorder className="rounded-lg space-y-4">
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Training Details
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Mode
+                    </Text>
+                    <Badge
+                      variant="light"
+                      color={training.type === "OFFLINE" ? "red" : "green"}
+                      size="sm"
+                      className="mt-1"
+                    >
+                      {training.type ?? (training.location ? "OFFLINE" : "ONLINE")}
+                    </Badge>
+                  </div>
+                  {training.location && (
+                    <div>
+                      <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                        Location
+                      </Text>
+                      <Text size="sm" fw={500} className="text-gray-900">
+                        {training.location}
+                      </Text>
+                    </div>
+                  )}
+                  {training.link && (
+                    <div>
+                      <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                        Meeting Link
+                      </Text>
+                      <Link
+                        to={training.link}
+                        target="_blank"
+                        className="text-blue-600 hover:underline text-sm break-all"
+                      >
+                        {training.link}
+                      </Link>
+                    </div>
+                  )}
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Cost
+                    </Text>
+                    <Text size="lg" fw={700} className="text-gray-900">
+                      ₹{training.cost || "N/A"}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Schedule
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {formatDate(training.startDate)} -{" "}
+                      {formatDate(training.endDate)}
+                    </Text>
+                  </div>
+                  {training.cut && (
+                    <div>
+                      <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                        Instructor Payout
+                      </Text>
+                      <Text size="sm" fw={500} className="text-gray-900">
+                        {training.cut}%
+                      </Text>
+                    </div>
+                  )}
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Created On
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {formatDate(training.createdAt)}
+                    </Text>
+                  </div>
+                </div>
+              </Paper>
+
+              <Paper p="md" withBorder className="rounded-lg mt-4">
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Instructor Information
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Name
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {training.instructor.firstName +
+                        " " +
+                        (training.instructor.lastName ?? "")}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Institution
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {training.instructor.institutionName}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Contact
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {training.instructor.email}
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {training.instructor.mobile}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Address
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {training.instructor.address.addressLine1}
+                      {training.instructor.address.addressLine2 && (
+                        <>, {training.instructor.address.addressLine2}</>
+                      )}
+                      <br />
+                      {training.instructor.address.city},{" "}
+                      {training.instructor.address.state} -{" "}
+                      {training.instructor.address.pincode}
+                    </Text>
+                  </div>
+                </div>
+              </Paper>
+            </div>
+          </div>
+          {!training.approvedBy && (
+            <Paper p="md" withBorder className="rounded-lg mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Approval Settings
+              </h3>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <DateTimePicker
+                    label="Start date and time"
+                    placeholder="Select start date and time"
+                    value={formData.startDate}
+                    onChange={(value) => handleDateChange("startDate", value)}
+                    leftSection={<Calendar size={16} />}
+                    radius="md"
+                  />
+                  <DateTimePicker
+                    label="End date and time"
+                    placeholder="Select end date and time"
+                    value={formData.endDate}
+                    onChange={(value) => handleDateChange("endDate", value)}
+                    leftSection={<Calendar size={16} />}
+                    radius="md"
+                  />
+                </div>
+
+                <div>
+                  <NumberInput
+                    label="Instructor Profit Cut (%)"
+                    description="Percentage of profit that will be provided to the instructor after this training ends (10-90%)"
+                    step={1}
+                    value={formData.cut}
+                    min={10}
+                    defaultValue={10}
+                    max={90}
+                    onChange={(num) =>
+                      setFormData((prev) => ({ ...prev, cut: Number(num) }))
+                    }
+                    radius="md"
+                  />
+                  {formData.cut !== 0 && (
+                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                      <Text size="sm" fw={600} className="text-gray-900 mb-2">
+                        Payout Calculation Example
+                      </Text>
+                      <Text size="xs" className="text-gray-700">
+                        If 10 students register for ₹{training.cost} each, after{" "}
+                        {formatDate(formData.endDate ?? training.endDate)}:
+                      </Text>
+                      <div className="mt-2 space-y-1">
+                        <Text size="xs" className="text-gray-700">
+                          • Instructor earns:{" "}
+                          <span className="font-semibold">
+                            {currencyFormatter.format(
+                              (Number(training.cost) *
+                                10 *
+                                Number(formData.cut)) /
+                                100,
+                            )}
+                          </span>
+                        </Text>
+                        <Text size="xs" className="text-gray-700">
+                          • Platform earns:{" "}
+                          <span className="font-semibold">
+                            {currencyFormatter.format(
+                              (Number(training.cost) *
+                                10 *
+                                (100 - Number(formData.cut))) /
+                                100,
+                            )}
+                          </span>
+                        </Text>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <Button
+                  radius="md"
+                  variant="filled"
+                  color="green"
+                  size="md"
+                  onClick={() =>
+                    mutate({
+                      decision: "approve",
+                      startDate: formData.startDate ?? training.startDate,
+                      endDate: formData.endDate ?? training.endDate,
+                      cut: formData.cut!,
+                    })
+                  }
+                  disabled={isPending || isLoading}
+                  className="w-full sm:w-auto"
+                >
+                  {isPending ? "Approving..." : "Approve Training"}
+                </Button>
+              </div>
+            </Paper>
+          )}
+
+          {training.approvedBy && (
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Students Enrolled ({training.enrolments.length})
+              </h3>
+              <div className="overflow-x-auto rounded-lg border border-gray-200">
                 <Table
                   headers={[
-                    { render: "S.No", className: "w-[10%]" },
-                    { render: "Student Name", className: "w-[12%]" },
-                    { render: "Enrolled on" },
-                    {
-                      render: "Paid on",
-                    },
-                    {
-                      render: "Feedback",
-                      className: "max-w-[30%]",
-                    },
-                    {
-                      render: "Certificate",
-                    },
-                    { render: "Details" },
+                    { render: "S.No", className: "w-[6%] text-left pl-4" },
+                    { render: "Student Name", className: "text-left" },
+                    { render: "Enrolled On", className: "text-left" },
+                    { render: "Paid On", className: "text-left" },
+                    { render: "Feedback", className: "text-left" },
+                    { render: "Certificate", className: "text-left" },
+                    { render: "Actions", className: "w-[10%] text-center" },
                   ]}
                   classNames={{
-                    root: "bg-white rounded-lg shadow",
+                    root: "bg-white",
+                    header: "bg-gray-50",
+                    body: "divide-y divide-gray-100",
+                    row: "hover:bg-gray-50 transition-colors",
                   }}
                   rows={training.enrolments.map((r, i) => ({
                     id: r.id,
                     cells: [
                       {
-                        render: i + 1,
-                        className: "w-[10%]",
+                        render: (
+                          <span className="text-gray-600 font-medium">{i + 1}</span>
+                        ),
+                        className: "text-left pl-4",
                       },
                       {
-                        render:
-                          r.user.firstName + " " + (r.user.lastName ?? ""),
-                        className: "w-[12%]",
+                        render: (
+                          <span className="font-medium text-gray-900">
+                            {r.user.firstName + " " + (r.user.lastName ?? "")}
+                          </span>
+                        ),
+                        className: "text-left",
                       },
                       {
-                        render: formatDate(r.createdAt),
+                        render: (
+                          <span className="text-gray-600 text-sm">
+                            {formatDate(r.createdAt)}
+                          </span>
+                        ),
+                        className: "text-left",
                       },
                       {
                         render: r.paidOn ? (
-                          formatDate(r.paidOn)
+                          <span className="text-gray-600 text-sm">
+                            {formatDate(r.paidOn)}
+                          </span>
                         ) : (
-                          <i>Not paid</i>
+                          <Badge variant="light" color="yellow" size="sm">
+                            Not Paid
+                          </Badge>
                         ),
+                        className: "text-left",
                       },
                       {
                         render: (() => {
                           const fb = training.ratings?.find(
                             (rt) => rt.userId === r.user.id,
                           );
-                          if (!fb) return <i>No feedback</i>;
+                          if (!fb)
+                            return (
+                              <span className="text-gray-400 text-sm">
+                                No feedback
+                              </span>
+                            );
                           return (
-                            <div className="grid place-items-center">
-                              <Rating value={fb.rating} />
-                              {fb.feedback}
+                            <div className="flex flex-col gap-1">
+                              <Rating value={fb.rating} size="sm" readOnly />
+                              <Text size="xs" className="text-gray-600 max-w-xs">
+                                {fb.feedback}
+                              </Text>
                             </div>
                           );
                         })(),
-                        className: "max-w-[30%]",
+                        className: "text-left",
                       },
                       {
                         render: !r.certificate ? (
-                          <i>Yet to be generated</i>
+                          <Badge variant="light" color="gray" size="sm">
+                            Pending
+                          </Badge>
                         ) : r.certificate === "generating" ? (
-                          <i>Processing</i>
+                          <Badge variant="light" color="blue" size="sm">
+                            Processing
+                          </Badge>
                         ) : (
-                          <Link to={r.certificate!}>Click here</Link>
+                          <Link
+                            to={r.certificate!}
+                            className="text-blue-600 hover:underline text-sm"
+                          >
+                            Download
+                          </Link>
                         ),
+                        className: "text-left",
                       },
                       {
                         render: (
                           <Link to={`/admin/students/${r.user.id}`}>
-                            <Button radius={999}>View details</Button>
+                            <Button size="xs" variant="light" radius="md">
+                              View
+                            </Button>
                           </Link>
                         ),
+                        className: "text-center",
                       },
                     ],
                   }))}
                 />
-              </>
-            )}
+              </div>
+            </div>
+          )}
 
-            {training.lessons && training.lessons.length > 0 && (
-              <div className="grid gap-3 mt-8">
-                <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                  Course Syllabus
-                </span>
+          {training.lessons && training.lessons.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Course Syllabus ({training.lessons.length} lessons)
+              </h3>
+              <div className="space-y-4">
                 {training.lessons.map((l) => (
-                  <div className="w-full border my-1 rounded-md p-4" key={l.id}>
-                    <div className="flex justify-between items-center mb-2">
-                      <h4 className="text-lg font-semibold">{l.title}</h4>
+                  <Paper
+                    p="md"
+                    withBorder
+                    className="rounded-lg"
+                    key={l.id}
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <h4 className="text-lg font-semibold text-gray-900">
+                        {l.title}
+                      </h4>
                       <Badge
-                        variant="dot"
-                        color={l.type === "ONLINE" ? "red" : "green"}
+                        variant="light"
+                        color={l.type === "ONLINE" ? "blue" : "green"}
+                        size="sm"
                       >
                         {l.type}
                       </Badge>
                     </div>
                     {l.content && (
                       <div
-                        className="ql-snow"
+                        className="ql-snow mb-3 text-sm"
                         dangerouslySetInnerHTML={{ __html: l.content }}
                       ></div>
                     )}
-                    <div className="flex flex-col mb-2 gap-3">
-                      <span className="text-gray-600">
-                        <Calendar size={16} className="inline-block mr-1" />
-                        {formatDate(l.lastDate)}
-                      </span>
+                    <div className="flex flex-col gap-2 text-sm">
+                      {l.lastDate && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Calendar size={16} />
+                          <span>Due: {formatDate(l.lastDate)}</span>
+                        </div>
+                      )}
                       {l.type === "ONLINE" && l.video && (
-                        <div className="pt-[56.25%] relative">
+                        <div className="pt-[56.25%] relative rounded-lg overflow-hidden bg-gray-100">
                           <ReactPlayer
                             url={l.video}
                             controls
@@ -505,23 +631,20 @@ export default function AdminTrainingSpotlight() {
                           />
                         </div>
                       )}
+                      {l.type === "OFFLINE" && l.location && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <FaLocationDot size={16} />
+                          <span>{l.location}</span>
+                        </div>
+                      )}
                     </div>
-                    {l.type === "OFFLINE" && l.location && (
-                      <div className="text-gray-600">
-                        <FaLocationDot
-                          size={16}
-                          className="inline-block mr-1"
-                        />
-                        {l.location}
-                      </div>
-                    )}
-                  </div>
+                  </Paper>
                 ))}
               </div>
-            )}
-          </>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

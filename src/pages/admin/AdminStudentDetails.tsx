@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { Button } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import Errorbox from "../../components/Errorbox";
 import Loading from "../../components/Loading";
@@ -64,78 +64,116 @@ function AdminStudentDetails() {
   const student = data?.data;
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-8 p-4">
-      <div className="w-full">
-        {/*// @ts-expect-error shutup */}
-        <Link to={-1}>
-          <Button radius={999} fullWidth={false}>
-            <ChevronLeft size={16} />
-            Back
-          </Button>
-        </Link>
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="flex items-center gap-4 mb-4">
+        <Button
+          variant="subtle"
+          leftSection={<ChevronLeft size={18} />}
+          radius="md"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
       </div>
-      <div className="w-full flex-col max-w-7xl">
-        <h1 className="text-3xl font-semibold mb-6 text-left">
-          Student Details
-        </h1>
-        <div className="flex flex-col gap-7">
-          <div className="flex flex-col">
-            <span className="text-sm">Name </span>
-            <span className="text-lg font-semibold">
+
+      <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">Student Details</h1>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-gray-50 rounded-lg p-4">
+            <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-1">
+              Full Name
+            </Text>
+            <Text size="lg" fw={600} className="text-gray-900">
               {student?.firstName + " " + (student?.lastName ?? "")}
-            </span>
+            </Text>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm">Phone </span>
-            <span className="text-lg font-semibold">{student?.mobile}</span>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-1">
+              Email Address
+            </Text>
+            <Text size="lg" fw={600} className="text-gray-900">
+              {student?.email}
+            </Text>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm">Email </span>
-            <span className="text-lg font-semibold">{student?.email}</span>
+          <div className="bg-gray-50 rounded-lg p-4">
+            <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-1">
+              Phone Number
+            </Text>
+            <Text size="lg" fw={600} className="text-gray-900">
+              {student?.mobile}
+            </Text>
           </div>
         </div>
 
-        <h3 className="text-xl font-medium mt-6">Courses enrolled</h3>
-        <Table
-          headers={[
-            { render: "S.No", className: "w-[10%]" },
-            { render: "Course Name" },
-            { render: "Enrolled on" },
-            { render: "Dates" },
-            { render: "Details" },
-          ]}
-          classNames={{
-            root: "bg-white rounded-lg shadow",
-          }}
-          rows={student!.enrolments.map((r, i) => ({
-            id: r.id,
-            cells: [
-              {
-                render: i + 1,
-                className: "w-[10%]",
-              },
-              {
-                render: r.training.title,
-              },
-              {
-                render: formatDate(r.createdAt),
-              },
-              {
-                render:
-                  formatDate(r.training.startDate) +
-                  " to " +
-                  formatDate(r.training.endDate),
-              },
-              {
-                render: (
-                  <Link to={`/admin/trainings/${r.training.id}`}>
-                    <Button radius={999}>View details</Button>
-                  </Link>
-                ),
-              },
-            ],
-          }))}
-        />
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            Courses Enrolled
+          </h3>
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Course Name", className: "text-left" },
+                { render: "Enrolled On", className: "text-left" },
+                { render: "Schedule", className: "text-left" },
+                { render: "Actions", className: "w-[12%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={student!.enrolments.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <span className="font-medium text-gray-900">
+                        {r.training.title}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-600 text-sm">
+                        {formatDate(r.createdAt)}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">
+                        {formatDate(r.training.startDate)} -{" "}
+                        {formatDate(r.training.endDate)}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Link to={`/admin/trainings/${r.training.id}`}>
+                        <Button size="xs" variant="light" radius="md">
+                          View Course
+                        </Button>
+                      </Link>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

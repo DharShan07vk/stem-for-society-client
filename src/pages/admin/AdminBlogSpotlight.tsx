@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { ChevronLeft } from "lucide-react";
@@ -73,97 +73,136 @@ export default function AdminBlogSpotlight() {
   const blog = data?.data;
 
   return (
-    <div className="w-full mt-4">
-      <div className="max-w-7xl h-full mx-auto flex flex-col px-4">
-        {!blog || Object.keys(blog).length === 0 ? (
-          <Errorbox message="No data! Must be an invalid link. Please refresh or go back and try again" />
-        ) : (
-          <>
-            <div className=" flex flex-col gap-2">
-              <div className="w-full">
-                <Button
-                  radius={999}
-                  onClick={() => navigate(-1)}
-                  className="flex items-center gap-2"
-                >
-                  <ChevronLeft size={16} />
-                  Back
-                </Button>
-              </div>
-              <span className="mt-2 text-xl md:text-3xl font-semibold">
-                {blog.title}
-              </span>
-              <div className="mt-5 flex gap-4">
-                <img
-                  src={blog.coverImage ?? undefined}
-                  alt={blog.title}
-                  className="w-2/3 object-cover aspect-video rounded-lg"
-                />
-                <div className="flex flex-col gap-1">
-                  <span className="font-medium">Author Details</span>
-                  <h4 className="font-medium">
-                    Name:{" "}
-                    <span className="font-normal">{blog.blogAuthor.name}</span>
-                  </h4>
-                  <h4 className="font-medium">
-                    LinkedIn:{" "}
-                    <span className="font-normal">
-                      {blog.blogAuthor.linkedin}
-                    </span>
-                  </h4>
-                  <h4 className="font-medium">
-                    Email:{" "}
-                    <span className="font-normal">{blog.blogAuthor.email}</span>
-                  </h4>
-                  <h4 className="font-medium">
-                    Mobile:{" "}
-                    <span className="font-normal">
-                      {blog.blogAuthor.mobile}
-                    </span>
-                  </h4>
-                  <h4 className="font-medium">
-                    References:{" "}
-                    <ul className="font-normal">
-                      {blog.references?.map((ref) => (
-                        <Link key={ref} to={ref} target="_blank">
-                          <li>{ref}</li>
-                        </Link>
-                      ))}
-                    </ul>
-                  </h4>
-                </div>
-              </div>
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="flex items-center gap-4 mb-4">
+        <Button
+          variant="subtle"
+          leftSection={<ChevronLeft size={18} />}
+          radius="md"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </div>
 
-              <BlogContent markdownContent={blog.content}></BlogContent>
-            </div>
-            <div className="flex justify-start gap-4 mt-5">
+      {!blog || Object.keys(blog).length === 0 ? (
+        <Errorbox message="No data! Must be an invalid link. Please refresh or go back and try again" />
+      ) : (
+        <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
+              {blog.title}
+            </h1>
+            <div>
               {!blog.approvedBy ? (
                 <Button
-                  radius={999}
+                  radius="md"
                   variant="filled"
                   color="green"
-                  className="text-xs sm:text-sm md:text-base"
                   onClick={() => mutate("approve")}
                   disabled={isPending || isLoading}
+                  size="md"
                 >
-                  Approve
+                  Approve Blog
                 </Button>
               ) : (
                 <Button
-                  radius={999}
+                  radius="md"
                   variant="filled"
                   color="red"
-                  className="text-xs sm:text-sm md:text-base"
                   onClick={() => mutate("reject")}
                   disabled={isPending || isLoading}
+                  size="md"
                 >
-                  Reject
+                  Reject Blog
                 </Button>
               )}
             </div>
-          </>
-        )}
-      </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="lg:col-span-2">
+              {blog.coverImage && (
+                <img
+                  src={blog.coverImage}
+                  alt={blog.title}
+                  className="w-full object-cover aspect-video rounded-lg mb-6"
+                />
+              )}
+              <div className="prose max-w-none">
+                <BlogContent markdownContent={blog.content}></BlogContent>
+              </div>
+            </div>
+
+            <div className="lg:col-span-1">
+              <div className="bg-gray-50 rounded-lg p-6 space-y-4 sticky top-4">
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Author Information
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Name
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {blog.blogAuthor.name}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Email
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {blog.blogAuthor.email}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                      Mobile
+                    </Text>
+                    <Text size="sm" fw={500} className="text-gray-900">
+                      {blog.blogAuthor.mobile}
+                    </Text>
+                  </div>
+                  {blog.blogAuthor.linkedin && (
+                    <div>
+                      <Text size="xs" c="dimmed" className="uppercase tracking-wide">
+                        LinkedIn
+                      </Text>
+                      <Link
+                        to={blog.blogAuthor.linkedin}
+                        target="_blank"
+                        className="text-blue-600 hover:underline text-sm"
+                      >
+                        View Profile
+                      </Link>
+                    </div>
+                  )}
+                  {blog.references && blog.references.length > 0 && (
+                    <div>
+                      <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-2">
+                        References
+                      </Text>
+                      <div className="space-y-1">
+                        {blog.references.map((ref, idx) => (
+                          <Link
+                            key={idx}
+                            to={ref}
+                            target="_blank"
+                            className="block text-blue-600 hover:underline text-xs break-all"
+                          >
+                            {ref}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

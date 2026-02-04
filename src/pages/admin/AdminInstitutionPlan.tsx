@@ -140,131 +140,160 @@ export default function AdminInstitutionRegistrations() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold">
-            Institution Registrations
-          </h1>
-          <Text size="sm" c="dimmed">
-            Total: {filteredInstitutionRegistrations.length} registrations
-          </Text>
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+              Institution Registrations
+            </h1>
+            <Text size="sm" c="dimmed" className="text-gray-500">
+              Total: {filteredInstitutionRegistrations.length} registrations
+            </Text>
+          </div>
+          <Group className="flex-wrap">
+            <Input
+              leftSection={<Search size={18} />}
+              radius="md"
+              placeholder="Search name, organization, mobile..."
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full sm:w-80"
+              classNames={{
+                input: "h-10",
+              }}
+            />
+            <Button
+              leftSection={<Download size={18} />}
+              variant="outline"
+              radius="md"
+              onClick={exportToCSV}
+              disabled={!filteredInstitutionRegistrations.length}
+              className="h-10"
+            >
+              Export CSV
+            </Button>
+          </Group>
         </div>
-        <Group>
-          <Input
-            leftSection={<Search size={16} />}
-            radius="md"
-            placeholder="Search name, organization, mobile..."
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ minWidth: "250px" }}
-          />
-          <Button 
-            leftSection={<Download size={16} />}
-            variant="outline"
-            onClick={exportToCSV}
-            disabled={!filteredInstitutionRegistrations.length}
-          >
-            Export to XLS
-          </Button>
-        </Group>
-      </div>
-      <div className="w-full">
         {!data ? (
           <Errorbox message="Cannot get data due to some unknown error" />
         ) : (
-          <Table
-            headers={[
-              { render: "S.No", className: "w-[10%]" },
-              { render: "Organization" },
-              { render: "Contact Person" },
-              { render: "Contact Info" },
-              { render: "Payment" },
-              { render: "Session Date" },
-              { render: "Details" },
-            ]}
-            classNames={{
-              root: "bg-white rounded-lg shadow",
-            }}
-            rows={filteredInstitutionRegistrations.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: (
-                    <div>
-                      <div className="font-medium text-gray-900">{r.organizationName}</div>
-                      {r.type && (
-                        <div className="text-xs text-gray-500">{r.type}</div>
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  render: (
-                    <div>
-                      <div className="font-medium text-gray-900">{r.name}</div>
-                      {r.designation && (
-                        <div className="text-xs text-gray-500">{r.designation}</div>
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  render: (
-                    <div className="text-sm">
-                      <div className="text-gray-900">{r.email}</div>
-                      <div className="text-gray-600">{r.mobile}</div>
-                    </div>
-                  ),
-                },
-                {
-                  render: (
-                    <div className="text-sm">
-                      <div className="font-semibold text-gray-900">
-                        ₹{r.transactions?.[0]?.transaction.amount || "N/A"}
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Organization", className: "text-left" },
+                { render: "Contact Person", className: "text-left" },
+                { render: "Contact Info", className: "text-left" },
+                { render: "Payment", className: "text-left" },
+                { render: "Session", className: "text-left" },
+                { render: "Actions", className: "w-[10%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={filteredInstitutionRegistrations.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <div>
+                        <div className="font-medium text-gray-900">
+                          {r.organizationName}
+                        </div>
+                        {r.type && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {r.type}
+                          </div>
+                        )}
                       </div>
-                      <Badge 
-                        size="sm" 
-                        color={
-                          r.transactions?.[0]?.transaction.status === "success" 
-                            ? "green" 
-                            : r.transactions?.[0]?.transaction.status === "pending"
-                            ? "yellow"
-                            : "red"
-                        }
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div>
+                        <div className="font-medium text-gray-900">{r.name}</div>
+                        {r.designation && (
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {r.designation}
+                          </div>
+                        )}
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="text-sm">
+                        <div className="text-gray-900">{r.email}</div>
+                        <div className="text-gray-600">{r.mobile}</div>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-gray-900">
+                          ₹{r.transactions?.[0]?.transaction.amount || "N/A"}
+                        </span>
+                        <Badge
+                          size="sm"
+                          variant="light"
+                          color={
+                            r.transactions?.[0]?.transaction.status === "success"
+                              ? "green"
+                              : r.transactions?.[0]?.transaction.status ===
+                                  "pending"
+                              ? "yellow"
+                              : "red"
+                          }
+                        >
+                          {r.transactions?.[0]?.transaction.status || "N/A"}
+                        </Badge>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="text-sm">
+                        <div className="font-medium text-gray-900">
+                          {r.selectedDate}
+                        </div>
+                        <div className="text-gray-600">{r.selectedTime}</div>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Button
+                        size="xs"
+                        variant="light"
+                        radius="md"
+                        onClick={() => setActiveInstituteId(r.id)}
                       >
-                        {r.transactions?.[0]?.transaction.status || "N/A"}
-                      </Badge>
-                    </div>
-                  ),
-                },
-                {
-                  render: (
-                    <div className="text-sm">
-                      <div className="font-medium text-gray-900">{r.selectedDate}</div>
-                      <div className="text-gray-600">{r.selectedTime}</div>
-                    </div>
-                  ),
-                },
-                {
-                  render: (
-                    <Button
-                      size="xs"
-                      variant="light"
-                      onClick={() => setActiveInstituteId(r.id)}
-                    >
-                      View
-                    </Button>
-                  ),
-                },
-              ],
-            }))}
-          />
+                        View
+                      </Button>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
         )}
       </div>
 
@@ -274,11 +303,15 @@ export default function AdminInstitutionRegistrations() {
         opened={!!activeInstituteId}
         onClose={() => setActiveInstituteId(null)}
         title={
-          <Text fw={600}>
+          <Text fw={600} size="lg">
             Institution Registration Details
           </Text>
         }
-        size="1000px"
+        size="xl"
+        classNames={{
+          content: "rounded-xl",
+          header: "border-b border-gray-200 pb-4",
+        }}
       >
         {(() => {
           const currentInst = data?.data.find(

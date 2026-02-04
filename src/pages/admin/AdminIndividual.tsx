@@ -132,72 +132,85 @@ export default function AdminPsychology() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold">
-            Individual Registrations
-          </h1>
-          <Text size="sm" c="dimmed">
-            Total: {filteredPsychology.length} registrations
-          </Text>
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+              Individual Registrations
+            </h1>
+            <Text size="sm" c="dimmed" className="text-gray-500">
+              Total: {filteredPsychology.length} registrations
+            </Text>
+          </div>
+          <Group className="flex-wrap">
+            <Input
+              leftSection={<Search size={18} />}
+              radius="md"
+              placeholder="Search name, email, mobile..."
+              type="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full sm:w-80"
+              classNames={{
+                input: "h-10",
+              }}
+            />
+            <Button
+              leftSection={<Download size={18} />}
+              variant="outline"
+              radius="md"
+              onClick={exportToCSV}
+              disabled={!filteredPsychology.length}
+              className="h-10"
+            >
+              Export CSV
+            </Button>
+          </Group>
         </div>
-        <Group>
-          <Input
-            leftSection={<Search size={16} />}
-            radius="md"
-            placeholder="Search name, email, mobile..."
-            type="search"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ minWidth: "250px" }}
-          />
-          <Button 
-            leftSection={<Download size={16} />}
-            variant="outline"
-            onClick={exportToCSV}
-            disabled={!filteredPsychology.length}
-          >
-            Export To XLS
-          </Button>
-        </Group>
-      </div>
-      
-      <div className="w-full overflow-x-auto">
+
         {!data ? (
           <Errorbox message="Cannot get data due to some unknown error" />
         ) : (
-          <div className="min-w-full">
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
             <Table
               headers={[
-                { render: "S.No", className: "w-16" },
-                { render: "Name", className: "min-w-[150px]" },
-                { render: "Contact", className: "min-w-[200px]" },
-                { render: "Organization", className: "min-w-[180px]" },
-                { render: "Session", className: "min-w-[150px]" },
-                { render: "Payment", className: "min-w-[120px]" },
-                { render: "Registered", className: "min-w-[120px]" },
-                { render: "Actions", className: "w-24" },
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Name", className: "text-left" },
+                { render: "Contact", className: "text-left" },
+                { render: "Organization", className: "text-left" },
+                { render: "Session", className: "text-left" },
+                { render: "Payment", className: "text-left" },
+                { render: "Registered", className: "text-left" },
+                { render: "Actions", className: "w-[10%] text-center" },
               ]}
               classNames={{
-                root: "bg-white rounded-lg shadow",
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
               }}
               rows={filteredPsychology.map((r, i) => ({
                 id: r.id,
                 cells: [
                   {
-                    render: i + 1,
-                    className: "font-medium text-gray-600",
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
                   },
                   {
                     render: (
                       <div>
                         <div className="font-medium text-gray-900">{r.name}</div>
                         {r.designation && (
-                          <div className="text-xs text-gray-500">{r.designation}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {r.designation}
+                          </div>
                         )}
                       </div>
                     ),
+                    className: "text-left",
                   },
                   {
                     render: (
@@ -206,34 +219,41 @@ export default function AdminPsychology() {
                         <div className="text-gray-600">{r.mobile}</div>
                       </div>
                     ),
+                    className: "text-left",
                   },
                   {
                     render: (
-                      <div className="text-sm">
-                        <div className="text-gray-900">{r.organizationName || "N/A"}</div>
-                      </div>
+                      <span className="text-gray-700 text-sm">
+                        {r.organizationName || "N/A"}
+                      </span>
                     ),
+                    className: "text-left",
                   },
                   {
                     render: (
                       <div className="text-sm">
-                        <div className="font-medium text-gray-900">{r.selectedDate}</div>
+                        <div className="font-medium text-gray-900">
+                          {r.selectedDate}
+                        </div>
                         <div className="text-gray-600">{r.selectedTime}</div>
                       </div>
                     ),
+                    className: "text-left",
                   },
                   {
                     render: (
-                      <div className="text-sm">
-                        <div className="font-semibold text-gray-900">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-gray-900">
                           ₹{r.transactions?.[0]?.transaction.amount || "N/A"}
-                        </div>
-                        <Badge 
-                          size="sm" 
+                        </span>
+                        <Badge
+                          size="sm"
+                          variant="light"
                           color={
-                            r.transactions?.[0]?.transaction.status === "success" 
-                              ? "green" 
-                              : r.transactions?.[0]?.transaction.status === "pending"
+                            r.transactions?.[0]?.transaction.status === "success"
+                              ? "green"
+                              : r.transactions?.[0]?.transaction.status ===
+                                  "pending"
                               ? "yellow"
                               : "red"
                           }
@@ -242,13 +262,15 @@ export default function AdminPsychology() {
                         </Badge>
                       </div>
                     ),
+                    className: "text-left",
                   },
                   {
                     render: (
-                      <div className="text-sm text-gray-600">
+                      <span className="text-gray-600 text-sm">
                         {formatDate(r.createdAt)}
-                      </div>
+                      </span>
                     ),
+                    className: "text-left",
                   },
                   {
                     render: (
@@ -256,11 +278,13 @@ export default function AdminPsychology() {
                         size="xs"
                         variant="light"
                         leftSection={<Eye size={14} />}
+                        radius="md"
                         onClick={() => setActiveRegistrationId(r.id)}
                       >
                         View
                       </Button>
                     ),
+                    className: "text-center",
                   },
                 ],
               }))}
@@ -275,11 +299,15 @@ export default function AdminPsychology() {
         opened={!!activeRegistrationId}
         onClose={() => setActiveRegistrationId(null)}
         title={
-          <Text fw={600}>
+          <Text fw={600} size="lg">
             Registration Details
           </Text>
         }
-        size="900px"
+        size="xl"
+        classNames={{
+          content: "rounded-xl",
+          header: "border-b border-gray-200 pb-4",
+        }}
       >
         {(() => {
           const currentReg = data?.data.find(
@@ -287,80 +315,149 @@ export default function AdminPsychology() {
           );
           if (!currentReg)
             return <Alert color="red" title="Invalid registration selected" />;
-          
+
           return (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Personal Information */}
-              <Paper p="md" withBorder>
-                <Text size="sm" fw={600} mb="sm" c="blue">
+              <Paper p="md" withBorder className="rounded-lg">
+                <Text size="sm" fw={600} mb="md" c="blue" className="uppercase tracking-wide">
                   Personal Information
                 </Text>
-                <div style={{ fontSize: "13px" }}>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Full Name:</Text> <Text span fw={500}>{currentReg.name}</Text></div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Email:</Text> <Text span fw={500}>{currentReg.email}</Text></div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Mobile:</Text> <Text span fw={500}>{currentReg.mobile}</Text></div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Designation:</Text> <Text span fw={500}>{currentReg.designation || "N/A"}</Text></div>
-                  <div><Text span c="dimmed">Organization:</Text> <Text span fw={500}>{currentReg.organizationName || "N/A"}</Text></div>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <Text span c="dimmed" size="xs">Full Name:</Text>{" "}
+                    <Text span fw={500}>{currentReg.name}</Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Email:</Text>{" "}
+                    <Text span fw={500}>{currentReg.email}</Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Mobile:</Text>{" "}
+                    <Text span fw={500}>{currentReg.mobile}</Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Designation:</Text>{" "}
+                    <Text span fw={500}>{currentReg.designation || "N/A"}</Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Organization:</Text>{" "}
+                    <Text span fw={500}>
+                      {currentReg.organizationName || "N/A"}
+                    </Text>
+                  </div>
                 </div>
               </Paper>
 
               {/* Session Information */}
-              <Paper p="md" withBorder>
-                <Text size="sm" fw={600} mb="sm" c="green">
+              <Paper p="md" withBorder className="rounded-lg">
+                <Text size="sm" fw={600} mb="md" c="green" className="uppercase tracking-wide">
                   Session Information
                 </Text>
-                <div style={{ fontSize: "13px" }}>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Session Date:</Text> <Text span fw={500}>{currentReg.selectedDate}</Text></div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Session Time:</Text> <Text span fw={500}>{currentReg.selectedTime}</Text></div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Service Interest:</Text> <Text span fw={500}>{currentReg.serviceInterest || "N/A"}</Text></div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Registered On:</Text> <Text span fw={500}>{formatDate(currentReg.createdAt)}</Text></div>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <Text span c="dimmed" size="xs">Session Date:</Text>{" "}
+                    <Text span fw={500}>{currentReg.selectedDate}</Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Session Time:</Text>{" "}
+                    <Text span fw={500}>{currentReg.selectedTime}</Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Service Interest:</Text>{" "}
+                    <Text span fw={500}>
+                      {currentReg.serviceInterest || "N/A"}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Registered On:</Text>{" "}
+                    <Text span fw={500}>
+                      {formatDate(currentReg.createdAt)}
+                    </Text>
+                  </div>
                   {currentReg.updatedAt && (
-                    <div><Text span c="dimmed">Last Updated:</Text> <Text span fw={500}>{formatDate(currentReg.updatedAt)}</Text></div>
+                    <div>
+                      <Text span c="dimmed" size="xs">Last Updated:</Text>{" "}
+                      <Text span fw={500}>
+                        {formatDate(currentReg.updatedAt)}
+                      </Text>
+                    </div>
                   )}
                 </div>
               </Paper>
 
               {/* Additional Details */}
-              <Paper p="md" withBorder>
-                <Text size="sm" fw={600} mb="sm" c="purple">
+              <Paper p="md" withBorder className="rounded-lg">
+                <Text size="sm" fw={600} mb="md" c="purple" className="uppercase tracking-wide">
                   Additional Details
                 </Text>
-                <div style={{ fontSize: "13px" }}>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Requirements:</Text> <Text span fw={500}>{currentReg.requirements || "N/A"}</Text></div>
-                  <div><Text span c="dimmed">Concerns:</Text> <Text span fw={500}>{currentReg.concerns || "N/A"}</Text></div>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <Text span c="dimmed" size="xs">Requirements:</Text>{" "}
+                    <Text span fw={500}>
+                      {currentReg.requirements || "N/A"}
+                    </Text>
+                  </div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Concerns:</Text>{" "}
+                    <Text span fw={500}>{currentReg.concerns || "N/A"}</Text>
+                  </div>
                 </div>
               </Paper>
 
               {/* Payment Information */}
-              <Paper p="md" withBorder>
-                <Text size="sm" fw={600} mb="sm" c="orange">
+              <Paper p="md" withBorder className="rounded-lg">
+                <Text size="sm" fw={600} mb="md" c="orange" className="uppercase tracking-wide">
                   Payment Information
                 </Text>
-                <div style={{ fontSize: "13px" }}>
-                  <div style={{ marginBottom: "8px" }}>
-                    <Text span c="dimmed">Amount:</Text> <Text span fw={700}>₹{currentReg.transactions?.[0]?.transaction.amount || "N/A"}</Text>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <Text span c="dimmed" size="xs">Amount:</Text>{" "}
+                    <Text span fw={700} size="md">
+                      ₹{currentReg.transactions?.[0]?.transaction.amount || "N/A"}
+                    </Text>
                   </div>
-                  <div style={{ marginBottom: "8px" }}>
-                    <Text span c="dimmed">Status:</Text>{" "}
-                    <Badge 
+                  <div>
+                    <Text span c="dimmed" size="xs">Status:</Text>{" "}
+                    <Badge
                       size="sm"
+                      variant="light"
                       color={
-                        currentReg.transactions?.[0]?.transaction.status === "success" 
-                          ? "green" 
-                          : currentReg.transactions?.[0]?.transaction.status === "pending"
-                          ? "yellow"
-                          : "red"
+                        currentReg.transactions?.[0]?.transaction.status ===
+                        "success"
+                          ? "green"
+                          : currentReg.transactions?.[0]?.transaction.status ===
+                              "pending"
+                            ? "yellow"
+                            : "red"
                       }
                     >
-                      {currentReg.transactions?.[0]?.transaction.status || "N/A"}
+                      {currentReg.transactions?.[0]?.transaction.status ||
+                        "N/A"}
                     </Badge>
                   </div>
-                  <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Order ID:</Text> <Text span fw={500} size="xs">{currentReg.transactions?.[0]?.transaction.orderId || "N/A"}</Text></div>
+                  <div>
+                    <Text span c="dimmed" size="xs">Order ID:</Text>{" "}
+                    <Text span fw={500} size="xs" className="font-mono">
+                      {currentReg.transactions?.[0]?.transaction.orderId ||
+                        "N/A"}
+                    </Text>
+                  </div>
                   {currentReg.transactions?.[0]?.transaction.paymentId && (
-                    <div style={{ marginBottom: "8px" }}><Text span c="dimmed">Payment ID:</Text> <Text span fw={500} size="xs">{currentReg.transactions[0].transaction.paymentId}</Text></div>
+                    <div>
+                      <Text span c="dimmed" size="xs">Payment ID:</Text>{" "}
+                      <Text span fw={500} size="xs" className="font-mono">
+                        {currentReg.transactions[0].transaction.paymentId}
+                      </Text>
+                    </div>
                   )}
                   {currentReg.transactions?.[0]?.transaction.txnNo && (
-                    <div><Text span c="dimmed">Txn No:</Text> <Text span fw={500}>{currentReg.transactions[0].transaction.txnNo}</Text></div>
+                    <div>
+                      <Text span c="dimmed" size="xs">Txn No:</Text>{" "}
+                      <Text span fw={500} className="font-mono">
+                        {currentReg.transactions[0].transaction.txnNo}
+                      </Text>
+                    </div>
                   )}
                 </div>
               </Paper>

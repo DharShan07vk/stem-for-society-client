@@ -1,4 +1,4 @@
-import { Alert, Button, Input, Modal } from "@mantine/core";
+import { Alert, Button, Input, Modal, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { Search } from "lucide-react";
@@ -78,121 +78,178 @@ export default function AdminCampusAmbassador() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">
-          Campus Ambassador applications
-        </h1>
-        <Input
-          leftSection={<Search size={16} />}
-          radius={999}
-          classNames={{ wrapper: "ml-auto w-64" }}
-          placeholder="Search for name, city, mobile, etc..."
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-      <div className="w-full">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+              Campus Ambassador Applications
+            </h1>
+            <Text size="sm" c="dimmed" className="text-gray-500">
+              Review campus ambassador program applications
+            </Text>
+          </div>
+          <Input
+            leftSection={<Search size={18} />}
+            radius="md"
+            placeholder="Search applications..."
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-80"
+            classNames={{
+              input: "h-10",
+            }}
+          />
+        </div>
         {!data ? (
           <Errorbox message="Cannot get data due to some unknown error" />
         ) : (
-          <Table
-            headers={[
-              { render: "S.No", className: "w-[10%]" },
-              { render: "Name" },
-              { render: "Email" },
-              { render: "Mobile" },
-              { render: "Registered on" },
-              { render: "Details" },
-            ]}
-            classNames={{
-              root: "bg-white rounded-lg shadow",
-            }}
-            rows={filteredCampusAmbassador.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: r.firstName + " " + (r.lastName ?? ""),
-                },
-                {
-                  render: r.email,
-                },
-                {
-                  render: r.mobile,
-                },
-                {
-                  render: formatDate(r.createdAt),
-                },
-                {
-                  render: (
-                    <Button radius={999} onClick={() => setActiveAmbId(r.id)}>
-                      Click
-                    </Button>
-                  ),
-                },
-              ],
-            }))}
-          />
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Name", className: "text-left" },
+                { render: "Email", className: "text-left" },
+                { render: "Mobile", className: "text-left" },
+                { render: "Registered On", className: "text-left" },
+                { render: "Actions", className: "w-[12%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={filteredCampusAmbassador.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <span className="font-medium text-gray-900">
+                        {r.firstName + " " + (r.lastName ?? "")}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">{r.email}</span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">{r.mobile}</span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-600 text-sm">
+                        {formatDate(r.createdAt)}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Button
+                        size="xs"
+                        variant="light"
+                        radius="md"
+                        onClick={() => setActiveAmbId(r.id)}
+                      >
+                        View Details
+                      </Button>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
         )}
       </div>
       <Modal
-        size={"xl"}
+        size="xl"
         centered
-        classNames={{
-          title: "font-medium",
-        }}
         title={
-          data?.data.find((amb) => amb.id === activeAmbId)?.firstName +
-          " details"
+          <Text fw={600} size="lg">
+            {data?.data.find((amb) => amb.id === activeAmbId)?.firstName +
+              " Details"}
+          </Text>
         }
         onClose={() => setActiveAmbId(null)}
         opened={!!activeAmbId}
+        classNames={{
+          content: "rounded-xl",
+          header: "border-b border-gray-200 pb-4",
+        }}
       >
         {(() => {
           const currentAmb = data?.data.find((amb) => amb.id === activeAmbId);
           if (!currentAmb)
             return <Alert color="red" title="Invalid ambassador selected" />;
           return (
-            <div className="grid gap-6">
-              <div className="flex gap-3">
+            <div className="space-y-6 py-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <LabelAndValue
-                  label="Name"
+                  label="Full Name"
                   value={
                     currentAmb.firstName + " " + (currentAmb.lastName ?? "")
                   }
                 />
                 <LabelAndValue label="Email" value={currentAmb.email} />
                 <LabelAndValue label="Mobile" value={currentAmb.mobile} />
-              </div>
-              <div className="flex gap-3">
                 <LabelAndValue
-                  label="Education type"
+                  label="Education Type"
                   value={currentAmb.eduType}
                 />
                 <LabelAndValue
-                  label="Date of birth"
+                  label="Date of Birth"
                   value={formatDate(currentAmb.dob)}
                 />
-                <LabelAndValue label="LinkedIn" value={currentAmb.linkedin} />
-              </div>
-              <div className="flex gap-3">
                 <LabelAndValue
-                  label="College Name"
-                  value={currentAmb.collegeName}
+                  label="LinkedIn"
+                  value={currentAmb.linkedin || "N/A"}
                 />
-                <LabelAndValue label="City" value={currentAmb.collegeCity} />
-                <LabelAndValue label="Year" value={currentAmb.yearInCollege} />
-                <LabelAndValue label="Dept." value={currentAmb.department} />
               </div>
-              <LabelAndValue
-                label="Registered On"
-                value={formatDate(currentAmb.createdAt)}
-              />
+              <div className="border-t border-gray-200 pt-4">
+                <h4 className="font-semibold text-gray-900 mb-3">
+                  College Information
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <LabelAndValue
+                    label="College Name"
+                    value={currentAmb.collegeName}
+                  />
+                  <LabelAndValue
+                    label="City"
+                    value={currentAmb.collegeCity}
+                  />
+                  <LabelAndValue
+                    label="Year"
+                    value={currentAmb.yearInCollege || "N/A"}
+                  />
+                  <LabelAndValue
+                    label="Department"
+                    value={currentAmb.department}
+                  />
+                </div>
+              </div>
+              <div className="border-t border-gray-200 pt-4">
+                <LabelAndValue
+                  label="Registered On"
+                  value={formatDate(currentAmb.createdAt)}
+                />
+              </div>
             </div>
           );
         })()}

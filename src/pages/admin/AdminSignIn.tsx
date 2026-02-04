@@ -36,49 +36,55 @@ export default function AdminSignIn() {
   if (user) return <Navigate to={"/admin/students"} />;
 
   return (
-    <div className="h-full justify-center flex w-full  items-center" 
-    style={{
-          backgroundImage: `url(".../assets/backGround.png")`,
-          backgroundPosition: 'center 75%',
-        }}>
-      <div className="w-full mt-4">
-        <div className="max-w-7xl mx-auto flex flex-col">
-          <div className="flex flex-row h-full w-full  mt-12">
-            <div className="flex-1 flex items-center justify-center flex-col w-full gap-5 pl-10 pr-10 ">
-              <div className="w-2/3">
-                <Title order={1} mb={20}>
-                  Admin Login
-                </Title>
-                <Text size="lg">Enter your credentials to proceed further</Text>
-              </div>
-              <TextInput
-                label="Email Address"
-                placeholder="Enter your email"
-                size="md"
-                className="w-2/3"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-              />
-              <PasswordInput
-                label="Password"
-                placeholder="Enter your password"
-                size="md"
-                name="password"
-                className="w-2/3"
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-              <Button
-                radius={999}
-                w="400"
-                disabled={isSigningIn}
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Login
-              </Button>
-            </div>
+    <div className="min-h-screen flex items-center justify-center w-full bg-gradient-to-br from-gray-50 to-gray-100 p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10 space-y-6">
+          <div className="text-center space-y-2 mb-8">
+            <Title order={1} className="text-3xl font-bold text-gray-900">
+              Admin Login
+            </Title>
+            <Text size="md" c="dimmed" className="text-gray-600">
+              Enter your credentials to access the admin panel
+            </Text>
+          </div>
+          <div className="space-y-5">
+            <TextInput
+              label="Email Address"
+              placeholder="admin@example.com"
+              size="md"
+              radius="md"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              classNames={{
+                label: "mb-2 font-medium text-gray-700",
+                input: "h-11",
+              }}
+            />
+            <PasswordInput
+              label="Password"
+              placeholder="Enter your password"
+              size="md"
+              radius="md"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              classNames={{
+                label: "mb-2 font-medium text-gray-700",
+                input: "h-11",
+              }}
+            />
+            <Button
+              radius="md"
+              fullWidth
+              size="md"
+              disabled={isSigningIn}
+              type="submit"
+              onClick={handleSubmit}
+              className="h-11 mt-6 font-semibold bg-blue-600 hover:bg-blue-700 transition-colors"
+            >
+              {isSigningIn ? "Signing in..." : "Sign In"}
+            </Button>
           </div>
         </div>
       </div>

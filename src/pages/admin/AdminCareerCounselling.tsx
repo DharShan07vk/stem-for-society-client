@@ -1,4 +1,4 @@
-import { Badge, Input } from "@mantine/core";
+import { Badge, Input, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { Search } from "lucide-react";
@@ -92,88 +92,139 @@ export default function AdminCareerCounselling() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">
-          Career counselling registrations
-        </h1>
-        <Input
-          leftSection={<Search size={16} />}
-          radius={999}
-          classNames={{ wrapper: "ml-auto w-64" }}
-          placeholder="Search for name, city, mobile, etc..."
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-      <div className="w-full">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">
+              Career Counselling Registrations
+            </h1>
+            <Text size="sm" c="dimmed" className="text-gray-500">
+              Manage career counselling service registrations
+            </Text>
+          </div>
+          <Input
+            leftSection={<Search size={18} />}
+            radius="md"
+            placeholder="Search registrations..."
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-80"
+            classNames={{
+              input: "h-10",
+            }}
+          />
+        </div>
         {!data ? (
           <Errorbox message="Cannot get data due to some unknown error" />
         ) : (
-          <Table
-            headers={[
-              { render: "S.No", className: "w-[10%]" },
-              { render: "Name" },
-              { render: "Email" },
-              { render: "Mobile" },
-              { render: "Service/Plan" },
-              { render: "Payment" },
-              { render: "Registered on" },
-              { render: "Session Date" }
-            ]}
-            classNames={{
-              root: "bg-white rounded-lg shadow",
-            }}
-            rows={filteredPsychology.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: r.firstName + " " + (r.lastName ?? ""),
-                },
-                {
-                  render: r.email,
-                },
-                {
-                  render: r.mobile,
-                },
-                {
-                  render: r.service ? (
-                    <>
-                      {r.service} <Badge className="ml-2">service</Badge>
-                    </>
-                  ) : (
-                    <>
-                      {r.plan}
-                      <Badge className="ml-2" size="sm">
-                        plan
-                      </Badge>
-                    </>
-                  ),
-                },
-                {
-                  render: (
-                    <>
-                      ₹{r.transactions?.[0]?.transaction.amount}
-                      <Badge className="ml-2" size="sm">
-                        {r.transactions?.[0]?.transaction.status}
-                      </Badge>
-                    </>
-                  ),
-                },
-                {
-                  render: formatDate(r.createdAt),
-                },
-                {
-                  render: r.selectedDate + " " + r.selectedTime,
-                },
-              ],
-            }))}
-          />
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Name", className: "text-left" },
+                { render: "Contact", className: "text-left" },
+                { render: "Service/Plan", className: "text-left" },
+                { render: "Payment", className: "text-left" },
+                { render: "Session", className: "text-left" },
+                { render: "Registered", className: "text-left" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={filteredPsychology.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <span className="font-medium text-gray-900">
+                        {r.firstName + " " + (r.lastName ?? "")}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="text-sm">
+                        <div className="text-gray-900">{r.email}</div>
+                        <div className="text-gray-600">{r.mobile}</div>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: r.service ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-700 text-sm">{r.service}</span>
+                        <Badge variant="light" color="blue" size="sm">
+                          Service
+                        </Badge>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-700 text-sm">{r.plan}</span>
+                        <Badge variant="light" color="purple" size="sm">
+                          Plan
+                        </Badge>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-gray-900">
+                          ₹{r.transactions?.[0]?.transaction.amount || "N/A"}
+                        </span>
+                        <Badge
+                          color={
+                            r.transactions?.[0]?.transaction.status === "success"
+                              ? "green"
+                              : r.transactions?.[0]?.transaction.status ===
+                                  "pending"
+                              ? "yellow"
+                              : "red"
+                          }
+                          variant="light"
+                          size="sm"
+                        >
+                          {r.transactions?.[0]?.transaction.status || "N/A"}
+                        </Badge>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="text-sm">
+                        <div className="text-gray-900">{r.selectedDate}</div>
+                        <div className="text-gray-600">{r.selectedTime}</div>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-600 text-sm">
+                        {formatDate(r.createdAt)}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                ],
+              }))}
+            />
+          </div>
         )}
       </div>
     </div>

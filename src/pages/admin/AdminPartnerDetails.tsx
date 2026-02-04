@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mantine/core";
+import { Badge, Button, Paper, Text } from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useEffect } from "react";
@@ -110,218 +110,263 @@ function AdminPartnerDetails() {
   const partner = data?.data;
 
   return (
-    <>
-      <div className="flex flex-col items-center gap-4 mt-8 p-4">
-        <div className="w-full">
-          {/*// @ts-expect-error shutup */}
-          <Link to={-1}>
-            <Button radius={999} fullWidth={false}>
-              <ChevronLeft size={16} />
-              Back
-            </Button>
-          </Link>
-        </div>
-        <div className="w-full flex-col max-w-7xl">
-          <h1 className="text-2xl font-semibold mb-6 text-left">
-            Partner Details
-          </h1>
-          <div className="flex gap-20">
-            <div className="flex flex-col gap-7">
-              <div className="flex flex-col">
-                <span className="text-sm">Name </span>
-                <span className="text-lg font-semibold">
-                  {partner?.firstName + " " + (partner?.lastName ?? "")}
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Phone </span>
-                <span className="text-lg font-semibold">{partner?.mobile}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Email </span>
-                <span className="text-lg font-semibold">{partner?.email}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Joined on </span>
-                <span className="text-lg font-semibold">
-                  {formatDate(partner?.createdAt ?? null)}
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col">
-                <span className="text-sm">Company Name </span>
-                <span className="text-lg font-semibold">
-                  {partner?.institutionName}
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Address</span>
-                <span className="text-lg font-semibold">
-                  <p>{partner?.address.addressLine1}</p>
-                  <p>{partner?.address.addressLine2 ?? ""}</p>
-                  <p>{partner?.address.city}</p>
-                  <p>{partner?.address.state}</p>
-                  <p>{partner?.address.pincode}</p>
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Teaching topics</span>
-                <span className="text-lg font-semibold">
-                  <ul>
-                    {partner?.topics?.map((topic) => (
-                      <li>
-                        <Badge size="sm" color="gray">
-                          {topic}
-                        </Badge>
-                      </li>
-                    ))}
-                  </ul>
-                </span>
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-col">
-                <span className="font-medium">Account Details </span>
-                <p className="text-sm mb-5">
-                  {partner?.payoutEligibility === "approved"
-                    ? "This person is eligible for payouts"
-                    : partner?.payoutEligibility === "no-data"
-                      ? "This person is yet to fill their bank account details"
-                      : partner?.payoutEligibility === "failed"
-                        ? "Payout details invalid. Verification failed from Razorpay"
-                        : partner?.payoutEligibility === "pending-approval"
-                          ? "Pending approval"
-                          : partner?.payoutEligibility === "pending-details"
-                            ? "Pending details"
-                            : ""}
-                </p>
-                <span className="text-sm">Razorpay Account ID</span>
-                <span className="text-lg font-semibold">
-                  {partner?.account?.rzpyContactId ?? <i>N/A</i>}
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Bank Account ID</span>
-                <span className="text-lg font-semibold">
-                  {partner?.account?.rzpyBankAcctId}{" "}
-                  <Badge
-                    color={
-                      partner?.account?.bankAccVerifiedOn ? "blue" : "yellow"
-                    }
-                  >
-                    {partner?.account?.bankAccVerifiedOn
-                      ? "verified"
-                      : "unverified"}
-                  </Badge>
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">VPA ID</span>
-                <span className="text-lg font-semibold">
-                  {partner?.account?.rzpyVPAId}{" "}
-                  <Badge
-                    color={partner?.account?.VPAVerifiedOn ? "blue" : "yellow"}
-                  >
-                    {partner?.account?.VPAVerifiedOn
-                      ? "verified"
-                      : "unverified"}
-                  </Badge>
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm">Card ID</span>
-                <span className="text-lg font-semibold">
-                  {partner?.account?.rzpyCardId}{" "}
-                  <Badge
-                    color={partner?.account?.cardVerifiedOn ? "blue" : "yellow"}
-                  >
-                    {partner?.account?.cardVerifiedOn
-                      ? "verified"
-                      : "unverified"}
-                  </Badge>
-                </span>
-              </div>
-            </div>
-          </div>
-          <h3 className="text-xl font-medium mt-6">Courses created</h3>
-          <Table
-            headers={[
-              { render: "S.No", className: "w-[10%]" },
-              { render: "Course Name" },
-              { render: "Enrolment Count" },
-              { render: "Dates" },
-              { render: "Status" },
-              { render: "Details", className: "w-[20%]" },
-            ]}
-            classNames={{
-              root: "bg-white rounded-lg shadow",
-            }}
-            rows={partner!.trainings.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: r.title,
-                },
-                {
-                  render: r.enrolments?.length,
-                },
-                {
-                  render:
-                    formatDate(r.startDate) + " to " + formatDate(r.endDate),
-                },
-                {
-                  render: (
-                    <Badge
-                      color={r.approvedBy ? "green" : "gray"}
-                      classNames={{ label: "font-normal" }}
-                    >
-                      {r.approvedBy ? "approved" : "pending"}
-                    </Badge>
-                  ),
-                },
-                {
-                  render: (
-                    <Link to={`/admin/trainings/${r.id}`}>
-                      <Button radius={999}>View details</Button>
-                    </Link>
-                  ),
-                },
-              ],
-            }))}
-          />
-          <div className="flex justify-start items-start mt-5">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="flex items-center gap-4 mb-4">
+        <Button
+          variant="subtle"
+          leftSection={<ChevronLeft size={18} />}
+          radius="md"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Partner Details</h1>
+          <div className="mt-4 sm:mt-0">
             {!partner?.approvedBy ? (
               <Button
-                radius={999}
+                radius="md"
                 variant="filled"
                 color="green"
-                className="text-xs sm:text-sm md:text-base"
                 onClick={() => mutate("approve")}
                 disabled={isPending}
+                size="md"
               >
-                Approve
+                Approve Partner
               </Button>
             ) : (
               <Button
-                radius={999}
+                radius="md"
                 variant="filled"
                 color="red"
-                className="text-xs sm:text-sm md:text-base"
                 onClick={() => mutate("deny")}
                 disabled={isPending}
+                size="md"
               >
-                Reject
+                Reject Partner
               </Button>
             )}
           </div>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <Paper p="md" withBorder className="rounded-lg">
+            <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-2">
+              Personal Information
+            </Text>
+            <div className="space-y-3">
+              <div>
+                <Text size="xs" c="dimmed">Full Name</Text>
+                <Text size="lg" fw={600} className="text-gray-900">
+                  {partner?.firstName + " " + (partner?.lastName ?? "")}
+                </Text>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">Email</Text>
+                <Text size="sm" fw={500} className="text-gray-900">
+                  {partner?.email}
+                </Text>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">Phone</Text>
+                <Text size="sm" fw={500} className="text-gray-900">
+                  {partner?.mobile}
+                </Text>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">Joined On</Text>
+                <Text size="sm" fw={500} className="text-gray-900">
+                  {formatDate(partner?.createdAt ?? null)}
+                </Text>
+              </div>
+            </div>
+          </Paper>
+
+          <Paper p="md" withBorder className="rounded-lg">
+            <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-2">
+              Institution Details
+            </Text>
+            <div className="space-y-3">
+              <div>
+                <Text size="xs" c="dimmed">Institution Name</Text>
+                <Text size="sm" fw={500} className="text-gray-900">
+                  {partner?.institutionName || "Individual Partner"}
+                </Text>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">Address</Text>
+                <Text size="sm" fw={500} className="text-gray-900">
+                  {partner?.address.addressLine1}
+                  {partner?.address.addressLine2 && (
+                    <>, {partner.address.addressLine2}</>
+                  )}
+                  <br />
+                  {partner?.address.city}, {partner?.address.state}
+                  <br />
+                  {partner?.address.pincode}
+                </Text>
+              </div>
+              {partner?.topics && partner.topics.length > 0 && (
+                <div>
+                  <Text size="xs" c="dimmed" className="mb-1">Teaching Topics</Text>
+                  <div className="flex flex-wrap gap-2">
+                    {partner.topics.map((topic, idx) => (
+                      <Badge key={idx} variant="light" color="blue" size="sm">
+                        {topic}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </Paper>
+
+          <Paper p="md" withBorder className="rounded-lg">
+            <Text size="xs" c="dimmed" className="uppercase tracking-wide mb-2">
+              Account & Payout
+            </Text>
+            <div className="space-y-3">
+              <div>
+                <Badge
+                  color={
+                    partner?.payoutEligibility === "approved"
+                      ? "green"
+                      : partner?.payoutEligibility === "failed"
+                      ? "red"
+                      : "yellow"
+                  }
+                  variant="light"
+                  size="md"
+                  className="mb-2"
+                >
+                  {partner?.payoutEligibility === "approved"
+                    ? "Eligible for Payouts"
+                    : partner?.payoutEligibility === "no-data"
+                    ? "No Account Data"
+                    : partner?.payoutEligibility === "failed"
+                    ? "Verification Failed"
+                    : "Pending"}
+                </Badge>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">Razorpay Contact ID</Text>
+                <Text size="xs" fw={500} className="text-gray-900 font-mono">
+                  {partner?.account?.rzpyContactId || "N/A"}
+                </Text>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">Bank Account ID</Text>
+                <div className="flex items-center gap-2">
+                  <Text size="xs" fw={500} className="text-gray-900 font-mono">
+                    {partner?.account?.rzpyBankAcctId || "N/A"}
+                  </Text>
+                  {partner?.account?.bankAccVerifiedOn && (
+                    <Badge size="xs" color="green" variant="light">
+                      Verified
+                    </Badge>
+                  )}
+                </div>
+              </div>
+              <div>
+                <Text size="xs" c="dimmed">VPA ID</Text>
+                <div className="flex items-center gap-2">
+                  <Text size="xs" fw={500} className="text-gray-900 font-mono">
+                    {partner?.account?.rzpyVPAId || "N/A"}
+                  </Text>
+                  {partner?.account?.VPAVerifiedOn && (
+                    <Badge size="xs" color="green" variant="light">
+                      Verified
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Paper>
+        </div>
+
+        <div className="mt-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            Courses Created
+          </h3>
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Course Name", className: "text-left" },
+                { render: "Enrolments", className: "text-center" },
+                { render: "Schedule", className: "text-left" },
+                { render: "Status", className: "text-center" },
+                { render: "Actions", className: "w-[12%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={partner!.trainings.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <span className="font-medium text-gray-900">{r.title}</span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Badge variant="light" color="blue" size="sm">
+                        {r.enrolments?.length || 0}
+                      </Badge>
+                    ),
+                    className: "text-center",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">
+                        {formatDate(r.startDate)} - {formatDate(r.endDate)}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Badge
+                        color={r.approvedBy ? "green" : "yellow"}
+                        variant="light"
+                        size="sm"
+                      >
+                        {r.approvedBy ? "Approved" : "Pending"}
+                      </Badge>
+                    ),
+                    className: "text-center",
+                  },
+                  {
+                    render: (
+                      <Link to={`/admin/trainings/${r.id}`}>
+                        <Button size="xs" variant="light" radius="md">
+                          View
+                        </Button>
+                      </Link>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 

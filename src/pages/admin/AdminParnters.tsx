@@ -1,4 +1,4 @@
-import { Badge, Button, Input } from "@mantine/core";
+import { Badge, Button, Input, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useEffect, useMemo, useState } from "react";
@@ -80,77 +80,115 @@ export default function AdminPartners() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-20 p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Partners</h1>
-        <Input
-          leftSection={<Search size={16} />}
-          classNames={{ wrapper: "ml-auto w-64" }}
-          placeholder="Search for partners..."
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          radius={999}
-        />
-      </div>
-      <div className="w-full">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">Partners</h1>
+            <Text size="sm" c="dimmed" className="text-gray-500">
+              Manage partner instructors and institutions
+            </Text>
+          </div>
+          <Input
+            leftSection={<Search size={18} />}
+            placeholder="Search partners..."
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            radius="md"
+            className="w-full sm:w-80"
+            classNames={{
+              input: "h-10",
+            }}
+          />
+        </div>
         {!data ? (
           <Errorbox message="Cannot get data due to some unknown error" />
         ) : (
-          <Table
-            headers={[
-              { render: "S.No", className: "w-[10%]" },
-              { render: "Name" },
-              { render: "Email" },
-              { render: "Mobile" },
-              { render: "Institution Name" },
-              { render: "Status" },
-              { render: "Details", className: "w-[20%]" },
-            ]}
-            classNames={{
-              root: "bg-white rounded-lg shadow",
-            }}
-            rows={filteredPartners.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: r.firstName + " " + (r.lastName ?? ""),
-                },
-                {
-                  render: r.email,
-                },
-                {
-                  render: r.mobile,
-                },
-                {
-                  render: r.institutionName || (
-                    <Badge color="blue">individual</Badge>
-                  ),
-                },
-                {
-                  render: (
-                    <Badge
-                      color={r.approvedBy ? "green" : "gray"}
-                      classNames={{ label: "font-normal" }}
-                    >
-                      {r.approvedBy ? "approved" : "pending"}
-                    </Badge>
-                  ),
-                },
-                {
-                  render: (
-                    <Link to={`/admin/partners/${r.id}`}>
-                      <Button radius={999}>View details</Button>
-                    </Link>
-                  ),
-                },
-              ],
-            }))}
-          />
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Name", className: "text-left" },
+                { render: "Email", className: "text-left" },
+                { render: "Mobile", className: "text-left" },
+                { render: "Institution", className: "text-left" },
+                { render: "Status", className: "text-center" },
+                { render: "Actions", className: "w-[12%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={filteredPartners.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <span className="font-medium text-gray-900">
+                        {r.firstName + " " + (r.lastName ?? "")}
+                      </span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">{r.email}</span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">{r.mobile}</span>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: r.institutionName ? (
+                      <span className="text-gray-700 text-sm">
+                        {r.institutionName}
+                      </span>
+                    ) : (
+                      <Badge variant="light" color="blue" size="sm">
+                        Individual
+                      </Badge>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Badge
+                        color={r.approvedBy ? "green" : "yellow"}
+                        variant="light"
+                        size="sm"
+                      >
+                        {r.approvedBy ? "Approved" : "Pending"}
+                      </Badge>
+                    ),
+                    className: "text-center",
+                  },
+                  {
+                    render: (
+                      <Link to={`/admin/partners/${r.id}`}>
+                        <Button size="xs" variant="light" radius="md">
+                          View
+                        </Button>
+                      </Link>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
         )}
       </div>
     </div>

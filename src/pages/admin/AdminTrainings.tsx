@@ -9,7 +9,7 @@ import { formatDate, mutationErrorHandler } from "../../lib/utils";
 import { Link, useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 import Errorbox from "../../components/Errorbox";
-import { Badge, Button, Input } from "@mantine/core";
+import { Badge, Button, Input, Text } from "@mantine/core";
 import { Calendar1, CalendarCheckIcon, Search } from "lucide-react";
 
 type AdminTrainingsType = PartnerTrainingResponse;
@@ -60,92 +60,124 @@ export default function AdminTrainings() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 mt-20 p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Trainings</h1>
-        <Input
-          leftSection={<Search size={16} />}
-          radius={999}
-          classNames={{ wrapper: "ml-auto w-64" }}
-          placeholder="Search for trainings..."
-          type="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-      <div className="w-full">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6">
+      <div className="bg-white rounded-xl shadow-sm p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-1">Trainings</h1>
+            <Text size="sm" c="dimmed" className="text-gray-500">
+              Manage and review training courses
+            </Text>
+          </div>
+          <Input
+            leftSection={<Search size={18} />}
+            radius="md"
+            placeholder="Search trainings..."
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full sm:w-80"
+            classNames={{
+              input: "h-10",
+            }}
+          />
+        </div>
         {!data ? (
           <Errorbox message="Cannot get data due to some unknown error" />
         ) : (
-          <Table
-            headers={[
-              { render: "S.No", className: "w-[10%]" },
-              { render: "Course Name", className: "w-[25%]" },
-              { render: "Created by" },
-              { render: "Enrolment Count" },
-              { render: "Dates" },
-              { render: "Status" },
-              { render: "Details", className: "w-[20%]" },
-            ]}
-            classNames={{
-              root: "bg-white rounded-lg shadow",
-            }}
-            rows={filteredTrainings.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: r.title,
-                  className: "w-[25%]",
-                },
-                {
-                  render:
-                    r.instructor.firstName +
-                    " " +
-                    (r.instructor.lastName ?? ""),
-                },
-                {
-                  render: r.enrolments?.length ?? 0,
-                },
-                {
-                  render: (
-                    <div className="grid text-sm *:flex *:gap-2">
-                      <span>
-                        <Calendar1 size={16} />
-                        {formatDate(r.startDate)}
+          <div className="overflow-x-auto rounded-lg border border-gray-200">
+            <Table
+              headers={[
+                { render: "S.No", className: "w-[6%] text-left pl-4" },
+                { render: "Course Name", className: "text-left" },
+                { render: "Instructor", className: "text-left" },
+                { render: "Enrolments", className: "text-center" },
+                { render: "Schedule", className: "text-left" },
+                { render: "Status", className: "text-center" },
+                { render: "Actions", className: "w-[12%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors",
+              }}
+              rows={filteredTrainings.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: (
+                      <span className="text-gray-600 font-medium">{i + 1}</span>
+                    ),
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <span className="font-medium text-gray-900 line-clamp-2">
+                        {r.title}
                       </span>
-                      {/* <hr className="border-none h-6 w-[1px] mx-auto bg-gray-200" /> */}
-                      to
-                      <span>
-                        <CalendarCheckIcon size={16} />
-                        {formatDate(r.endDate)}
+                    ),
+                    className: "text-left max-w-xs",
+                  },
+                  {
+                    render: (
+                      <span className="text-gray-700 text-sm">
+                        {r.instructor.firstName +
+                          " " +
+                          (r.instructor.lastName ?? "")}
                       </span>
-                    </div>
-                  ),
-                },
-                {
-                  render: (
-                    <Badge
-                      color={r.approvedBy ? "green" : "gray"}
-                      classNames={{ label: "font-normal" }}
-                    >
-                      {r.approvedBy ? "approved" : "pending"}
-                    </Badge>
-                  ),
-                },
-                {
-                  render: (
-                    <Link to={`/admin/trainings/${r.id}`}>
-                      <Button radius={999}>View details</Button>
-                    </Link>
-                  ),
-                },
-              ],
-            }))} // Use filteredTrainings for the rows
-          />
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Badge variant="light" color="blue" size="sm">
+                        {r.enrolments?.length ?? 0}
+                      </Badge>
+                    ),
+                    className: "text-center",
+                  },
+                  {
+                    render: (
+                      <div className="flex flex-col gap-1 text-sm">
+                        <div className="flex items-center gap-1 text-gray-700">
+                          <Calendar1 size={14} />
+                          <span>{formatDate(r.startDate)}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-600">
+                          <CalendarCheckIcon size={14} />
+                          <span>{formatDate(r.endDate)}</span>
+                        </div>
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <Badge
+                        color={r.approvedBy ? "green" : "yellow"}
+                        variant="light"
+                        size="sm"
+                      >
+                        {r.approvedBy ? "Approved" : "Pending"}
+                      </Badge>
+                    ),
+                    className: "text-center",
+                  },
+                  {
+                    render: (
+                      <Link to={`/admin/trainings/${r.id}`}>
+                        <Button size="xs" variant="light" radius="md">
+                          View
+                        </Button>
+                      </Link>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
         )}
       </div>
     </div>
