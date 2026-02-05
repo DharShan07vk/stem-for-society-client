@@ -169,11 +169,15 @@ export default function Table({
           ))}
         </tbody>
       ) : (
-        <div className="w-full py-5 flex-1">
-          <div className="italic absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[20%] text-gray-400">
-            No data
-          </div>
-        </div>
+        <tbody>
+          <tr>
+            <td colSpan={headers.length + (selectable ? 1 : 0)} className="py-8 text-center">
+              <div className="italic text-gray-400">
+                No data
+              </div>
+            </td>
+          </tr>
+        </tbody>
       )}
     </table>
   );

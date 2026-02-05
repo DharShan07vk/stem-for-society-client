@@ -67,19 +67,19 @@ export default function AdminInstitutionRegistrations() {
     return data.data.filter(
       (registration) =>
         registration.organizationName
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(search?.toLowerCase() || "") ||
         registration.name
           ?.toLowerCase()
           .includes(search?.toLowerCase() || "") ||
         registration.mobile
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(search?.toLowerCase() || "") ||
         registration.email
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(search?.toLowerCase() || "") ||
         registration.designation
-          .toLowerCase()
+          ?.toLowerCase()
           .includes(search?.toLowerCase() || ""),
     );
   }, [data, search]); // Filter institutionRegistrations based on search input
