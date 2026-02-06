@@ -1,6 +1,6 @@
 
 
-import { Button, TextInput } from "@mantine/core";
+import { Button, Paper, Text, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
@@ -188,179 +188,248 @@ export default function PartnerSettings() {
   if (!user) return <Navigate to={"/partner"} />;
 
   return (
-    <div className="p-4 space-y-3 w-full justify-center items-center h-full">
-      <h4>View and edit profile settings here</h4>
-
-      <TextInput
-        label="Instructor First name"
-        placeholder="Enter your first name"
-        size="sm"
-        className="lg:w-2/3 w-full"
-        required
-        name="firstName"
-        value={formData.firstName}
-        onChange={handleInputChange}
-      />
-
-      <TextInput
-        label="Instructor Last name"
-        placeholder="Enter your last name"
-        size="sm"
-        className="lg:w-2/3 w-full"
-        name="lastName"
-        value={formData.lastName || ""}
-        onChange={handleInputChange}
-      />
-
-      <TextInput
-        label="Phone No."
-        placeholder="Enter your phone"
-        size="sm"
-        className="lg:w-2/3 w-full"
-        required
-        name="phone"
-        value={formData.phone}
-        onChange={handleInputChange}
-      />
-
-      <TextInput
-        label="City"
-        placeholder="Enter city"
-        size="sm"
-        className="lg:w-2/3 w-full"
-        name="city"
-        required
-        value={formData.city}
-        onChange={handleInputChange}
-      />
-
-      <TextInput
-        label="State"
-        placeholder="Enter state"
-        size="sm"
-        className="lg:w-2/3 w-full"
-        name="state"
-        required
-        value={formData.state}
-        onChange={handleInputChange}
-      />
-
-      <TextInput
-        label="Pincode"
-        placeholder="Enter pincode"
-        size="sm"
-        className="lg:w-2/3 w-full"
-        name="pincode"
-        type="number"
-        required
-        value={formData.pincode}
-        onChange={handleInputChange}
-      />
-
-      <TextInput
-        label="Email Address"
-        placeholder="Enter your email"
-        size="sm"
-        type="email"
-        className="lg:w-2/3 w-full"
-        required
-        name="email"
-        value={formData.email}
-        onChange={handleInputChange}
-      />
-
-      {/* Logo Upload Section */}
-      <div className="lg:w-2/3 w-full space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
-          Company Logo
-        </label>
-
-        {(logoPreview || currentLogoUrl) && (
-          <div className="mb-3">
-            <img
-              src={logoPreview || currentLogoUrl}
-              alt="Company Logo"
-              className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {logoPreview ? "New logo selected" : "Current logo"}
-            </p>
-          </div>
-        )}
-
-        <div className="flex items-center space-x-3">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, "logo")}
-            className="hidden"
-            id="logo-upload"
-          />
-          <label
-            htmlFor="logo-upload"
-            className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-          >
-            {currentLogoUrl || logoPreview ? "Change Logo" : "Upload Logo"}
-          </label>
-          {formData.logo && (
-            <span className="text-sm text-green-600">
-              ✓ {formData.logo.name}
-            </span>
-          )}
-        </div>
+    <div className="w-full max-w-5xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="space-y-2 animate-in slide-in-from-top duration-500">
+        <h1 className="text-3xl font-semibold text-gray-900">Profile Settings</h1>
+        <p className="text-sm text-gray-600">Manage your profile and institution information</p>
       </div>
 
-      {/* Digital Sign Upload Section */}
-      <div className="lg:w-2/3 w-full space-y-2">
-        <label className="block text-sm font-medium text-gray-700">
-          Digital Signature
-        </label>
-
-        {(digitalSignPreview || currentDigitalSignUrl) && (
-          <div className="mb-3">
-            <img
-              src={digitalSignPreview || currentDigitalSignUrl}
-              alt="Digital Signature"
-              className="w-32 h-32 object-cover rounded-lg border border-gray-300"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              {digitalSignPreview ? "New signature selected" : "Current signature"}
-            </p>
+      {/* Main Form */}
+      <Paper p="xl" withBorder className="rounded-xl animate-in slide-in-from-bottom duration-500 delay-100">
+        <div className="space-y-6">
+          {/* Personal Information Section */}
+          <div className="space-y-4">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Personal Information
+            </Text>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <TextInput
+                label="First Name"
+                placeholder="Enter your first name"
+                size="md"
+                required
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+              <TextInput
+                label="Last Name"
+                placeholder="Enter your last name"
+                size="md"
+                name="lastName"
+                value={formData.lastName || ""}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <TextInput
+                label="Email Address"
+                placeholder="Enter your email"
+                size="md"
+                type="email"
+                required
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+              <TextInput
+                label="Phone Number"
+                placeholder="Enter your phone"
+                size="md"
+                required
+                name="phone"
+                value={formData.phone}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+            </div>
           </div>
-        )}
 
-        <div className="flex items-center space-x-3">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleFileChange(e, "digitalSign")}
-            className="hidden"
-            id="digital-sign-upload"
-          />
-          <label
-            htmlFor="digital-sign-upload"
-            className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm"
-          >
-            {currentDigitalSignUrl || digitalSignPreview
-              ? "Change Signature"
-              : "Upload Signature"}
-          </label>
-          {formData.digitalSign && (
-            <span className="text-sm text-green-600">
-              ✓ {formData.digitalSign.name}
-            </span>
-          )}
+          {/* Address Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Address Information
+            </Text>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <TextInput
+                label="City"
+                placeholder="Enter city"
+                size="md"
+                required
+                name="city"
+                value={formData.city}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+              <TextInput
+                label="State"
+                placeholder="Enter state"
+                size="md"
+                required
+                name="state"
+                value={formData.state}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+              <TextInput
+                label="Pincode"
+                placeholder="Enter pincode"
+                size="md"
+                type="number"
+                required
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Documents Section */}
+          <div className="space-y-6 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Documents & Signatures
+            </Text>
+            
+            {/* Logo Upload */}
+            <div className="space-y-3">
+              <div>
+                <Text size="sm" fw={500} className="mb-1">
+                  Company Logo
+                </Text>
+                <Text size="xs" c="dimmed">
+                  Upload your company or institution logo
+                </Text>
+              </div>
+              
+              {(logoPreview || currentLogoUrl) && (
+                <div className="inline-block">
+                  <img
+                    src={logoPreview || currentLogoUrl}
+                    alt="Company Logo"
+                    className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200 shadow-sm"
+                  />
+                  <Text size="xs" c="dimmed" className="mt-2 text-center">
+                    {logoPreview ? "New logo selected" : "Current logo"}
+                  </Text>
+                </div>
+              )}
+              
+              <div className="flex items-center gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, "logo")}
+                  className="hidden"
+                  id="logo-upload"
+                />
+                <label htmlFor="logo-upload">
+                  <Button
+                    component="span"
+                    variant="light"
+                    radius="md"
+                    size="sm"
+                    className="cursor-pointer"
+                  >
+                    {currentLogoUrl || logoPreview ? "Change Logo" : "Upload Logo"}
+                  </Button>
+                </label>
+                {formData.logo && (
+                  <Text size="sm" c="green" fw={500}>
+                    ✓ {formData.logo.name}
+                  </Text>
+                )}
+              </div>
+            </div>
+
+            {/* Digital Signature Upload */}
+            <div className="space-y-3">
+              <div>
+                <Text size="sm" fw={500} className="mb-1">
+                  Digital Signature
+                </Text>
+                <Text size="xs" c="dimmed">
+                  Upload your digital signature for certificates
+                </Text>
+              </div>
+              
+              {(digitalSignPreview || currentDigitalSignUrl) && (
+                <div className="inline-block">
+                  <img
+                    src={digitalSignPreview || currentDigitalSignUrl}
+                    alt="Digital Signature"
+                    className="w-32 h-32 object-cover rounded-lg border-2 border-gray-200 shadow-sm"
+                  />
+                  <Text size="xs" c="dimmed" className="mt-2 text-center">
+                    {digitalSignPreview ? "New signature selected" : "Current signature"}
+                  </Text>
+                </div>
+              )}
+              
+              <div className="flex items-center gap-3">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, "digitalSign")}
+                  className="hidden"
+                  id="digital-sign-upload"
+                />
+                <label htmlFor="digital-sign-upload">
+                  <Button
+                    component="span"
+                    variant="light"
+                    radius="md"
+                    size="sm"
+                    className="cursor-pointer"
+                  >
+                    {currentDigitalSignUrl || digitalSignPreview
+                      ? "Change Signature"
+                      : "Upload Signature"}
+                  </Button>
+                </label>
+                {formData.digitalSign && (
+                  <Text size="sm" c="green" fw={500}>
+                    ✓ {formData.digitalSign.name}
+                  </Text>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="pt-6">
+            <Button
+              fullWidth
+              size="lg"
+              radius="md"
+              disabled={profileSaving}
+              type="submit"
+              onClick={handleSaveChanges}
+              className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 hover:shadow-md"
+            >
+              {profileSaving ? "Saving Changes..." : "Save Changes"}
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <Button
-        radius={999}
-        disabled={profileSaving}
-        type="submit"
-        onClick={handleSaveChanges}
-      >
-        {profileSaving ? "Saving..." : "Save Changes"}
-      </Button>
+      </Paper>
     </div>
   );
 }

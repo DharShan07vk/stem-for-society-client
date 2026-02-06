@@ -1,4 +1,5 @@
-import { Button, Text, TextInput, Title } from "@mantine/core";
+import { Button, Paper, Text, TextInput, Title } from "@mantine/core";
+import { Lock, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { usePartner } from "../../lib/hooks";
@@ -36,51 +37,80 @@ export default function PartnerSignIn() {
   if (user) return <Navigate to={"/partner"} />;
 
   return (
-    <div className="h-full justify-center flex w-full items-center">
-      <div className="flex items-center justify-center flex-col w-full gap-3 my-10 rounded-lg">
-        <Title order={1}>Login</Title>
-        <Text size="lg">Enter your credentials to proceed further</Text>
-        <div className="flex flex-col justify-center items-center p-3 w-full gap-2">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100 flex items-center justify-center p-4">
+      <Paper
+        p="xl"
+        withBorder
+        shadow="md"
+        className="w-full max-w-md rounded-2xl animate-in zoom-in duration-500 bg-white"
+      >
+        <div className="text-center space-y-2 mb-8">
+          <Title order={2} className="text-gray-900">
+            Partner Login
+          </Title>
+          <Text size="sm" c="dimmed">
+            Enter your credentials to access your dashboard
+          </Text>
+        </div>
+        
+        <form
+          className="space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           <TextInput
             label="Email Address"
             placeholder="Enter your email"
             size="md"
-            className="w-full lg:w-2/3"
             name="email"
+            type="email"
+            required
             value={formData.email}
             onChange={handleInputChange}
+            leftSection={<Mail size={16} className="text-gray-500" />}
+            classNames={{
+              input: "transition-all duration-200 focus:shadow-sm",
+            }}
           />
           <TextInput
             label="Password"
             placeholder="Enter your password"
             size="md"
-            className="w-full lg:w-2/3"
             name="password"
             type="password"
+            required
             value={formData.password}
             onChange={handleInputChange}
+            leftSection={<Lock size={16} className="text-gray-500" />}
+            classNames={{
+              input: "transition-all duration-200 focus:shadow-sm",
+            }}
           />
           <Button
-            radius={999}
-            w="400"
+            fullWidth
+            size="md"
+            radius="md"
             disabled={isSigningIn}
             type="submit"
-            onClick={handleSubmit}
+            className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 hover:shadow-md mt-6"
           >
-            Login
+            {isSigningIn ? "Signing in..." : "Login"}
           </Button>
-          <div className="lg:w-2/3 flex flex-row gap-2">
-            <Text ta="left" fw={500}>
-              Want to partner with us?
-            </Text>
+        </form>
+
+        <div className="mt-6 text-center">
+          <Text size="sm" c="dimmed">
+            Want to partner with us?{" "}
             <Link to={"/partner/signup"}>
-              <Text ta="left" c="blue" fw={500}>
+              <Text span c="blue" fw={500} className="hover:underline transition-all">
                 Sign up now
               </Text>
             </Link>
-          </div>
+          </Text>
         </div>
-      </div>
+      </Paper>
     </div>
   );
 }
