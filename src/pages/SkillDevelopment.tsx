@@ -166,17 +166,20 @@ const SkillDevelopment = () => {
   }, [courses]);
 
   // Calculate duration from start and end dates
-  const calculateDuration = (startDate: string, endDate: string) => {
+   const calculateDuration = (startDate: string, endDate: string) => {
     const start = dayjs(startDate);
     const end = dayjs(endDate);
     const weeks = end.diff(start, 'week');
     const months = end.diff(start, 'month');
-    
+    const days =  end.diff(start,"day");    
     if (months > 0) {
       return `${months} month${months > 1 ? 's' : ''}`;
     }
-    return `${weeks} week${weeks > 1 ? 's' : ''}`;
-  };
+    else if(weeks > 0) {
+      return `${weeks} week${weeks > 1 ? 's' : ''}`;
+    }
+      return `${days} day${days > 1 ? 's' : ''}`;
+};
 
   if (isLoading) return <Loading />;
   if (error) return <Errorbox message={error.message} />;
