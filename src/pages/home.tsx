@@ -43,8 +43,8 @@ function Home() {
       </div>
 
       {/* Other Sections */}
-      <SectorsWeFocus />
       <ProgramsOffered/>
+      <SectorsWeFocus />
      <WhyChooseUs />
        <Partners/>
        {/* <UpcomingSessions/> */}
