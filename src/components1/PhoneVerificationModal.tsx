@@ -35,7 +35,6 @@ const PhoneVerificationModal = ({
     try {
       // Pass the phone number back to parent component
       onSuccess(phoneNumber);
-      toast.success("Phone number added successfully!");
     } catch (error: any) {
       console.error("Error submitting phone number:", error);
       toast.error("Failed to add phone number. Please try again.");

@@ -1,6 +1,8 @@
 import {
+  Alert,
   Button,
   FileInput,
+  Paper,
   SegmentedControl,
   Select,
   Text,
@@ -11,7 +13,7 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { Calendar, ChevronLeft, Plus, X } from "lucide-react";
+import { Calendar, ChevronLeft, Link2, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { FaLocationArrow } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -179,278 +181,365 @@ export default function PartnerCreateCourse() {
 
 
   return (
-    <div className="w-full mt-4">
-      <div className="flex flex-row h-full w-full my-12">
-        <div className="flex-1 flex items-center justify-center flex-col w-full gap-5 lg:px-10 ">
-          <div className="w-full">
-            {/*// @ts-expect-error shutup */}
-            <Link to={-1}>
-              <Button radius={999} fullWidth={false}>
-                <ChevronLeft size={16} />
-                Back
-              </Button>
-            </Link>
-          </div>
-          <div className="lg:w-2/3 w-full">
-            <Title order={1} mb={20}>
-              Create Training Course
-            </Title>
-            <Text size="lg">Giving back to the community.</Text>
-          </div>
-          <TextInput
-            label="Title"
-            placeholder="What do you want to teach?"
-            size="md"
-            className="lg:w-2/3 w-full"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-          />
-          <Textarea
-            label="Description"
-            placeholder="Give brief explanation along with syllabus"
-            size="md"
-            className="lg:w-2/3 w-full"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-          />
-          <FileInput
-            label="Upload Cover"
-            description="Size: 1280x720"
-            placeholder="Select Image"
-            className="lg:w-2/3 w-full"
-            size="md"
-            accept="image/*"
-            name="cover"
-            value={formData.cover}
-            onChange={handleFileInputChange}
-          />
-
-          <div className="flex items-center lg:w-2/3 w-full gap-3">
-            <span className="text-sm font-medium">Course Type</span>
-            <SegmentedControl
-              data={["Skill Development", "Finishing School"]}
-              value={formData.courseType}
-              onChange={(val) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  courseType: val as "Skill Development" | "Finishing School",
-                  category: null,
-                }))
-              }
-            />
-          </div>
-
-          <div className="flex w-full lg:w-2/3 gap-2">
-            <DateTimePicker
-              label="Start date and time"
-              placeholder="Start date and time"
-              value={formData.startDate}
-              minDate={new Date()}
-              onChange={(value) => handleDateChange("startDate", value)}
-              leftSection={<Calendar size={14} />}
-              className="w-full"
-            />
-            <DateTimePicker
-              label="End date and time"
-              placeholder="End date and time"
-              value={formData.endDate}
-              minDate={
-                formData.startDate ? new Date(formData.startDate) : new Date()
-              }
-              onChange={(value) => handleDateChange("endDate", value)}
-              leftSection={<Calendar size={14} />}
-              className="w-full"
-            />
-          </div>
-          <div className="flex items-center lg:w-2/3 w-full gap-3">
-            <span className="text-sm font-medium">Mode</span>
-            <SegmentedControl
-              data={["ONLINE", "OFFLINE", "HYBRID"]}
-              value={formData.mode}
-              onChange={(val) =>
-                handleInputChange({ target: { value: val, name: "mode" } })
-              }
-            />
-          </div>
-          {(formData.mode === "ONLINE" || formData.mode === "HYBRID") && (
-            <TextInput
-              label="Meeting Link"
-              placeholder="Enter Google Meet, Zoom, or other meeting link"
-              size="md"
-              leftSection={<Calendar size={13} />}
-              className="lg:w-2/3 w-full"
-              name="meetingLink"
-              value={formData.meetingLink}
-              onChange={handleInputChange}
-            />
-          )}
-          {(formData.mode === "OFFLINE" || formData.mode === "HYBRID") && (
-            <TextInput
-              label="Location"
-              placeholder="Enter address or city"
-              size="md"
-              leftSection={<FaLocationArrow size={13} />}
-              className="lg:w-2/3 w-full"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-            />
-          )}
-
-          {/* Who is it for - Bullet Points */}
-          <div className="lg:w-2/3 w-full">
-            <div className="flex items-center justify-between mb-2">
-              <Text size="sm" fw={500}>
-                Who is it for? <span className="text-red-500">*</span>
-              </Text>
-              <Button
-                size="xs"
-                variant="light"
-                onClick={() => handleAddBulletPoint("whoIsItFor")}
-                leftSection={<Plus size={14} />}
-              >
-                Add Point
-              </Button>
-            </div>
-            <Text size="xs" c="dimmed" mb="sm">
-              Add bullet points describing the target audience (e.g., beginners, professionals, students)
-            </Text>
-            <div className="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-              {formData.whoIsItFor.map((point, index) => (
-                <div key={index} className="flex items-start gap-2">
-                  <span className="text-gray-600 mt-3">•</span>
-                  <TextInput
-                    placeholder={`Point ${index + 1}`}
-                    value={point}
-                    onChange={(e) =>
-                      handleBulletPointChange("whoIsItFor", index, e.target.value)
-                    }
-                    className="flex-1"
-                    size="sm"
-                  />
-                  {formData.whoIsItFor.length > 1 && (
-                    <Button
-                      size="xs"
-                      variant="subtle"
-                      color="red"
-                      onClick={() => handleRemoveBulletPoint("whoIsItFor", index)}
-                    >
-                      <X size={14} />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* What you will learn - Bullet Points */}
-          <div className="lg:w-2/3 w-full">
-            <div className="flex items-center justify-between mb-2">
-              <Text size="sm" fw={500}>
-                What you will learn <span className="text-red-500">*</span>
-              </Text>
-              <Button
-                size="xs"
-                variant="light"
-                onClick={() => handleAddBulletPoint("whatYouWillLearn")}
-                leftSection={<Plus size={14} />}
-              >
-                Add Point
-              </Button>
-            </div>
-            <Text size="xs" c="dimmed" mb="sm">
-              Add bullet points describing key learning outcomes and skills
-            </Text>
-            <div className="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
-              {formData.whatYouWillLearn.map((point, index) => (
-                <div key={index} className="flex items-start gap-2">
-                  <span className="text-gray-600 mt-3">•</span>
-                  <TextInput
-                    placeholder={`Learning outcome ${index + 1}`}
-                    value={point}
-                    onChange={(e) =>
-                      handleBulletPointChange("whatYouWillLearn", index, e.target.value)
-                    }
-                    className="flex-1"
-                    size="sm"
-                  />
-                  {formData.whatYouWillLearn.length > 1 && (
-                    <Button
-                      size="xs"
-                      variant="subtle"
-                      color="red"
-                      onClick={() =>
-                        handleRemoveBulletPoint("whatYouWillLearn", index)
-                      }
-                    >
-                      <X size={14} />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {formData.courseType === "Finishing School" ? (
-            <Select
-              data={courseCategories}
-              clearable={false}
-              onChange={(value) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  category: value,
-                }))
-              }
-              label="Choose category"
-              className="lg:w-2/3 w-full"
-              value={formData.category}
-            />
-          ) : (
-            <TextInput
-              label=" Choose Category"
-              placeholder="Enter category (e.g., Web Development, Data Science)"
-              size="sm"
-              className="lg:w-2/3 w-full"
-              value={formData.category || ""}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  category: e.target.value,
-                }))
-              }
-            />
-          )}
-          <TextInput
-            label="Registration Cost"
-            placeholder="Enter cost of registration"
-            size="md"
-            type="number"
-            leftSection={"₹"}
-            step={0.01}
-            className="lg:w-2/3 w-full"
-            name="cost"
-            value={formData.cost}
-            onChange={handleInputChange}
-          />
-          <div className="w-2/3 flex flex-row gap-2">
-            <Text ta="left">
-              *Date and timings are subjected to be changed by the
-              administration.
-            </Text>
-          </div>
-          <Button
-            radius={999}
-            w="400"
-            type="submit"
-            onClick={handleSubmit}
-            disabled={isPending}
-          >
-            Create
-          </Button>
+    <div className="w-full max-w-5xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      {/* Back Button & Header */}
+      <div className="space-y-4 animate-in slide-in-from-top duration-500">
+        <div>
+          {/*// @ts-expect-error shutup */}
+          <Link to={-1}>
+            <Button 
+              variant="subtle" 
+              leftSection={<ChevronLeft size={18} />}
+              radius="md"
+              className="hover:bg-gray-100 transition-colors"
+            >
+              Back
+            </Button>
+          </Link>
+        </div>
+        
+        <div>
+          <h1 className="text-3xl font-semibold text-gray-900">Create Training Course</h1>
+          <p className="text-sm text-gray-600 mt-1">Share your knowledge and skills with the community</p>
         </div>
       </div>
+
+      {/* Main Form */}
+      <Paper p="xl" withBorder className="rounded-xl animate-in slide-in-from-bottom duration-500 delay-100">
+        <div className="space-y-6">
+          {/* Basic Information Section */}
+          <div className="space-y-4">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Basic Information
+            </Text>
+            <TextInput
+              label="Course Title"
+              placeholder="e.g., Introduction to Web Development"
+              size="md"
+              required
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              classNames={{
+                input: "transition-all duration-200 focus:shadow-sm",
+              }}
+            />
+            <Textarea
+              label="Course Description"
+              placeholder="Provide a comprehensive description including syllabus and key topics..."
+              size="md"
+              minRows={4}
+              required
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              classNames={{
+                input: "transition-all duration-200 focus:shadow-sm",
+              }}
+            />
+            <FileInput
+              label="Upload Cover Image"
+              description="Recommended size: 1280x720 pixels"
+              placeholder="Click to select an image"
+              size="md"
+              accept="image/*"
+              name="cover"
+              value={formData.cover}
+              onChange={handleFileInputChange}
+              classNames={{
+                input: "transition-all duration-200 focus:shadow-sm",
+              }}
+            />
+          </div>
+
+          {/* Course Type & Category Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Course Type & Category
+            </Text>
+            <div className="space-y-3">
+              <div className="flex flex-col gap-2">
+                <Text size="sm" fw={500}>Course Type</Text>
+                <SegmentedControl
+                  data={["Skill Development", "Finishing School"]}
+                  value={formData.courseType}
+                  onChange={(val) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      courseType: val as "Skill Development" | "Finishing School",
+                      category: null,
+                    }))
+                  }
+                  size="md"
+                  fullWidth
+                />
+              </div>
+              
+              {formData.courseType === "Finishing School" ? (
+                <Select
+                  data={courseCategories}
+                  clearable={false}
+                  onChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: value,
+                    }))
+                  }
+                  label="Category"
+                  size="md"
+                  value={formData.category}
+                  classNames={{
+                    input: "transition-all duration-200 focus:shadow-sm",
+                  }}
+                />
+              ) : (
+                <TextInput
+                  label="Category"
+                  placeholder="e.g., Web Development, Data Science, Digital Marketing"
+                  size="md"
+                  value={formData.category || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: e.target.value,
+                    }))
+                  }
+                  classNames={{
+                    input: "transition-all duration-200 focus:shadow-sm",
+                  }}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Schedule Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Schedule & Duration
+            </Text>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <DateTimePicker
+                label="Start Date & Time"
+                placeholder="Select start date and time"
+                value={formData.startDate}
+                minDate={new Date()}
+                onChange={(value) => handleDateChange("startDate", value)}
+                leftSection={<Calendar size={16} />}
+                size="md"
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+              <DateTimePicker
+                label="End Date & Time"
+                placeholder="Select end date and time"
+                value={formData.endDate}
+                minDate={
+                  formData.startDate ? new Date(formData.startDate) : new Date()
+                }
+                onChange={(value) => handleDateChange("endDate", value)}
+                leftSection={<Calendar size={16} />}
+                size="md"
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+            </div>
+            <Alert color="blue" variant="light" className="text-xs">
+              Note: Date and timings are subject to administrative approval and may be adjusted
+            </Alert>
+          </div>
+
+          {/* Delivery Mode Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Delivery Mode
+            </Text>
+            <div className="flex flex-col gap-2">
+              <Text size="sm" fw={500}>Mode of Delivery</Text>
+              <SegmentedControl
+                data={["ONLINE", "OFFLINE", "HYBRID"]}
+                value={formData.mode}
+                onChange={(val) =>
+                  handleInputChange({ target: { value: val, name: "mode" } })
+                }
+                size="md"
+                fullWidth
+              />
+            </div>
+            {(formData.mode === "ONLINE" || formData.mode === "HYBRID") && (
+              <TextInput
+                label="Meeting Link"
+                placeholder="Enter Google Meet, Zoom, or Teams link"
+                size="md"
+                leftSection={<Link2 size={16} />}
+                name="meetingLink"
+                value={formData.meetingLink}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+            )}
+            {(formData.mode === "OFFLINE" || formData.mode === "HYBRID") && (
+              <TextInput
+                label="Location"
+                placeholder="Enter complete address or city"
+                size="md"
+                leftSection={<FaLocationArrow size={13} />}
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+            )}
+          </div>
+
+          {/* Course Details Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Course Details
+            </Text>
+            
+            {/* Who is it for */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <Text size="sm" fw={500}>
+                    Who is it for? <span className="text-red-500">*</span>
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    Define your target audience
+                  </Text>
+                </div>
+                <Button
+                  size="xs"
+                  variant="light"
+                  onClick={() => handleAddBulletPoint("whoIsItFor")}
+                  leftSection={<Plus size={14} />}
+                >
+                  Add Point
+                </Button>
+              </div>
+              <div className="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                {formData.whoIsItFor.map((point, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-gray-600 mt-3 font-medium">•</span>
+                    <TextInput
+                      placeholder={`e.g., Beginners with basic coding knowledge`}
+                      value={point}
+                      onChange={(e) =>
+                        handleBulletPointChange("whoIsItFor", index, e.target.value)
+                      }
+                      className="flex-1"
+                      size="sm"
+                    />
+                    {formData.whoIsItFor.length > 1 && (
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        color="red"
+                        onClick={() => handleRemoveBulletPoint("whoIsItFor", index)}
+                      >
+                        <X size={16} />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* What you will learn */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <Text size="sm" fw={500}>
+                    What you will learn <span className="text-red-500">*</span>
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    List key learning outcomes
+                  </Text>
+                </div>
+                <Button
+                  size="xs"
+                  variant="light"
+                  onClick={() => handleAddBulletPoint("whatYouWillLearn")}
+                  leftSection={<Plus size={14} />}
+                >
+                  Add Point
+                </Button>
+              </div>
+              <div className="space-y-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                {formData.whatYouWillLearn.map((point, index) => (
+                  <div key={index} className="flex items-start gap-2">
+                    <span className="text-gray-600 mt-3 font-medium">•</span>
+                    <TextInput
+                      placeholder={`e.g., Build responsive websites using HTML & CSS`}
+                      value={point}
+                      onChange={(e) =>
+                        handleBulletPointChange("whatYouWillLearn", index, e.target.value)
+                      }
+                      className="flex-1"
+                      size="sm"
+                    />
+                    {formData.whatYouWillLearn.length > 1 && (
+                      <Button
+                        size="xs"
+                        variant="subtle"
+                        color="red"
+                        onClick={() =>
+                          handleRemoveBulletPoint("whatYouWillLearn", index)
+                        }
+                      >
+                        <X size={16} />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Pricing Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Pricing
+            </Text>
+            <TextInput
+              label="Registration Cost"
+              placeholder="Enter course fee"
+              size="md"
+              type="number"
+              leftSection={<span className="text-gray-600 font-medium">₹</span>}
+              step={0.01}
+              name="cost"
+              required
+              value={formData.cost}
+              onChange={handleInputChange}
+              classNames={{
+                input: "transition-all duration-200 focus:shadow-sm",
+              }}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="pt-6">
+            <Button
+              fullWidth
+              size="lg"
+              radius="md"
+              type="submit"
+              onClick={handleSubmit}
+              disabled={isPending}
+              className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 hover:shadow-md"
+            >
+              {isPending ? "Creating Course..." : "Create Course"}
+            </Button>
+          </div>
+        </div>
+      </Paper>
     </div>
   );
 }

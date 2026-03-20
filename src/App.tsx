@@ -142,9 +142,9 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
+              <Route path="/admin/signin" element={<AdminSignIn />} />
               <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminHome />} />
-                <Route path="signin" element={<AdminSignIn />} />
+                <Route index element={<AdminHome />} />   
                 <Route path="trainings" element={<AdminTrainings />} />
                 <Route
                   path="trainings/:id"

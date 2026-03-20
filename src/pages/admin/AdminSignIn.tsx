@@ -18,7 +18,7 @@ export default function AdminSignIn() {
   });
 
   const { signIn, isSigningIn } = useAdmin({
-    extraOnSuccess: () => navigate("/admin/students"),
+    extraOnSuccess: () => navigate("/admin"),
   });
 
   const handleSubmit = () => {
@@ -33,7 +33,7 @@ export default function AdminSignIn() {
     }));
   };
 
-  if (user) return <Navigate to={"/admin/students"} />;
+  if (user) return <Navigate to={"/admin"} />;
 
   return (
     <div className="min-h-screen flex items-center justify-center w-full bg-gradient-to-br from-gray-50 to-gray-100 p-4">

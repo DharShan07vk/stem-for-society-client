@@ -14,6 +14,7 @@ type PartnerStudents = {
   firstName: string;
   lastName?: string;
   email: string;
+  mobile:string;
 };
 
 function usePartnerStudents() {
@@ -38,15 +39,19 @@ export default function PartnerStudents() {
         d.firstName
           .toLowerCase()
           .trim()
-          .includes(search || "") ||
+          .includes(search?.toLowerCase() || "") ||
         d.lastName
           ?.toLowerCase()
           .trim()
-          .includes(search || "") ||
+          .includes(search?.toLowerCase() || "") ||
         d.email
           .toLowerCase()
           .trim()
-          .includes(search || ""),
+          .includes(search?.toLowerCase() || "") ||
+        d.mobile
+          .toLowerCase()
+          .trim()
+          .includes(search?.toLowerCase() || ""),
     );
   }, [data, search]);
 
@@ -59,52 +64,81 @@ export default function PartnerStudents() {
   const students = data?.data;
 
   return (
-    <div className="flex flex-col items-center gap-4 lg:mt-20 p-4">
-      <div className="control-bar w-full mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Students</h1>
-        <Input
-          leftSection={<Search size={16} />}
-          classNames={{ wrapper: "ml-auto w-64" }}
-          placeholder="Search for students..."
-          value={search}
-          radius={999}
-          onChange={(e) => setSearch(e.target.value)}
-          type="search"
-        />
-      </div>
-      <div className="w-full overflow-auto">
-        {!students ? (
-          <p className="text-center text-gray-600">No students found</p>
-        ) : (
-          <Table
-            headers={[
-              { id: 1, render: "S.No", className: "w-[10%]" },
-              { id: 2, render: "Name" },
-              { id: 3, render: "Email" },
-              { id: 5, render: "Details", className: "w-[20%]" },
-            ]}
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="animate-in slide-in-from-left duration-500">
+          <h1 className="text-3xl font-semibold text-gray-900">Students</h1>
+          <p className="text-sm text-gray-600 mt-1">View all enrolled students in your courses</p>
+        </div>
+        <div className="animate-in slide-in-from-right duration-500">
+          <Input
+            leftSection={<Search size={16} />}
+            className="w-64"
+            placeholder="Search students..."
+            value={search}
+            radius="md"
+            onChange={(e) => setSearch(e.target.value)}
+            type="search"
             classNames={{
-              root: "bg-white rounded-lg",
+              input: "transition-all duration-200 focus:shadow-sm",
             }}
-            rows={filteredStudents.map((r, i) => ({
-              id: r.id,
-              cells: [
-                {
-                  render: i + 1,
-                  className: "w-[10%]",
-                },
-                {
-                  render: r.firstName + " " + (r.lastName || ""),
-                },
-                {
-                  render: r.email,
-                },
-                {
-                  render: <Button radius={999}>View Details</Button>,
-                },
-              ],
-            }))}
           />
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="animate-in fade-in duration-500 delay-100">
+        {!students || students.length === 0 ? (
+          <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
+            <p className="text-gray-500">No students found</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+            <Table
+              headers={[
+                { id: 1, render: "S.No", className: "w-[8%] text-left pl-4" },
+                { id: 2, render: "Name", className: "text-left" },
+                { id: 3, render: "Email", className: "text-left" },
+                { id: 5, render: "Phone Number", className: "w-[15%] text-center" },
+              ]}
+              classNames={{
+                root: "bg-white",
+                header: "bg-gray-50",
+                body: "divide-y divide-gray-100",
+                row: "hover:bg-gray-50 transition-colors duration-150",
+              }}
+              rows={filteredStudents.map((r, i) => ({
+                id: r.id,
+                cells: [
+                  {
+                    render: <span className="text-gray-600 font-medium">{i + 1}</span>,
+                    className: "text-left pl-4",
+                  },
+                  {
+                    render: (
+                      <div className="font-medium text-gray-900">
+                        {r.firstName} {r.lastName || ""}
+                      </div>
+                    ),
+                    className: "text-left",
+                  },
+                  {
+                    render: <div className="text-sm text-gray-700">{r.email}</div>,
+                    className: "text-left",
+                  },
+                  {
+                    render: (
+                      <div className="flex justify-center">
+                        {r.mobile} 
+                      </div>
+                    ),
+                    className: "text-center",
+                  },
+                ],
+              }))}
+            />
+          </div>
         )}
       </div>
     </div>

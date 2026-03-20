@@ -1,4 +1,4 @@
-import { Alert, Button, SegmentedControl, TextInput } from "@mantine/core";
+import { Alert, Button, Paper, SegmentedControl, TextInput } from "@mantine/core";
 import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
@@ -101,122 +101,153 @@ export default function PartnerAccounts() {
   if (!user) return <Navigate to={"/partner"} />;
 
   return (
-    <div className="p-4 space-y-3 w-full h-full">
-      <div className="space-y-1">
-        <h4 className="font-medium">
-          View and edit payment account settings here
-        </h4>
-        <p className="text-sm">
-          To be eligible for payouts, you need to fill up these details, after
-          which we will verify the details
+    <div className="w-full max-w-4xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="space-y-2 animate-in slide-in-from-top duration-500">
+        <h1 className="text-3xl font-semibold text-gray-900">Payment Account Settings</h1>
+        <p className="text-sm text-gray-600">
+          Configure your payment details to receive payouts from your trainings
         </p>
-        <Alert icon={<Info />} color="blue">
-          You are only eligible for payouts after verification process is
-          successful
+      </div>
+
+      {/* Info Alert */}
+      <div className="animate-in fade-in duration-500 delay-100">
+        <Alert icon={<Info />} color="blue" variant="light" className="rounded-lg">
+          You are only eligible for payouts after your account details are verified by our team
         </Alert>
       </div>
 
-      <div className="flex flex-col gap-2 w-[400px] mx-auto">
-        {partnerProfile?.account?.bankAccVerifiedOn ||
-        partnerProfile?.account?.VPAVerifiedOn ||
-        partnerProfile?.account?.cardVerifiedOn ? (
-          <Alert color="green">
-            Your account has been verified. You are eligible for payouts
-          </Alert>
-        ) : (partnerProfile?.account?.rzpyBankAcctId &&
-            !partnerProfile.account.bankAccVerifiedOn) ||
-          (partnerProfile?.account?.rzpyCardId &&
-            !partnerProfile.account.cardVerifiedOn) ||
-          (partnerProfile?.account?.rzpyVPAId &&
-            !partnerProfile.account.VPAVerifiedOn) ? (
-          <Alert color="yellow">
-            Your account is being verified. You will be eligible for payouts
-          </Alert>
-        ) : (
-          <>
-            <SegmentedControl
-              data={[
-                { label: "Bank Account", value: "bank_account" },
-                { label: "UPI", value: "vpa", disabled: true },
-              ]}
-              value={formData?.type}
-              onChange={(value) =>
-                // @ts-expect-error moodu
-                setFormData((prev) => ({ ...prev, type: value }))
-              }
-            />
-            {formData?.type === "bank_account" ? (
-              <>
-                <TextInput
-                  label="Account name"
-                  placeholder="Enter your name"
-                  size="sm"
-                  required
-                  name="name"
-                  value={formData?.bank_account?.name}
-                  onChange={handleInputChange}
-                />
-                <TextInput
-                  label="Bank Name"
-                  placeholder="Enter Bank Name"
-                  size="sm"
-                  required
-                  name="bank_name"
-                  value={formData?.bank_account?.bank_name}
-                  onChange={handleInputChange}
-                />
-                <TextInput
-                  label="IFSC"
-                  placeholder="Enter IFSC code"
-                  size="sm"
-                  required
-                  name="ifsc"
-                  value={formData?.bank_account?.ifsc}
-                  onChange={handleInputChange}
-                />
-                <TextInput
-                  label="Account Number"
-                  placeholder="Enter Account number"
-                  size="sm"
-                  required
-                  name="account_number"
-                  value={formData?.bank_account?.account_number}
-                  onChange={handleInputChange}
-                />
-              </>
-            ) : formData?.type === "vpa" ? (
-              <TextInput
-                label="UPI Address"
-                placeholder="Enter your UPI ID"
-                size="sm"
-                required
-                name="address"
-                value={formData?.vpa?.address}
-                onChange={handleInputChange}
+      {/* Main Form */}
+      <Paper
+        p="xl"
+        withBorder
+        className="rounded-xl animate-in slide-in-from-bottom duration-500 delay-200"
+      >
+        <div className="space-y-6">
+          {partnerProfile?.account?.bankAccVerifiedOn ||
+          partnerProfile?.account?.VPAVerifiedOn ||
+          partnerProfile?.account?.cardVerifiedOn ? (
+            <Alert color="green" variant="light" className="rounded-lg">
+              ✓ Your account has been verified. You are eligible for payouts
+            </Alert>
+          ) : (partnerProfile?.account?.rzpyBankAcctId &&
+              !partnerProfile.account.bankAccVerifiedOn) ||
+            (partnerProfile?.account?.rzpyCardId &&
+              !partnerProfile.account.cardVerifiedOn) ||
+            (partnerProfile?.account?.rzpyVPAId &&
+              !partnerProfile.account.VPAVerifiedOn) ? (
+            <Alert color="yellow" variant="light" className="rounded-lg">
+              ⏱ Your account is being verified. You will be eligible for payouts soon
+            </Alert>
+          ) : (
+            <>
+              <SegmentedControl
+                data={[
+                  { label: "Bank Account", value: "bank_account" },
+                  { label: "UPI", value: "vpa", disabled: true },
+                ]}
+                value={formData?.type}
+                onChange={(value) =>
+                  // @ts-expect-error moodu
+                  setFormData((prev) => ({ ...prev, type: value }))
+                }
+                size="md"
+                className="w-full"
               />
-            ) : null}
-          </>
-        )}
-        <Button
-          radius={999}
-          w="400"
-          type="submit"
-          onClick={() => {
-            console.log("🚀 ~ PartnerAccounts ~ formData:", formData);
-            if (!formData) {
-              return toast.error("Invalid data");
-            }
-            mutate(
-              formData.type === "bank_account"
-                ? { bank_account: formData.bank_account! }
-                : { vpa: formData.vpa! },
-            );
-          }}
-          disabled={isPending}
-        >
-          Submit
-        </Button>
-      </div>
+              
+              <div className="space-y-4 pt-4">
+                {formData?.type === "bank_account" ? (
+                  <>
+                    <TextInput
+                      label="Account Holder Name"
+                      placeholder="Enter account holder name"
+                      size="md"
+                      required
+                      name="name"
+                      value={formData?.bank_account?.name}
+                      onChange={handleInputChange}
+                      classNames={{
+                        input: "transition-all duration-200 focus:shadow-sm",
+                      }}
+                    />
+                    <TextInput
+                      label="Bank Name"
+                      placeholder="Enter bank name"
+                      size="md"
+                      required
+                      name="bank_name"
+                      value={formData?.bank_account?.bank_name}
+                      onChange={handleInputChange}
+                      classNames={{
+                        input: "transition-all duration-200 focus:shadow-sm",
+                      }}
+                    />
+                    <TextInput
+                      label="IFSC Code"
+                      placeholder="Enter IFSC code (e.g., SBIN0001234)"
+                      size="md"
+                      required
+                      name="ifsc"
+                      value={formData?.bank_account?.ifsc}
+                      onChange={handleInputChange}
+                      classNames={{
+                        input: "transition-all duration-200 focus:shadow-sm",
+                      }}
+                    />
+                    <TextInput
+                      label="Account Number"
+                      placeholder="Enter account number"
+                      size="md"
+                      required
+                      name="account_number"
+                      value={formData?.bank_account?.account_number}
+                      onChange={handleInputChange}
+                      classNames={{
+                        input: "transition-all duration-200 focus:shadow-sm",
+                      }}
+                    />
+                  </>
+                ) : formData?.type === "vpa" ? (
+                  <TextInput
+                    label="UPI Address"
+                    placeholder="yourname@upi"
+                    size="md"
+                    required
+                    name="address"
+                    value={formData?.vpa?.address}
+                    onChange={handleInputChange}
+                    classNames={{
+                      input: "transition-all duration-200 focus:shadow-sm",
+                    }}
+                  />
+                ) : null}
+              </div>
+            </>
+          )}
+          
+          <Button
+            fullWidth
+            size="md"
+            radius="md"
+            type="submit"
+            onClick={() => {
+              console.log("🚀 ~ PartnerAccounts ~ formData:", formData);
+              if (!formData) {
+                return toast.error("Invalid data");
+              }
+              mutate(
+                formData.type === "bank_account"
+                  ? { bank_account: formData.bank_account! }
+                  : { vpa: formData.vpa! },
+              );
+            }}
+            disabled={isPending}
+            className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 hover:shadow-md mt-6"
+          >
+            {isPending ? "Submitting..." : "Submit for Verification"}
+          </Button>
+        </div>
+      </Paper>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Alert, Badge, Button, Rating, Skeleton } from "@mantine/core";
+import { Alert, Badge, Button, Paper, Rating, Skeleton, Text } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { Calendar, ChevronLeft, Link2 } from "lucide-react";
@@ -111,290 +111,352 @@ export default function PartnerCourseDetails() {
   const event = data?.data;
 
   return (
-    <div className="w-full my-4">
-      <div className="max-w-7xl mx-auto flex flex-col">
+    <div className="w-full max-w-7xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      <div className="max-w-full mx-auto">
         {!event ? (
           <Errorbox message="No data! Must be an invalid link. Please refresh or go back and try again" />
         ) : (
           <>
-            <div className="px-2 flex flex-col gap-4">
-              <div className="w-full">
+            {/* Back Button & Header */}
+            <div className="space-y-4 animate-in slide-in-from-top duration-500">
+              <div>
                 {/*// @ts-expect-error shutup */}
                 <Link to={-1}>
-                  <Button radius={999} fullWidth={false}>
-                    <ChevronLeft size={16} />
+                  <Button 
+                    variant="subtle" 
+                    leftSection={<ChevronLeft size={18} />}
+                    radius="md"
+                    className="hover:bg-gray-100 transition-colors"
+                  >
                     Back
                   </Button>
                 </Link>
               </div>
-              <h3 className="mt-2 text-xl md:text-3xl flex items-center gap-2 font-semibold">
-                {event.title}
-                <Badge
-                  variant="dot"
-                  color={!event.category ? "gray" : "blue"}
-                  className={
-                    !event.category ? "text-gray-600" : "text-blue-500"
-                  }
-                >
-                  {event.category || "Uncategorized"}
-                </Badge>
-              </h3>
+              
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h1 className="text-3xl font-semibold text-gray-900">
+                      {event.title}
+                    </h1>
+                    <Badge
+                      variant="light"
+                      color={!event.category ? "gray" : "blue"}
+                      size="lg"
+                      radius="sm"
+                    >
+                      {event.category || "Uncategorized"}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Payout Status */}
+            <div className="animate-in fade-in duration-500 delay-100">
               {payoutLoading || !payoutData ? (
-                <Skeleton width={"100%"} h={100} />
+                <Skeleton width="100%" height={100} radius="xl" />
               ) : (
                 <PayoutStatusBanner status={payoutData.payoutEligibility} />
               )}
-              <Alert color={event.approvedBy ? "green" : "yellow"}>
-                <Badge
-                  color={event.approvedBy ? "green" : "yellow"}
-                  classNames={{ label: "font-normal" }}
-                >
-                  {event.approvedBy ? "approved" : "pending"}
-                </Badge>
-                <br />
-                {event.approvedBy
-                  ? "Course approved!"
-                  : "Course awaits approval"}
-              </Alert>
-              <div className=" mt-5">
-                <img
-                  src={event.coverImg ?? undefined}
-                  alt={event.title}
-                  className="w-2/3 object-contain rounded-lg"
-                />
-              </div>
-              <span className="mt-2 text-xl md:text-lg">
-                {event.description}
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Created on{" "}
-                <span className="date ml-2 text-black font-semibold">
-                  {formatDate(event.createdAt)}
-                </span>
-              </span>
-              <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base mb-1">
-                <FaLocationDot /> Mode:{" "}
-                <span className=" text-black font-normal">
-                  <Badge variant="dot" color={location ? "red" : "green"}>
-                    {event.type ?? (event.location ? "Offline" : "Online")}
+            </div>
+
+            {/* Approval Status */}
+            <div className="animate-in fade-in duration-500 delay-150">
+              <Alert 
+                color={event.approvedBy ? "green" : "yellow"} 
+                variant="light"
+                className="rounded-lg"
+              >
+                <div className="flex items-center gap-2">
+                  <Badge
+                    color={event.approvedBy ? "green" : "yellow"}
+                    variant="filled"
+                    size="md"
+                  >
+                    {event.approvedBy ? "Approved" : "Pending"}
                   </Badge>
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Location:{" "}
-                <span className="location text-black font-semibold">
-                  {event.location || "N/A"}
-                </span>
-              </span>
-              <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base">
-                <Link2 /> Meeting Link:{" "}
-                <span className="location text-black font-semibold">
-                  {event.link || "N/A"}
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Cost:{" "}
-                <span className="location text-black font-semibold">
-                  ₹ {event.cost || "N/A"}
-                </span>
-              </span>
-              <span className="text-green-600 flex items-center gap-2 font-semibold text-xs sm:text-sm md:text-base">
-                <Calendar size={18} />
-                Dates:{" "}
-                <span className="location text-black font-semibold">
-                  {formatDate(event.startDate) +
-                    " to " +
-                    formatDate(event.endDate)}
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Payout:{" "}
-                <span className="location text-black font-semibold">
-                  {event.cut}%
-                </span>
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Total registrations:{" "}
-                <span className="location text-black font-semibold">
-                  {event.enrolments.length} student(s)
-                </span>{" "}
-              </span>
-              <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                Potential Pay:{" "}
-                <span className="location text-black font-semibold">
-                  {currencyFormatter.format(
-                    event.enrolments.length *
-                      Number(event.cost) *
-                      (Number(event.cut) / 100),
-                  )}{" "}
-                </span>{" "}
-              </span>
-
-              {event.lessons && event.lessons.length > 0 && (
-                <div className="grid gap-3 mt-8">
-                  <span className="text-green-600 font-semibold text-xs sm:text-sm md:text-base">
-                    Course Syllabus
+                  <span className="font-medium">
+                    {event.approvedBy
+                      ? "Course has been approved and is live"
+                      : "Course is awaiting admin approval"}
                   </span>
-                  {event.lessons.map((l) => (
-                    <div
-                      className="w-full border my-1 rounded-md p-4"
-                      key={l.id}
-                    >
-                      <div className="flex justify-between items-center mb-2">
-                        <h4 className="text-lg font-semibold">{l.title}</h4>
-                        <Badge
-                          variant="dot"
-                          color={l.type === "ONLINE" ? "red" : "green"}
-                        >
-                          {l.type}
-                        </Badge>
-                      </div>
-                      {l.content && (
-                        <div
-                          className="ql-snow"
-                          dangerouslySetInnerHTML={{ __html: l.content }}
-                        ></div>
-                      )}
-                      <div className="flex flex-col mb-2 gap-3">
-                        <span className="text-gray-600">
-                          <Calendar size={16} className="inline-block mr-1" />
-                          {formatDate(l.lastDate)}
-                        </span>
-                        {l.type === "ONLINE" && l.video && (
-                          <div className="pt-[56.25%] relative">
-                            <ReactPlayer
-                              url={l.video}
-                              controls
-                              height={"100%"}
-                              width={"100%"}
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                              }}
-                            />
-                          </div>
-                        )}
-                      </div>
-                      {l.type === "OFFLINE" && l.location && (
-                        <div className="text-gray-600">
-                          <FaLocationDot
-                            size={16}
-                            className="inline-block mr-1"
-                          />
-                          {l.location}
-                        </div>
-                      )}
-                    </div>
-                  ))}
                 </div>
-              )}
+              </Alert>
+            </div>
 
-              <div className="mt-6 w-full">
-                <h2 className="font-medium text-lg">Certificate generation</h2>
-                <p className="text-sm mb-3">
-                  Select the students for whom you want to generate certificates
-                </p>
-                <div className="flex mb-4">
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-in fade-in duration-500 delay-200">
+              {/* Left Column - Cover Image & Description */}
+              <div className="lg:col-span-2 space-y-6">
+                <Paper p="lg" withBorder className="rounded-xl">
+                  <img
+                    src={event.coverImg ?? undefined}
+                    alt={event.title}
+                    className="w-full h-64 object-cover rounded-lg mb-4"
+                  />
+                  <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium mb-2">
+                    Description
+                  </Text>
+                  <Text size="md" className="text-gray-700">
+                    {event.description}
+                  </Text>
+                </Paper>
+
+                {/* Lessons Section */}
+                {event.lessons && event.lessons.length > 0 && (
+                  <Paper p="lg" withBorder className="rounded-xl">
+                    <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium mb-4">
+                      Course Syllabus
+                    </Text>
+                    <div className="space-y-4">
+                      {event.lessons.map((l) => (
+                        <Paper
+                          key={l.id}
+                          p="md"
+                          withBorder
+                          className="rounded-lg hover:shadow-sm transition-shadow"
+                        >
+                          <div className="flex justify-between items-start mb-3">
+                            <h4 className="text-lg font-semibold text-gray-900">{l.title}</h4>
+                            <Badge
+                              variant="dot"
+                              color={l.type === "ONLINE" ? "blue" : "green"}
+                            >
+                              {l.type}
+                            </Badge>
+                          </div>
+                          {l.content && (
+                            <div
+                              className="ql-snow text-sm text-gray-700 mb-3"
+                              dangerouslySetInnerHTML={{ __html: l.content }}
+                            ></div>
+                          )}
+                          <div className="flex flex-col gap-2 text-sm text-gray-600">
+                            <div className="flex items-center gap-2">
+                              <Calendar size={16} />
+                              {formatDate(l.lastDate)}
+                            </div>
+                            {l.type === "OFFLINE" && l.location && (
+                              <div className="flex items-center gap-2">
+                                <FaLocationDot size={16} />
+                                {l.location}
+                              </div>
+                            )}
+                          </div>
+                          {l.type === "ONLINE" && l.video && (
+                            <div className="pt-[56.25%] relative mt-3">
+                              <ReactPlayer
+                                url={l.video}
+                                controls
+                                height="100%"
+                                width="100%"
+                                style={{
+                                  position: "absolute",
+                                  top: 0,
+                                  left: 0,
+                                }}
+                              />
+                            </div>
+                          )}
+                        </Paper>
+                      ))}
+                    </div>
+                  </Paper>
+                )}
+              </div>
+
+              {/* Right Column - Course Details */}
+              <div className="space-y-4">
+                <Paper p="lg" withBorder className="rounded-xl">
+                  <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium mb-4">
+                    Course Details
+                  </Text>
+                  <div className="space-y-4">
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Created On</Text>
+                      <Text size="sm" fw={500}>{formatDate(event.createdAt)}</Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Mode</Text>
+                      <Badge variant="dot" color={event.type === "ONLINE" ? "blue" : "green"}>
+                        {event.type ?? (event.location ? "Offline" : "Online")}
+                      </Badge>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Location</Text>
+                      <Text size="sm" fw={500}>{event.location || "N/A"}</Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Meeting Link</Text>
+                      <Text size="sm" fw={500} className="break-all">
+                        {event.link || "N/A"}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Cost</Text>
+                      <Text size="lg" fw={600} c="blue">₹ {event.cost || "N/A"}</Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Duration</Text>
+                      <Text size="sm" fw={500}>
+                        {formatDate(event.startDate)} to {formatDate(event.endDate)}
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Your Payout</Text>
+                      <Text size="sm" fw={500}>{event.cut}%</Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">Total Enrollments</Text>
+                      <Text size="xl" fw={700} c="blue">{event.enrolments.length}</Text>
+                    </div>
+                    <div className="pt-3 border-t border-gray-200">
+                      <Text size="xs" c="dimmed" className="mb-1">Potential Earnings</Text>
+                      <Text size="xl" fw={700} c="green">
+                        {currencyFormatter.format(
+                          event.enrolments.length *
+                            Number(event.cost) *
+                            (Number(event.cut) / 100)
+                        )}
+                      </Text>
+                    </div>
+                  </div>
+                </Paper>
+              </div>
+            </div>
+
+            {/* Certificate Generation Section */}
+            <div className="animate-in fade-in duration-500 delay-300">
+              <Paper p="lg" withBorder className="rounded-xl">
+                <div className="mb-6">
+                  <Text size="lg" fw={600} className="text-gray-900 mb-2">
+                    Certificate Generation
+                  </Text>
+                  <Text size="sm" c="dimmed">
+                    Select students to generate certificates for course completion
+                  </Text>
+                </div>
+                
+                <div className="mb-4">
                   <Button
-                    radius={999}
+                    size="md"
+                    radius="md"
                     disabled={isPending || selectedStudents.length < 1}
                     onClick={() => {
                       generateCertificates(selectedStudents);
                     }}
+                    className="bg-blue-600 hover:bg-blue-700 transition-all duration-200"
                   >
                     {selectedStudents.length < 1
-                      ? "Select to generate"
-                      : "Generate certificates"}
+                      ? "Select Students to Generate"
+                      : `Generate Certificates (${selectedStudents.length})`}
                   </Button>
                 </div>
-                <Table
-                  selectable
-                  setSelectedRows={setSelectedStudents}
-                  selectedRows={selectedStudents}
-                  selectionDisabled={event.enrolments
-                    .filter((enr) => enr.certificate)
-                    .map((enr) => enr.id)}
-                  selectionDisabledRender={"N/A"}
-                  headers={[
-                    {
-                      render: "S.No",
-                    },
-                    {
-                      render: "Student",
-                    },
-                    {
-                      render: "Enrolled on",
-                    },
-                    {
-                      render: "Feedback",
-                      className: "max-w-[30%]",
-                    },
-                    {
-                      render: "Certificate",
-                    },
-                  ]}
-                  rows={event.enrolments?.map((enrolment, i) => ({
-                    id: enrolment.id,
-                    cells: [
-                      {
-                        render: i + 1,
-                      },
-                      {
-                        render: (
-                          <div className="flex flex-col">
-                            <p className="font-medium">
-                              {enrolment.user.firstName +
-                                " " +
-                                (enrolment.user.lastName ?? "")}
-                            </p>
-                            <p>
-                              {enrolment.user.mobile +
-                                " " +
-                                enrolment.user.email}
-                            </p>
-                          </div>
-                        ),
-                      },
-                      {
-                        render: enrolment.paidOn
-                          ? formatDate(enrolment.paidOn)
-                          : "Not paid",
-                      },
-                      {
-                        render: (() => {
-                          const fb = event.ratings?.find(
-                            (rt) => rt.userId === enrolment.user.id,
-                          );
-                          if (!fb) return <i>No feedback</i>;
-                          return (
-                            <div className="grid place-items-center">
-                              <Rating value={fb.rating} />
-                              {fb.feedback}
+
+                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                  <Table
+                    selectable
+                    setSelectedRows={setSelectedStudents}
+                    selectedRows={selectedStudents}
+                    selectionDisabled={event.enrolments
+                      .filter((enr) => enr.certificate)
+                      .map((enr) => enr.id)}
+                    selectionDisabledRender="N/A"
+                    headers={[
+                      { render: "S.No", className: "w-[6%] text-left pl-4" },
+                      { render: "Student", className: "text-left" },
+                      { render: "Enrolled On", className: "text-left" },
+                      { render: "Feedback", className: "text-left" },
+                      { render: "Certificate", className: "text-center" },
+                    ]}
+                    classNames={{
+                      root: "bg-white",
+                      header: "bg-gray-50",
+                      body: "divide-y divide-gray-100",
+                      row: "hover:bg-gray-50 transition-colors",
+                    }}
+                    rows={event.enrolments?.map((enrolment, i) => ({
+                      id: enrolment.id,
+                      cells: [
+                        {
+                          render: <span className="text-gray-600 font-medium">{i + 1}</span>,
+                          className: "text-left pl-4",
+                        },
+                        {
+                          render: (
+                            <div>
+                              <div className="font-medium text-gray-900">
+                                {enrolment.user.firstName}{" "}
+                                {enrolment.user.lastName ?? ""}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {enrolment.user.email}
+                              </div>
+                              <div className="text-xs text-gray-500">
+                                {enrolment.user.mobile}
+                              </div>
                             </div>
-                          );
-                        })(),
-                        className: "max-w-[30%]",
-                      },
-                      {
-                        render: !enrolment.certificate ? (
-                          <i>Yet to be generated</i>
-                        ) : enrolment.certificate === "generating" ? (
-                          <i>Processing</i>
-                        ) : (
-                          <Link
-                            to={enrolment.certificate!}
-                            target="_blank"
-                            className="text-blue-500 underline"
-                          >
-                            Click here
-                          </Link>
-                        ),
-                      },
-                    ],
-                  }))}
-                />
-              </div>
+                          ),
+                          className: "text-left",
+                        },
+                        {
+                          render: (
+                            <div className="text-sm text-gray-700">
+                              {enrolment.paidOn
+                                ? formatDate(enrolment.paidOn)
+                                : <Badge color="gray" size="sm">Not Paid</Badge>}
+                            </div>
+                          ),
+                          className: "text-left",
+                        },
+                        {
+                          render: (() => {
+                            const fb = event.ratings?.find(
+                              (rt) => rt.userId === enrolment.user.id
+                            );
+                            if (!fb)
+                              return (
+                                <Text size="xs" c="dimmed" fs="italic">
+                                  No feedback
+                                </Text>
+                              );
+                            return (
+                              <div className="space-y-1">
+                                <Rating value={fb.rating} size="sm" />
+                                <Text size="xs" className="text-gray-600">
+                                  {fb.feedback}
+                                </Text>
+                              </div>
+                            );
+                          })(),
+                          className: "text-left",
+                        },
+                        {
+                          render: !enrolment.certificate ? (
+                            <Badge color="gray" variant="light" size="sm">
+                              Not Generated
+                            </Badge>
+                          ) : enrolment.certificate === "generating" ? (
+                            <Badge color="yellow" variant="light" size="sm">
+                              Processing
+                            </Badge>
+                          ) : (
+                            <Link
+                              to={enrolment.certificate!}
+                              target="_blank"
+                              className="text-blue-600 hover:underline text-sm font-medium"
+                            >
+                              View Certificate
+                            </Link>
+                          ),
+                          className: "text-center",
+                        },
+                      ],
+                    }))}
+                  />
+                </div>
+              </Paper>
             </div>
           </>
         )}
