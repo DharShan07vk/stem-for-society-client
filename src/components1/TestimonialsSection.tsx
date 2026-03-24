@@ -55,7 +55,12 @@ const TestimonialsSection = () => {
               <Card
                 key={index}
                 className="min-w-[320px] max-w-[340px] rounded-xl border-none flex-shrink-0"
-                style={{ backgroundColor: "#C0E1FF" }}
+                style={{ backgroundColor: "#C0E1FF" ,color: "black",
+        backgroundImage: `
+          linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)),
+          url(${"src/assets/logo.png"})
+        `,
+        backgroundSize: "cover",}}
               >
                 <CardContent className="p-6 flex flex-col h-full">
                   <Quote

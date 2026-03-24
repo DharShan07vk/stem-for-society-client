@@ -195,7 +195,8 @@ const SkillDevelopment = () => {
             {/* Page Title */}
             <div className="text-center mb-10">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                Quick Skill Boosts with <span className="text-[#0D9488]">Short Practical Courses</span>
+                Transform Your Career with <span className="text-[#0D9488]">Industry-Ready Skills</span>
+                {/* changed the text */}
               </h1>
               {/* <p className="text-gray-600 text-lg max-w-3xl mx-auto">
                 Short, hands-on programs to rapidly upskill for industry roles — practical projects, expert mentors, and career-focused outcomes.

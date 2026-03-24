@@ -81,13 +81,13 @@ const OurPrograms = () => {
               <img
                 src={asset3}
                 alt="Individuals"
-                className="absolute right-[10px] sm:right-[15px] md:right-[20px] top-[-10px] sm:top-[-15px] md:top-[-20px] w-[180px] sm:w-[260px] md:w-[320px] lg:w-[368px] h-auto object-contain transition-all duration-500 group-hover:scale-110"
+                className="absolute right-[10px] sm:right-[15px] md:right-[20px] top-[-10px] sm:top-[-15px] md:top-[-20px] w-[180px] sm:w-[260px] md:w-[320px] lg:w-[368px] h-auto object-contain transition-all duration-500 group-hover:scale-110 ps-5"
               />
               <div className="relative z-10">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#594D20] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
-                  Individuals
+                  Individuals & Instituitions 
                 </h3>
-                <p className="text-sm sm:text-base max-w-[180px] sm:max-w-[210px] md:max-w-[241px]">
+                <p className="text-sm sm:text-base max-w-[180px] sm:max-w-[210px] md:max-w-[241px] pt-3">
                 Expert counselling to help you choose the right career path, strengthen emotional resilience, and unlock your highest personal potential.
                 </p>
               </div>

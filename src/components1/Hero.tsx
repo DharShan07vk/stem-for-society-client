@@ -72,8 +72,8 @@ const HeroSection = () => {
 
       
       <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 relative z-10">
-        <p className="text-black mb-3 sm:mb-4 text-base sm:text-lg">Empowering Future Innovators through STEM Learning</p>
-        
+        <p className="text-black mb-3 sm:mb-4 text-base sm:text-lg">Empowering Future Innovators through <span style ={{fontWeight : "bold"}}>STEM</span> for society Learning</p>
+        {/* changed the stem to bold */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal mb-3 sm:mb-4 leading-tight max-w-5xl mx-auto">
           <span className="text-gray-400">Let's</span> <span className="text-black">Innovate, Incubate and Impact</span> <span className="text-gray-400">the<br className="hidden sm:block" /> world together!</span>
         </h1>
@@ -135,8 +135,8 @@ const HeroSection = () => {
                   <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-6 text-left items-center">
                     {stat.stats.map((item, idx) => (
                       <div key={idx} className="min-w-fit">
-                        <div className={`text-lg sm:text-xl font-sans mb-0.5 sm:mb-1 ${isMiddleCard ? 'text-white' : 'text-black'}`}>{item.value}</div>
-                        <div className={`text-[10px] sm:text-s ${isMiddleCard ? 'text-white/80' : 'text-black'}`}>{item.label}</div>
+                        <div className={`text-lg sm:text-xl font-sans mb-0.5 sm:mb-1 ${isMiddleCard ? 'text-black' : 'text-black'}`}>{item.value}</div>
+                        <div className={`text-[10px] sm:text-s ${isMiddleCard ? 'text-balck/80' : 'text-black'}`}>{item.label}</div>
                       </div>
                     ))}
                   </div>

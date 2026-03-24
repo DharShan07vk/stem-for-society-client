@@ -70,14 +70,15 @@ const Header = () => {
                     </Link>
                   </MenubarItem>
                   <div className="my-1 border-t border-gray-100" />
-                  <MenubarItem asChild>
+                  {/* <MenubarItem asChild>
                     <Link 
                       to="/finishing-school" 
                       className="block px-5 py-3 text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-2xl transition-all duration-200 cursor-pointer font-medium"
                     >
                       Finishing School
                     </Link>
-                  </MenubarItem>
+                  </MenubarItem> */}
+                  {/* removed finishing school link */}
                 </MenubarContent>
               </MenubarMenu>
 
@@ -201,7 +202,7 @@ const Header = () => {
   </div>
 ) : (
  <div className="flex items-center space-x-3">
-                <Link to="/partner-role">
+                <Link to="/partner-institution-signup"> {/*redirected link to crct location need to remove unwanted route */}
                   <Button variant="outline" className="border-2 border-[#0389FF] text-[#0389FF] hover:bg-[#0389FF] hover:text-white bg-white/70 backdrop-blur-sm rounded px-6 py-3 font-medium shadow-sm transition-all duration-300">
                     Partner with us
                   </Button>

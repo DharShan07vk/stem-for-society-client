@@ -3,9 +3,11 @@ import { Twitter, Instagram, Linkedin, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: "#00549F" }} className="text-white py-8 sm:py-10 md:py-12">
+    <footer
+      style={{ backgroundColor: "#00549F" }}
+      className="text-white py-8 sm:py-10 md:py-12"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        
         {/* Logo + Tagline */}
         <div className="flex items-center gap-3 mb-6 sm:mb-8">
           <img
@@ -23,37 +25,79 @@ const Footer = () => {
 
         {/* Links + Newsletter */}
         <div className="flex flex-col lg:flex-row justify-between gap-6 text-sm">
-          
           {/* Links */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div>
               <h4 className="font-semibold mb-2">PROGRAMS</h4>
               <ul className="space-y-1 text-blue-100">
-                <li><a href="/skill-development" className="hover:text-white">Skill Development</a></li>
-                <li><a href="/mental-wellbeing" className="hover:text-white">Mental Wellbeing</a></li>
-                <li><a href="/career-counselling" className="hover:text-white">Career Counselling</a></li>
+                <li>
+                  <a href="/skill-development" className="hover:text-white">
+                    Skill Development
+                  </a>
+                </li>
+                <li>
+                  <a href="/mental-wellbeing" className="hover:text-white">
+                    Mental Wellbeing
+                  </a>
+                </li>
+                <li>
+                  <a href="/career-counselling" className="hover:text-white">
+                    Career Counselling
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-2">FOR INSTITUTIONS</h4>
               <ul className="space-y-1 text-blue-100">
-                <li><a href="/insituion-individual" className="hover:text-white">Plans and pricings</a></li>
-                <li><a href="/campus-ambassador" className="hover:text-white">Campus Ambassador Program</a></li>
+                <li>
+                  <a href="/insituion-individual" className="hover:text-white">
+                    Plans and pricings
+                  </a>
+                </li>
+                <li>
+                  <a href="/campus-ambassador" className="hover:text-white">
+                    Campus Ambassador Program
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-2">COMMUNITY</h4>
               <ul className="space-y-1 text-blue-100">
-                <li><a href="/community" className="hover:text-white">Join Community</a></li>
-                <li><a href="/blog" className="hover:text-white">Scientific Blog</a></li>
-                <li><a href="https://www.youtube.com/@stemforsociety" className="hover:text-white">YouTube Channel</a></li>
+                <li>
+                  <a href="/community" className="hover:text-white">
+                    Join Community
+                  </a>
+                </li>
+                <li>
+                  <a href="/blog" className="hover:text-white">
+                    Scientific Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://www.youtube.com/@stemforsociety"
+                    className="hover:text-white"
+                  >
+                    YouTube Channel
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-2">QUICK LINKS</h4>
               <ul className="space-y-1 text-blue-100">
-                <li><a href="/signup" className="hover:text-white">Register</a></li>
-                <li><a href="/login" className="hover:text-white">Login</a></li>
+                <li>
+                  <a href="/signup" className="hover:text-white">
+                    Register
+                  </a>
+                </li>
+                <li>
+                  <a href="/login" className="hover:text-white">
+                    Login
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -80,25 +124,50 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row justify-between items-center mt-6 pt-4 border-t border-blue-300 text-blue-100 text-xs">
           <div className="text-center md:text-left">
-            94 Kempegowda nagara, Herohalli, Bengaluru, Karnataka 560091 • 829-615-5821 • info@stemforsociety.com
+            94 Kempegowda nagara, Herohalli, Bengaluru, Karnataka 560091 •
+            +918296155821 • info@stemforsociety.com
           </div>
           <div className="flex gap-3 mt-3 md:mt-0">
-            <a href="https://twitter.com/EmpoweringSci" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105">
+            <a
+              href="https://twitter.com/EmpoweringSci"
+              className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105"
+            >
               <Twitter className="h-4 w-4 text-blue-600" />
             </a>
-            <a href="https://www.instagram.com/esf_life_science_jobs/" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105">
+            <a
+              href="https://www.instagram.com/esf_life_science_jobs/"
+              className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105"
+            >
               <Instagram className="h-4 w-4 text-blue-600" />
             </a>
-            <a href="#" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105">
+            <a
+              href="#"
+              className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105"
+            >
               <Linkedin className="h-4 w-4 text-blue-600" />
             </a>
-            <a href="https://www.youtube.com/@stemforsociety" className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105">
+            <a
+              href="https://www.youtube.com/@stemforsociety"
+              className="w-8 h-8 bg-white rounded-full flex items-center justify-center hover:scale-105"
+            >
               <Youtube className="h-4 w-4 text-blue-600" />
             </a>
           </div>
         </div>
 
         {/* Copyright */}
+        <div className="flex justify-center gap-4 flex-wrap border-blue-300 pt-4 pb-3 mb-3">
+          <a href="#" className="text-blue-100 hover:text-white text-xs">
+            Privacy Policy
+          </a>
+          <a href="#" className="text-blue-100 hover:text-white text-xs">
+            Terms and Condition
+          </a>
+          <a href="#" className="text-blue-100 hover:text-white text-xs">
+            Refund Policy
+          </a>
+        </div>
+        
         <div className="mt-4 text-center text-xs text-blue-200">
           © 2025 STEM for Society. All rights reserved.
         </div>
