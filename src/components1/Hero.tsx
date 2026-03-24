@@ -72,7 +72,7 @@ const HeroSection = () => {
 
       
       <div className="max-w-7xl mx-auto text-center px-4 sm:px-6 relative z-10">
-        <p className="text-black mb-3 sm:mb-4 text-base sm:text-lg">Empowering Future Innovators through <span style ={{fontWeight : "bold"}}>STEM</span> for society Learning</p>
+        <p className="text-black mb-3 sm:mb-4 text-base sm:text-lg">Empowering Future Innovators through <span style ={{fontWeight : "bold"}}>STEM for society </span>Learning</p>
         {/* changed the stem to bold */}
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal mb-3 sm:mb-4 leading-tight max-w-5xl mx-auto">
           <span className="text-gray-400">Let's</span> <span className="text-black">Innovate, Incubate and Impact</span> <span className="text-gray-400">the<br className="hidden sm:block" /> world together!</span>
