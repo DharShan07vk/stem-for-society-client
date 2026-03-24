@@ -19,7 +19,8 @@ const OurPrograms = () => {
   };
 
   return (
-    <section className="py-8 sm:py-12 md:py-16 bg-white px-4 sm:px-6">
+    // <section className="py-8 sm:py-12 md:py-16 bg-white px-4 sm:px-6">
+    <section className="pt-8 pb-0 sm:pt-12 md:pt-16 bg-white px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
 
         <h2 className="text-2xl sm:text-3xl md:text-4xl mb-6 sm:mb-8 md:mb-10 text-[#00000080]">
@@ -27,8 +28,9 @@ const OurPrograms = () => {
         </h2>
         <div className="w-full flex justify-center">
           {/* Mobile: Single column, Tablet: 2 columns, Desktop: Original 6-column grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 w-full max-w-[1280px] mx-auto auto-rows-auto lg:grid-rows-6 lg:h-[1080px]">
-
+          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 w-full max-w-[1280px] mx-auto auto-rows-auto lg:grid-rows-6 lg:h-[1080px]"> */}
+{/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 grid-rows-4 gap-4"> */}
+<div className="grid grid-cols-2 grid-rows-2 lg:grid-cols-4 lg:grid-rows-4 gap-4">
             {/* 1. Skill Development Card */}
             <div
               onMouseEnter={() => setHoveredCard("skill")}
@@ -64,10 +66,10 @@ const OurPrograms = () => {
               />
               <div className="relative z-10">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#582059] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
-                  Finishing School
+                  Network Beyond Campus (Future Plan)
                 </h3>
                 <p className="text-sm sm:text-base max-w-[70%] sm:max-w-[55%] md:max-w-[45%]">
-                 Where students/learns become confident achievers equipped with the essential soft skills, clarity, & professionalism employers expect in today's competitive world.
+                 Where students can communicate with real-world experts
                 </p>
               </div>
             </div>
@@ -92,9 +94,26 @@ const OurPrograms = () => {
                 </p>
               </div>
             </div>
+            {/* 6. Join Community */}
+            <div
+              onMouseEnter={() => setHoveredCard("community")}
+              onMouseLeave={() => setHoveredCard(null)}
+              className={`group relative w-full h-[280px] sm:h-[320px] md:h-[344px] lg:col-start-5 lg:row-start-3 lg:col-span-2 lg:row-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#C8DD9A] hover:bg-[#B9D487] cursor-pointer ${getCardClasses("institutions")}`}
+            >
+              <img
+                src={joinAsset}
+                alt="Join Community"
+                className="absolute bottom-[-10px] sm:bottom-[-15px] md:bottom-[-20px] right-[-5px] sm:right-[-8px] md:right-[-10px] w-[200px] sm:w-[260px] md:w-[320px] lg:w-[357px] h-auto object-contain transition-all duration-500 group-hover:scale-110"
+              />
+              <div className="relative z-10">
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#203D59] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
+                  Join Community
+                </h3>
+              </div>
+            </div>
 
             {/* 4. Institutions Card */}
-            <div
+            {/* <div
               onMouseEnter={() => setHoveredCard("institutions")}
               onMouseLeave={() => setHoveredCard(null)}
               className={`group relative w-full h-[280px] sm:h-[320px] md:h-[344px] lg:col-start-5 lg:row-start-3 lg:col-span-2 lg:row-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#C8DD9A] hover:bg-[#B9D487] cursor-pointer ${getCardClasses("institutions")}`}
@@ -112,10 +131,10 @@ const OurPrograms = () => {
                 Holistic development solutions for edu institutions focusing on career readiness, well-being, and skill enhancement programs.
                 </p>
               </div>
-            </div>
+            </div> */}
 
             {/* 5. Founders Nest */}
-            <div
+            {/* <div
               onMouseEnter={() => setHoveredCard("founders")}
               onMouseLeave={() => setHoveredCard(null)}
               className={`group relative w-full h-[280px] sm:h-[320px] md:h-[344px] sm:col-span-2 lg:col-span-4 lg:row-start-5 lg:row-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#FFB27D] hover:bg-[#FFA165] cursor-pointer ${getCardClasses("founders")}`}
@@ -133,25 +152,9 @@ const OurPrograms = () => {
                   Empowering early-stage founders with clarity, leadership mindset, and investor-ready skills to build sustainable, scalable startups.
                 </p>
               </div>
-            </div>
+            </div> */}
 
-            {/* 6. Join Community */}
-            <div
-              onMouseEnter={() => setHoveredCard("community")}
-              onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative w-full h-[250px] sm:h-[280px] md:h-[344px] lg:col-start-5 lg:row-start-5 lg:col-span-2 lg:row-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#C5D7E6] hover:bg-[#B5CADC] cursor-pointer ${getCardClasses("community")}`}
-            >
-              <img
-                src={joinAsset}
-                alt="Join Community"
-                className="absolute bottom-[-10px] sm:bottom-[-15px] md:bottom-[-20px] right-[-5px] sm:right-[-8px] md:right-[-10px] w-[200px] sm:w-[260px] md:w-[320px] lg:w-[357px] h-auto object-contain transition-all duration-500 group-hover:scale-110"
-              />
-              <div className="relative z-10">
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#203D59] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
-                  Join Community
-                </h3>
-              </div>
-            </div>
+            
 
           </div>
         </div>
