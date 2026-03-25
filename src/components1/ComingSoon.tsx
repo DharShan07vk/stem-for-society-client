@@ -3,53 +3,40 @@ import comingSoonImg from "../assets/coming-soon.jpeg"; // adjust path
 
 const ComingSoon: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 relative overflow-hidden">
 
-      {/* Background Gradient Glow */}
-      <div className="absolute w-[600px] h-[600px] bg-[#0389FF]/10 rounded-full blur-3xl top-[-150px] left-[-150px]"></div>
-      <div className="absolute w-[500px] h-[500px] bg-[#0389FF]/10 rounded-full blur-3xl bottom-[-150px] right-[-150px]"></div>
+      {/* Background Glow */}
+      <div className="absolute w-[700px] h-[700px] bg-[#0389FF]/10 rounded-full blur-3xl top-[-200px]"></div>
 
-      {/* Main Container */}
-      <div className="relative z-10 flex flex-col lg:flex-row items-center gap-10 max-w-6xl w-full">
+      {/* Top Text */}
+      <p className="text-[#0389FF] font-semibold tracking-widest uppercase mb-4 z-10">
+        Stay Tuned
+      </p>
 
-        {/* Left Content */}
-        <div className="text-center lg:text-left flex-1">
+      {/* Main Image Section */}
+      <div className="relative flex items-center justify-center">
 
-          <p className="text-[#0389FF] font-semibold tracking-widest uppercase mb-3">
-            Stay Tuned
-          </p>
+        {/* Big Animated Ring */}
+        <div className="absolute w-[600px] h-[600px] md:w-[700px] md:h-[700px] border-[14px] border-[#0389FF]/20 rounded-full animate-spin-slow"></div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
-            <span className="text-gray-800">Coming</span>{" "}
-            <span className="text-[#0389FF]">Soon</span>
-          </h1>
+        {/* Glow Behind Image */}
+        <div className="absolute w-[500px] h-[500px] md:w-[600px] md:h-[600px] bg-[#0389FF]/10 rounded-full blur-2xl"></div>
 
-          <p className="mt-5 text-gray-600 text-lg max-w-md mx-auto lg:mx-0">
-            We’re building something powerful and exciting. Get ready for a next-level experience 🚀
-          </p>
-
-          {/* Divider Line */}
-          <div className="mt-6 h-1 w-20 bg-[#0389FF] mx-auto lg:mx-0 rounded-full"></div>
-
-        </div>
-
-        {/* Right Image */}
-        <div className="flex-1 flex justify-center relative">
-
-          {/* Animated Ring */}
-          <div className="absolute w-[420px] h-[420px] border-[10px] border-[#0389FF]/20 rounded-full animate-spin-slow"></div>
-
-          {/* Image */}
-          <img
-            src={comingSoonImg}
-            alt="Coming Soon"
-            className="relative z-10 w-[320px] md:w-[400px] drop-shadow-xl"
-          />
-        </div>
-
+        {/* Image */}
+        <img
+          src={comingSoonImg}
+          alt="Coming Soon"
+          className="relative z-10 w-[400px] md:w-[550px] lg:w-[650px] drop-shadow-2xl hover:scale-105 transition duration-500"
+        />
       </div>
 
-      {/* Custom Animation */}
+      {/* Bottom Text */}
+      {/* <h1 className="mt-6 text-4xl md:text-6xl font-extrabold text-center z-10">
+        <span className="text-gray-800">Coming</span>{" "}
+        <span className="text-[#0389FF]">Soon</span>
+      </h1> */}
+
+      {/* Animation */}
       <style>
         {`
           @keyframes spin-slow {
@@ -57,7 +44,7 @@ const ComingSoon: React.FC = () => {
             to { transform: rotate(360deg); }
           }
           .animate-spin-slow {
-            animation: spin-slow 20s linear infinite;
+            animation: spin-slow 25s linear infinite;
           }
         `}
       </style>
