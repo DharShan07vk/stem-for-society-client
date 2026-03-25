@@ -63,6 +63,7 @@ const OurPrograms = () => {
               onMouseLeave={() => setHoveredCard(null)}
               className={`group relative w-full h-[280px] sm:h-[300px] md:h-[344px] lg:col-span-4 lg:row-span-2 rounded-2xl sm:rounded-[40px] p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#FF8FB0] hover:bg-[#FF7FA4] cursor-pointer ${getCardClasses("finishing")}`}
             >
+              <Link to ="/coming-soon">
               <img
                 src={asset2}
                 alt="Finishing School"
@@ -75,7 +76,8 @@ const OurPrograms = () => {
                 <p className="text-sm sm:text-base max-w-[70%] sm:max-w-[55%] md:max-w-[45%]">
                  Where students can communicate with real-world experts
                 </p>
-              </div>
+              </div></Link>
+              
             </div>
 
             {/* 3. Individuals Card */}
