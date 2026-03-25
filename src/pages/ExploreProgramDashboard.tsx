@@ -9,22 +9,22 @@ const ExploreProgramDashboard = () => {
   const services = [
     {
       category: "Students (UG/PG/PhD), Job Seekers",
-      title: "Career Counselling",
-      description: "Get expert guidance to plan your academic and professional journey with confidence.",
+      title: "Individual",
+      description: "Expert counselling to help you choose the right career path, strengthen emotional resilience, and unlock your highest personal potential.",
       route: "/insituion-individual?mode=individual"
     },
     {
       category: "Students, Researchers, Young Professionals",
-      title: "Mental Wellbeings Counselling",
-      description: "Access personalized mental wellness support to thrive in both studies and life.",
-      route: "/insituion-individual?mode=individual"
+      title: "Institutional",
+      description: "Holistic development solutions for edu institutions focusing on career readiness, well-being, and skill enhancement programs.",
+      route: "/insituion-individual?mode=institution"
     },
    
     {
       category: "College Students, Campus Leaders",
-      title: "Ambassador Program",
-      description: "Become the face of STEM in your institution and develop real-world leadership skills.",
-      route: "/campus-ambassador"
+      title: "Skill Development ",
+      description: "Bridging academic learning with industrial skills for impactful career readiness.",
+      route: "/skill-development"
     }
   ];
   
