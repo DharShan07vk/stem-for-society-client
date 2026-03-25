@@ -1,4 +1,5 @@
 ﻿import { useState } from "react";
+import { Link } from "react-router-dom";
 
 // Import images for production build
 import asset1 from "../assets/asset1.png";
@@ -32,16 +33,18 @@ const OurPrograms = () => {
 {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 grid-rows-4 gap-4"> */}
 <div className="grid grid-cols-2 grid-rows-2 lg:grid-cols-4 lg:grid-rows-4 gap-4">
             {/* 1. Skill Development Card */}
-            <div
-              onMouseEnter={() => setHoveredCard("skill")}
-              onMouseLeave={() => setHoveredCard(null)}
-              className={`group relative w-full h-[350px] sm:h-[400px] md:h-[500px] lg:h-full lg:row-span-4 lg:col-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#C6B7E2] hover:bg-[#B8A7D8] cursor-pointer ${getCardClasses("skill")}`}
-            >
-              <img
+            
+            
+              <div
+                onMouseEnter={() => setHoveredCard("skill")}
+                onMouseLeave={() => setHoveredCard(null)}
+                className={`group relative w-full h-[350px] sm:h-[400px] md:h-[500px] lg:h-full lg:row-span-4 lg:col-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#C6B7E2] hover:bg-[#B8A7D8] cursor-pointer ${getCardClasses("skill")}`}
+              ><Link to="/skill-development">
+                <img
                 src={asset1}
                 alt="Skill Development"
                 className="absolute left-1/2 -translate-x-1/2 bottom-[-20px] sm:bottom-[-15px] md:bottom-[-20px] w-[250px] sm:w-[300px] md:w-[360px] lg:w-[411px] h-auto object-contain transition-all duration-500 ease-out group-hover:scale-110 group-hover:rotate-1"
-              />
+              /></Link>
               <div className="relative z-10">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#472059] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
                   Skill development
@@ -52,6 +55,7 @@ const OurPrograms = () => {
               </div>
               <div className="absolute inset-0 bg-black/5 rounded-2xl sm:rounded-3xl pointer-events-none" />
             </div>
+            
 
             {/* 2. Finishing School Card */}
             <div
@@ -80,11 +84,13 @@ const OurPrograms = () => {
               onMouseLeave={() => setHoveredCard(null)}
               className={`group relative w-full h-[280px] sm:h-[320px] md:h-[344px] lg:col-start-3 lg:col-span-2 lg:row-span-2 lg:row-start-3 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#FFE07A] hover:bg-[#FFD65C] cursor-pointer ${getCardClasses("individuals")}`}
             >
+              <Link to="/insituion-individual?mode=individual">
               <img
                 src={asset3}
                 alt="Individuals"
                 className="absolute right-[10px] sm:right-[15px] md:right-[20px] top-[-10px] sm:top-[-15px] md:top-[-20px] w-[180px] sm:w-[260px] md:w-[320px] lg:w-[368px] h-auto object-contain transition-all duration-500 group-hover:scale-110 ps-5"
               />
+              
               <div className="relative z-10">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#594D20] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
                   Individuals & Instituitions 
@@ -93,6 +99,7 @@ const OurPrograms = () => {
                 Expert counselling to help you choose the right career path, strengthen emotional resilience, and unlock your highest personal potential.
                 </p>
               </div>
+              </Link>
             </div>
             {/* 6. Join Community */}
             <div
@@ -100,11 +107,13 @@ const OurPrograms = () => {
               onMouseLeave={() => setHoveredCard(null)}
               className={`group relative w-full h-[280px] sm:h-[320px] md:h-[344px] lg:col-start-5 lg:row-start-3 lg:col-span-2 lg:row-span-2 rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden transition-all duration-500 bg-[#C8DD9A] hover:bg-[#B9D487] cursor-pointer ${getCardClasses("institutions")}`}
             >
+              <Link to="/community">
               <img
                 src={joinAsset}
                 alt="Join Community"
                 className="absolute bottom-[-10px] sm:bottom-[-15px] md:bottom-[-20px] right-[-5px] sm:right-[-8px] md:right-[-10px] w-[200px] sm:w-[260px] md:w-[320px] lg:w-[357px] h-auto object-contain transition-all duration-500 group-hover:scale-110"
               />
+              </Link>
               <div className="relative z-10">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-instrument mb-2 sm:mb-3 text-[#203D59] scale-y-[1.3] sm:scale-y-[1.5] inline-block">
                   Join Community
