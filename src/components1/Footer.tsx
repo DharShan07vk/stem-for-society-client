@@ -157,13 +157,13 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="flex justify-center gap-4 flex-wrap border-blue-300 pt-4 pb-3 mb-3">
-          <a href="#" className="text-blue-100 hover:text-white text-xs">
+          <a href="/privacy-policy" className="text-blue-100 hover:text-white text-xs">
             Privacy Policy
           </a>
-          <a href="#" className="text-blue-100 hover:text-white text-xs">
+          <a href="/terms-condition" className="text-blue-100 hover:text-white text-xs">
             Terms and Condition
           </a>
-          <a href="#" className="text-blue-100 hover:text-white text-xs">
+          <a href="/refund-policy" className="text-blue-100 hover:text-white text-xs">
             Refund Policy
           </a>
         </div>
