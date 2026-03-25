@@ -45,9 +45,9 @@ import PartnerSignUp from "./pages/partner/PartnerWithUs";
 import StudentDetails from "./pages/partner/StudentDetails";
 // import PricingPage from "./pages/Pricing";
 import ForgotPassword from "./pages/forgotPassword"
-import PrivacyPolicy from "./pages/PrivacyPolicy";
+// import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PsychologyTraining from "./pages/PsychologyTraining";
-import RefundPolicy from "./pages/RefundPolicy";
+// import RefundPolicy from "./pages/RefundPolicy";
 import SignUp from "./pages/Signup";
 import Training from "./pages/Training";
 import TrainingSpotlight from "./pages/TrainingSpotlight";
@@ -75,6 +75,10 @@ import InstitutionOrIndividual from "./pages/InstitutionOrIndividual";
 import FinishingSchool from "./pages/FinishingSchool";
 import AcademyDetail from "./pages/AcademyDetail";
 import SkillDevelopment from "./pages/SkillDevelopment";
+import PrivacyPolicy from "./components1/PrivacyPolicy";
+import RefundPolicy from "./components1/RefundPolicy";
+import TermsConditions from "./components1/TermsConditions";
+import ComingSoon from "./components1/ComingSoon";
 
 function AppLayout() {
   return (
@@ -109,10 +113,13 @@ function App() {
                 <Route path="/blogs/:id" element={<BlogSpotlight />} />
                 {/* <Route path="/pricing" element={<Home />} /> */}
                 <Route path="/community" element={<Community />} />
+                <Route path="/coming-soon" element={<ComingSoon />} />
+
                 {/* <Route path="/blogs/new" element={<BlogCreate />} /> */}
                 <Route path="/login" element={<Login />} />
-                {/* <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/refund-policy" element={<RefundPolicy />} /> */}
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/refund-policy" element={<RefundPolicy />} />
+                <Route path="/terms-condition" element={<TermsConditions />} />
                 <Route path = "/insituion-individual" element={<InstitutionOrIndividual />} />
                 <Route path="/partner-role" element={<PartnerRole />} />
                 <Route path="/campus-ambassador-signup" element={<CampusAmbassadorSignup />} />
