@@ -33,7 +33,7 @@ const PartnersSection = () => {
   const itemsWithStars = createItemsWithStars();
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
+    <section className="py-12 sm:py-16 md:py-20 bg-white-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
         <h2 className="text-3xl sm:text-4xl mb-8 sm:mb-12 md:mb-16 text-[#00000080]">Industrial & Academic Partners</h2>
 
