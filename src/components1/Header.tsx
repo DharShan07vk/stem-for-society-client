@@ -236,13 +236,13 @@ const Header = () => {
                 <Link to="/skill-development" className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium" onClick={() => setIsMenuOpen(false)}>
                 Skill Development
                 </Link>
-                <Link 
+               {/* <Link 
                   to="/finishing-school" 
                   className="block px-6 py-2 text-gray-700 hover:bg-gray-50 rounded-xl transition-colors font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Finishing School
-                </Link>
+                </Link>*/}
               </div>
               
               <div className="space-y-1">
