@@ -33,7 +33,7 @@ const PartnersSection = () => {
   const itemsWithStars = createItemsWithStars();
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-white-50">
+    <section className="py-12 sm:py-16 md:py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
         <h2 className="text-3xl sm:text-4xl mb-8 sm:mb-12 md:mb-16 text-[#00000080]">Industrial & Academic Partners</h2>
 
@@ -45,7 +45,7 @@ const PartnersSection = () => {
                 className="flex items-center justify-center flex-shrink-0 px-2"
               >
                 {item.type === 'logo' ? (
-                  <div className="flex items-center justify-center h-20 w-36 sm:h-24 sm:w-44 md:h-28 md:w-56 bg-white rounded-lg shadow-sm p-3 md:p-4">
+                  <div className="flex items-center justify-center h-20 w-36 sm:h-24 sm:w-44 md:h-28 md:w-56 bg-transparent rounded-lg shadow-sm p-3 md:p-4">
                     <img
                       src={item.logo}
                       alt={item.name}
