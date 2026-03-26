@@ -1,5 +1,5 @@
 import React from "react";
-import comingSoonImg from "../assets/coming-soon.jpeg"; // adjust path
+import comingSoonImg from "../assets/coming-soon.png"; // adjust path
 
 const ComingSoon: React.FC = () => {
   return (
