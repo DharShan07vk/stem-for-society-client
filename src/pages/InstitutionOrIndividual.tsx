@@ -110,7 +110,7 @@ const Index = () => {
           <div className="absolute bottom-0 left-0 right-0 h-[600px] bg-gradient-to-t from-emerald-100/20 to-transparent opacity-50" />
         </div>
         
-        <Header />
+        
 
         {/* Top Navigation */}
         <TopNavigation mode={mode} setMode={setMode} />
