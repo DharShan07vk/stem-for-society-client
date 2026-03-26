@@ -7,7 +7,7 @@ import asset2 from "../assets/asset2.webp";
 import asset3 from "../assets/asset3.webp";
 import asset4 from "../assets/asset4.webp";
 import asset6 from "../assets/asset6.webp";
-import joinAsset from "../assets/joinAsset.png";
+import joinAsset from "../assets/joinAsset.webp";
 
 
 const OurPrograms = () => {

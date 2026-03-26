@@ -10,7 +10,7 @@ import {
 } from "@/components1/ui/select";
 import { Search, ChevronDown, RotateCcw } from "lucide-react";
 import { Icon } from "@iconify/react";
-import FilterIcon from "@/assets/filter.png"
+import FilterIcon from "@/assets/filter.webp"
 
 interface CourseFiltersProps {
   onFilterChange?: (filters: FilterState) => void;

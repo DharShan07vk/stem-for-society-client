@@ -11,7 +11,7 @@ const Footer = () => {
         {/* Logo + Tagline */}
         <div className="flex items-center gap-3 mb-6 sm:mb-8">
           <img
-            src="/lovable-uploads/FooterLogo.png"
+            src="/lovable-uploads/Footerlogo.webp"
             alt="STEM for Society Logo"
             className="h-16 w-16 object-contain"
           />

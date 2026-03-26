@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/logo.webp";
 import { usePartner } from "../lib/hooks";
 import { cn } from "../lib/utils";
 

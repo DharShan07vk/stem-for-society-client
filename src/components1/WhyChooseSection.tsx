@@ -52,7 +52,7 @@ const WhyChooseSection = () => {
             <div 
               className="absolute w-72 h-72 md:w-80 md:h-80 opacity-15 bg-center bg-no-repeat bg-contain pointer-events-none"
               style={{ 
-                backgroundImage: `url("src/assets/logo.png")`,
+                backgroundImage: `url("src/assets/logo.webp")`,
                 transform: 'translateZ(0)'
               }}
             />

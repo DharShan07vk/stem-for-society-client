@@ -58,7 +58,7 @@ const TestimonialsSection = () => {
                 style={{ backgroundColor: "#C0E1FF" ,color: "black",
         backgroundImage: `
           linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)),
-          url(${"src/assets/logo.png"})
+          url(${"src/assets/logo.webp"})
         `,
         backgroundSize: "cover",}}
               >

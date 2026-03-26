@@ -1,6 +1,6 @@
 import { Button, Image, TextInput, Title } from "@mantine/core";
 import { useState } from "react";
-import bg from "../assets/bg.png";
+import bg from "../assets/bg.webp";
 import { queryClient } from "../lib/api";
 import { useBlogStepper } from "../lib/hooks";
 import { useQuery } from "@tanstack/react-query";

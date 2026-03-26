@@ -1240,7 +1240,7 @@ const PsychologyBookingFlow = () => {
           <div className="flex items-center">
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center mr-4">
               <img 
-                src="/lovable-uploads/FooterLogo.png" 
+                src="/lovable-uploads/Footerlogo.webp" 
                 alt="STEM for Society" 
                 className="w-8 h-8 object-contain"
               />
