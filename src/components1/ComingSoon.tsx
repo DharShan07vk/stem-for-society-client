@@ -1,9 +1,13 @@
 import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
 import comingSoonImg from "../assets/coming-soon.webp"; // adjust path
 
 const ComingSoon: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 relative overflow-hidden">
+    <>
+      <Header />
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4 relative overflow-hidden">
 
       {/* Background Glow */}
       <div className="absolute w-[700px] h-[700px] bg-[#0389FF]/10 rounded-full blur-3xl top-[-200px]"></div>
@@ -50,6 +54,8 @@ const ComingSoon: React.FC = () => {
       </style>
 
     </div>
+      <Footer />
+    </> 
   );
 };
 
