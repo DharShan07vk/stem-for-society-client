@@ -63,7 +63,7 @@ export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps)
             {navItems.map((item, index) => (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
+                onClick={() => item.id === "Home" ? navigate(`/`) : scrollToSection(item.id)}
                 style={{
                   transitionDelay: isMenuOpen ? `${index * 50}ms` : "0ms",
                 }}
