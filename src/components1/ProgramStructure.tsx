@@ -2,11 +2,11 @@
 import { Link } from "react-router-dom";
 
 // Import images for production build
-import asset1 from "../assets/asset1.png";
-import asset2 from "../assets/asset2.png";
-import asset3 from "../assets/asset3.png";
-import asset4 from "../assets/asset4.png";
-import asset6 from "../assets/asset6.png";
+import asset1 from "../assets/asset1.webp";
+import asset2 from "../assets/asset2.webp";
+import asset3 from "../assets/asset3.webp";
+import asset4 from "../assets/asset4.webp";
+import asset6 from "../assets/asset6.webp";
 import joinAsset from "../assets/joinAsset.png";
 
 
