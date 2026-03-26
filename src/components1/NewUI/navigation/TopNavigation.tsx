@@ -8,8 +8,7 @@ interface TopNavigationProps {
 
 export const TopNavigation = ({ mode, setMode }: TopNavigationProps) => {
   return (
-    <div className="relative">
-    <div className="absolute left-1/2 -translate-x-1/2 top-6 z-[60]">
+    <div className="fixed left-1/2 -translate-x-1/2 top-6 z-[60]">
       <div
         role="tablist"
         aria-label="View Mode Selection"
@@ -48,7 +47,6 @@ export const TopNavigation = ({ mode, setMode }: TopNavigationProps) => {
           <span className="relative z-10">Institutional</span>
         </button>
       </div>
-    </div>
     </div>
   );
 };
