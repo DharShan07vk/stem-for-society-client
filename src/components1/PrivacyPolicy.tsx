@@ -163,7 +163,7 @@ const PrivacyPolicy: React.FC = () => {
 
         {/* Footer */}
         <div className="border-t pt-6 mt-8 text-center">
-          <p className="font-semibold text-[#0388FF]">
+          <p className="font-semibold text-black">
             STEM for Society is committed to handling your data responsibly and transparently.
           </p>
         </div>
