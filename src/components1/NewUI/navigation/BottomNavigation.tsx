@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { X, Menu } from "lucide-react";
 import type { Mode } from "@/pages/InstitutionOrIndividual"
+import { useNavigate } from 'react-router-dom';
+
 
 interface BottomNavigationProps {
   mode: Mode;
@@ -9,6 +11,7 @@ interface BottomNavigationProps {
 
 export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+ const navigate = useNavigate();
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -16,6 +19,7 @@ export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps)
   };
 
   const individualNavItems = [
+    { id: "Home", label: "Home" },
     { id: "services", label: "Services" },
     { id: "process", label: "Process" },
     { id: "plans", label: "Plans" },
@@ -23,6 +27,7 @@ export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps)
   ];
 
   const institutionNavItems = [
+    { id: "Home", label: "Home" },
     { id: "services", label: "Modules" },
     { id: "process", label: "Process" },
     { id: "faq", label: "FAQ" },
@@ -111,7 +116,8 @@ export const BottomNavigation = ({ mode, activeSection }: BottomNavigationProps)
             {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => scrollToSection(item.id)}
+
+                onClick={() => item.id === "Home" ? navigate(`/`) : scrollToSection(item.id)}
                 className={`relative text-sm font-medium px-4 py-2 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
                   activeSection === item.id
                     ? "text-slate-900"
