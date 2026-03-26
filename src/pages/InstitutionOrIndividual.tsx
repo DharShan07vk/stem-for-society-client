@@ -1,6 +1,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { useSearchParams } from "react-router-dom"; // Added this import
 
+
 // Navigation Components
 import TopNavigation from "@/components1/NewUI/navigation/TopNavigation";
 import BottomNavigation from "@/components1/NewUI/navigation/BottomNavigation";
@@ -23,6 +24,8 @@ import InstitutionalCTA from "@/components1/NewUI/institutional/InstitutionalCTA
 
 // Enquiry Popup
 import EnquiryPopup, { EnquiryMode } from "@/components1/NewUI/EnquiryPopup";
+import Header from "@/components1/Header";
+import Footer from "@/components1/Footer";
 
 export type Mode = "individual" | "institution";
 
@@ -106,6 +109,8 @@ const Index = () => {
           <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-blue-100/20 to-transparent opacity-50" />
           <div className="absolute bottom-0 left-0 right-0 h-[600px] bg-gradient-to-t from-emerald-100/20 to-transparent opacity-50" />
         </div>
+        
+        <Header />
 
         {/* Top Navigation */}
         <TopNavigation mode={mode} setMode={setMode} />
@@ -114,7 +119,7 @@ const Index = () => {
         <BottomNavigation mode={mode} activeSection={activeSection} />
 
         {/* Main Content */}
-        <main className="relative z-10 w-full max-w-[1600px] mx-auto bg-white rounded-none sm:rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden ring-1 ring-slate-900/5 md:mt-6 md:mb-32">
+        <main className="relative z-10 w-full max-w-[1600px] mx-auto bg-white rounded-none sm:rounded-[2rem] md:rounded-[0rem] shadow-2xl overflow-hidden ring-1 ring-slate-900/5 md:mt-0 md:mb-32">
           {mode === "individual" ? (
             // Individual View
             <div className="transition-opacity duration-300">
@@ -124,6 +129,7 @@ const Index = () => {
               {/* <IndividualPricing /> */}
               <IndividualFAQ />
               <IndividualCTA />
+              <Footer />
             </div>
           ) : (
             // Institutional View
@@ -133,10 +139,11 @@ const Index = () => {
               {/* <HowWePartner /> */}
               <InstitutionalFAQ />
               <InstitutionalCTA />
+              <Footer />
             </div>
           )}
         </main>
-
+        
         {/* Enquiry Popup */}
         <EnquiryPopup
           isOpen={isEnquiryOpen}
@@ -144,7 +151,10 @@ const Index = () => {
           mode={mode as EnquiryMode}
           preSelectedService={selectedService}
         />
+        
+        
       </div>
+      
     </EnquiryContext.Provider>
   );
 };
