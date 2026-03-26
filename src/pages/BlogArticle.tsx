@@ -649,7 +649,7 @@ const BlogCreateContent = () => {
             <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3">
               <span className="text-blue-900 font-bold text-lg">
                 <img 
-                  src="/lovable-uploads/Footerlogo.webp" 
+                  src="/lovable-uploads/FooterLogo.png" 
                   alt="STEM for Society Logo" 
                   className="w-full h-full object-contain"
                 />
