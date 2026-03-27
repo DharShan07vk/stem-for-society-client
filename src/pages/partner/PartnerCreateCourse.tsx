@@ -254,11 +254,11 @@ export default function PartnerCreateCourse() {
 
           {/* Course Type & Category Section */}
           <div className="space-y-4 pt-4 border-t border-gray-200">
-            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+            {/* <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
               Course Type & Category
-            </Text>
+            </Text> */}
             <div className="space-y-3">
-              <div className="flex flex-col gap-2">
+              {/* <div className="flex flex-col gap-2">
                 <Text size="sm" fw={500}>Course Type</Text>
                 <SegmentedControl
                   data={["Skill Development", "Finishing School"]}
@@ -273,7 +273,7 @@ export default function PartnerCreateCourse() {
                   size="md"
                   fullWidth
                 />
-              </div>
+              </div> */}
               
               {formData.courseType === "Finishing School" ? (
                 <Select
