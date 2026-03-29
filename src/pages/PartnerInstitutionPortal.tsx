@@ -497,7 +497,7 @@ const PartnerInstitutionPortal = () => {
 
             <div className="flex gap-2">
               <Input
-                placeholder="Mobile Number"
+                placeholder="Email Address"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
