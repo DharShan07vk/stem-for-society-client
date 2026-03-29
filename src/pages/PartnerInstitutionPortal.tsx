@@ -206,10 +206,10 @@ const PartnerInstitutionPortal = () => {
   };
 
   const sendOTP = () => {
-    if (formData.phone && formData.phone.length >= 10) {
+    if (formData.email) {
       setOtpSent(true);
       toast.info("OTP sent to your email");
-      console.log("Sending OTP to:", formData.phone);
+      console.log("Sending OTP to:", formData.email);
     } else {
       toast.error("Please enter a valid email address");
     }
@@ -471,17 +471,45 @@ const PartnerInstitutionPortal = () => {
               Account & Professional Details
             </div>
 
-            <div>
+            <div className="flex gap-2">
               <Input
                 placeholder="Email Address"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="bg-white/80 rounded-xl"
+                className="bg-white/80 rounded-xl flex-1"
                 required
               />
+              <Button 
+                type="button" 
+                onClick={sendOTP}
+                className="bg-[#0389FF] hover:bg-[#0389FF]/90 rounded-xl"
+                disabled={!formData.email} // NEED TO ADD VERIFICATION
+              >
+                {otpSent ? "Resend OTP" : "Send OTP"}
+              </Button>
+              
             </div>
+            {otpSent && (
+              <div className="bg-yellow-100 p-3 rounded-xl flex items-center justify-between">
+                <span className="text-sm">⚠️ OTP sent to {formData.email}</span>
+              </div>
+            )}
+            
+            {otpSent && (
+              <div>
+                <Input
+                  placeholder="Enter 6-digit OTP"
+                  name="otp"
+                  value={formData.otp}
+                  onChange={handleChange}
+                  className="bg-white/80 rounded-xl"
+                  maxLength={6}
+                  required
+                />
+              </div>
+            )}
 
             <div>
               <Input
@@ -497,24 +525,24 @@ const PartnerInstitutionPortal = () => {
 
             <div className="flex gap-2">
               <Input
-                placeholder="Email Address"
+                placeholder="mobile number"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 className="bg-white/80 rounded-xl flex-1"
                 required
               />
-              <Button 
+              {/* <Button 
                 type="button" 
                 onClick={sendOTP}
                 className="bg-[#0389FF] hover:bg-[#0389FF]/90 rounded-xl"
                 disabled={!formData.phone || formData.phone.length < 10}
               >
                 {otpSent ? "Resend OTP" : "Send OTP"}
-              </Button>
+              </Button> */}
             </div>
             
-            {otpSent && (
+            {/* {otpSent && (
               <div className="bg-yellow-100 p-3 rounded-xl flex items-center justify-between">
                 <span className="text-sm">⚠️ OTP sent to {formData.phone}</span>
               </div>
@@ -532,7 +560,7 @@ const PartnerInstitutionPortal = () => {
                   required
                 />
               </div>
-            )}
+            )} */}
 
             <div>
               <Select value={formData.topic} onValueChange={(value) => handleSelectChange('topic', value)}>
