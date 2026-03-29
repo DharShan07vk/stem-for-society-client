@@ -208,10 +208,10 @@ const PartnerInstitutionPortal = () => {
   const sendOTP = () => {
     if (formData.phone && formData.phone.length >= 10) {
       setOtpSent(true);
-      toast.info("OTP sent to your mobile number");
+      toast.info("OTP sent to your email");
       console.log("Sending OTP to:", formData.phone);
     } else {
-      toast.error("Please enter a valid mobile number");
+      toast.error("Please enter a valid email address");
     }
   };
 
