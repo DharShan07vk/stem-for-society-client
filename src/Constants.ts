@@ -1,4 +1,4 @@
-export const API_URL = true
+export const API_URL = false
   ? // ? "https://stem-for-society-api-lnj3a.ondigitalocean.app"
     //"https://stem-society-api.onrender.com"
     "https://sfs-backend.onrender.com"

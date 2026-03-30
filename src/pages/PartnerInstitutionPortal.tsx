@@ -1,7 +1,7 @@
 import { Button } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api";
@@ -38,7 +38,28 @@ type PartnerInstitutionForm = {
   digitalSign?: File | null;
 };
 
+// API Response Types
+type SendOTPResponse = {
+  message: string;
+  data: any;
+};
+
 // ===== HOOK FOR BACKEND CONNECTIVITY =====
+function useSendPartnerOTP() {
+  return useMutation<
+    SendOTPResponse,
+    AxiosError<GenericError>,
+    { email: string, institutionName: string, mobile: string },
+    unknown
+  >({
+    mutationFn: async (data) => {
+      const response = await api().post("/email/sendOTP", data);
+      return response.data;
+    },
+    onError: (err) => mutationErrorHandler(err),
+  });
+}
+
 function usePartnerInstitutionSignUp() {
   const navigate = useNavigate();
   return useMutation<
@@ -67,6 +88,8 @@ const PartnerInstitutionPortal = () => {
   const { user } = usePartner();
   const [currentStep, setCurrentStep] = useState(1);
   const [otpSent, setOtpSent] = useState(false);
+  const [otpTimer, setOtpTimer] = useState(0);
+  const [canResendOtp, setCanResendOtp] = useState(true);
   const [formData, setFormData] = useState<PartnerInstitutionForm>({
     companyName: "",
     email: "",
@@ -92,6 +115,20 @@ const PartnerInstitutionPortal = () => {
   });
 
   const registerMutation = usePartnerInstitutionSignUp();
+  const { mutateAsync: sendOTPMutation, isPending: isSendingOTP } = useSendPartnerOTP();
+
+  // OTP timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (otpTimer > 0) {
+      interval = setInterval(() => {
+        setOtpTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (otpTimer === 0 && otpSent) {
+      setCanResendOtp(true);
+    }
+    return () => clearInterval(interval);
+  }, [otpTimer, otpSent]);
 
   // Redirect if user is already logged in
   if (user) return <Navigate to={"/partner"} />;
@@ -205,13 +242,32 @@ const PartnerInstitutionPortal = () => {
     }
   };
 
-  const sendOTP = () => {
-    if (formData.email) {
-      setOtpSent(true);
-      toast.info("OTP sent to your email");
-      console.log("Sending OTP to:", formData.email);
-    } else {
-      toast.error("Please enter a valid email address");
+  const sendOTP = async () => {
+    if (!formData.email) {
+      return toast.error("Please enter a valid email address");
+    }
+    if (!formData.companyName) {
+      return toast.error("Please fill company name first (Step 1)");
+    }
+    if (!formData.phone) {
+      return toast.error("Please enter phone number first");
+    }
+
+    try {
+      const response = await sendOTPMutation({
+        email: formData.email,
+        institutionName: formData.companyName,
+        mobile: formData.phone
+      });
+
+      if (response.message) {
+        setOtpSent(true);
+        setOtpTimer(60);
+        setCanResendOtp(false);
+        toast.success(`OTP sent successfully to ${formData.email}`);
+      }
+    } catch (error) {
+      console.error("Send OTP error:", error);
     }
   };
 
@@ -485,9 +541,9 @@ const PartnerInstitutionPortal = () => {
                 type="button" 
                 onClick={sendOTP}
                 className="bg-[#0389FF] hover:bg-[#0389FF]/90 rounded-xl"
-                disabled={!formData.email} // NEED TO ADD VERIFICATION
+                disabled={!formData.email || isSendingOTP || (otpSent && !canResendOtp)}
               >
-                {otpSent ? "Resend OTP" : "Send OTP"}
+                {isSendingOTP ? "Sending..." : otpSent ? (canResendOtp ? "Resend OTP" : `Resend in ${otpTimer}s`) : "Send OTP"}
               </Button>
               
             </div>
