@@ -1,7 +1,16 @@
-import { Alert, Badge, Button, Paper, Rating, Skeleton, Text } from "@mantine/core";
+import {
+  Alert,
+  Badge,
+  Button,
+  Modal,
+  Paper,
+  Rating,
+  Skeleton,
+  Text,
+} from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { Calendar, ChevronLeft, Link2 } from "lucide-react";
+import { Calendar, ChevronLeft, Edit2, Link2, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -43,6 +52,22 @@ function useTrainingData({ id }: { id?: string }) {
     queryFn: async () =>
       (await api("partnerAuth").get("/partner/trainings/" + id)).data,
     staleTime: 1000 * 60 * 10,
+  });
+}
+
+function useDeleteTraining(id?: string) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  return useMutation<GenericResponse, AxiosError<GenericError>, void>({
+    mutationFn: async () => {
+      return (await api("partnerAuth").delete(`/partner/trainings/${id}`)).data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Training deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["partner", "trainings"] });
+      navigate("/partner/trainings");
+    },
+    onError: (err) => mutationErrorHandler(err, navigate, "/partner/signin"),
   });
 }
 
@@ -93,14 +118,17 @@ function useGenerateCertificates({ id }: { id?: string }) {
 
 export default function PartnerCourseDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data, error, isLoading } = useTrainingData({ id });
   const { mutate: generateCertificates, isPending } = useGenerateCertificates({
     id,
   });
+  const { mutate: deleteTraining, isPending: isDeleting } = useDeleteTraining(id);
   const { data: payoutData, isLoading: payoutLoading } = usePartnerHomeData();
   const [selectedStudents, setSelectedStudents] = useState<(string | number)[]>(
     [],
   );
+  const [deleteOpened, setDeleteOpened] = useState(false);
 
   if (isLoading) {
     return <Loading />;
@@ -112,6 +140,39 @@ export default function PartnerCourseDetails() {
 
   return (
     <div className="w-full max-w-7xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      {/* Delete Confirmation Modal */}
+      <Modal
+        opened={deleteOpened}
+        onClose={() => setDeleteOpened(false)}
+        title="Delete Training Course"
+        centered
+        radius="md"
+      >
+        <div className="space-y-4">
+          <Text size="sm">
+            Are you sure you want to delete this training course? This action cannot be undone.
+          </Text>
+          {event?.enrolments && event.enrolments.length > 0 && (
+            <Alert color="red" variant="light" className="text-xs">
+              Warning: This course has {event.enrolments.length} enrollment(s). Deletion may be restricted by the system.
+            </Alert>
+          )}
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="subtle" onClick={() => setDeleteOpened(false)} radius="md">
+              Cancel
+            </Button>
+            <Button 
+              color="red" 
+              onClick={() => deleteTraining(undefined, { onSettled: () => setDeleteOpened(false) })} 
+              loading={isDeleting}
+              radius="md"
+            >
+              Delete Course
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
       <div className="max-w-full mx-auto">
         {!event ? (
           <Errorbox message="No data! Must be an invalid link. Please refresh or go back and try again" />
@@ -119,11 +180,11 @@ export default function PartnerCourseDetails() {
           <>
             {/* Back Button & Header */}
             <div className="space-y-4 animate-in slide-in-from-top duration-500">
-              <div>
+              <div className="flex justify-between items-center">
                 {/*// @ts-expect-error shutup */}
                 <Link to={-1}>
-                  <Button 
-                    variant="subtle" 
+                  <Button
+                    variant="subtle"
                     leftSection={<ChevronLeft size={18} />}
                     radius="md"
                     className="hover:bg-gray-100 transition-colors"
@@ -131,8 +192,30 @@ export default function PartnerCourseDetails() {
                     Back
                   </Button>
                 </Link>
+
+                <div className="flex gap-2">
+                  <Link to={`/partner/trainings/${id}/edit`}>
+                    <Button 
+                      variant="light" 
+                      color="blue" 
+                      leftSection={<Edit2 size={16} />}
+                      radius="md"
+                    >
+                      Edit Course
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="light" 
+                    color="red" 
+                    leftSection={<Trash2 size={16} />}
+                    radius="md"
+                    onClick={() => setDeleteOpened(true)}
+                  >
+                    Delete Course
+                  </Button>
+                </div>
               </div>
-              
+
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 flex-wrap">
@@ -163,8 +246,8 @@ export default function PartnerCourseDetails() {
 
             {/* Approval Status */}
             <div className="animate-in fade-in duration-500 delay-150">
-              <Alert 
-                color={event.approvedBy ? "green" : "yellow"} 
+              <Alert
+                color={event.approvedBy ? "green" : "yellow"}
                 variant="light"
                 className="rounded-lg"
               >
@@ -195,7 +278,11 @@ export default function PartnerCourseDetails() {
                     alt={event.title}
                     className="w-full h-64 object-cover rounded-lg mb-4"
                   />
-                  <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium mb-2">
+                  <Text
+                    size="sm"
+                    c="dimmed"
+                    className="uppercase tracking-wide font-medium mb-2"
+                  >
                     Description
                   </Text>
                   <Text size="md" className="text-gray-700">
@@ -206,7 +293,11 @@ export default function PartnerCourseDetails() {
                 {/* Lessons Section */}
                 {event.lessons && event.lessons.length > 0 && (
                   <Paper p="lg" withBorder className="rounded-xl">
-                    <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium mb-4">
+                    <Text
+                      size="sm"
+                      c="dimmed"
+                      className="uppercase tracking-wide font-medium mb-4"
+                    >
                       Course Syllabus
                     </Text>
                     <div className="space-y-4">
@@ -218,7 +309,9 @@ export default function PartnerCourseDetails() {
                           className="rounded-lg hover:shadow-sm transition-shadow"
                         >
                           <div className="flex justify-between items-start mb-3">
-                            <h4 className="text-lg font-semibold text-gray-900">{l.title}</h4>
+                            <h4 className="text-lg font-semibold text-gray-900">
+                              {l.title}
+                            </h4>
                             <Badge
                               variant="dot"
                               color={l.type === "ONLINE" ? "blue" : "green"}
@@ -269,55 +362,91 @@ export default function PartnerCourseDetails() {
               {/* Right Column - Course Details */}
               <div className="space-y-4">
                 <Paper p="lg" withBorder className="rounded-xl">
-                  <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium mb-4">
+                  <Text
+                    size="sm"
+                    c="dimmed"
+                    className="uppercase tracking-wide font-medium mb-4"
+                  >
                     Course Details
                   </Text>
                   <div className="space-y-4">
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Created On</Text>
-                      <Text size="sm" fw={500}>{formatDate(event.createdAt)}</Text>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Created On
+                      </Text>
+                      <Text size="sm" fw={500}>
+                        {formatDate(event.createdAt)}
+                      </Text>
                     </div>
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Mode</Text>
-                      <Badge variant="dot" color={event.type === "ONLINE" ? "blue" : "green"}>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Mode
+                      </Text>
+                      <Badge
+                        variant="dot"
+                        color={event.type === "ONLINE" ? "blue" : "green"}
+                      >
                         {event.type ?? (event.location ? "Offline" : "Online")}
                       </Badge>
                     </div>
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Location</Text>
-                      <Text size="sm" fw={500}>{event.location || "N/A"}</Text>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Location
+                      </Text>
+                      <Text size="sm" fw={500}>
+                        {event.location || "N/A"}
+                      </Text>
                     </div>
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Meeting Link</Text>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Meeting Link
+                      </Text>
                       <Text size="sm" fw={500} className="break-all">
                         {event.link || "N/A"}
                       </Text>
                     </div>
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Cost</Text>
-                      <Text size="lg" fw={600} c="blue">₹ {event.cost || "N/A"}</Text>
-                    </div>
-                    <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Duration</Text>
-                      <Text size="sm" fw={500}>
-                        {formatDate(event.startDate)} to {formatDate(event.endDate)}
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Cost
+                      </Text>
+                      <Text size="lg" fw={600} c="blue">
+                        ₹ {event.cost || "N/A"}
                       </Text>
                     </div>
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Your Payout</Text>
-                      <Text size="sm" fw={500}>{event.cut}%</Text>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Duration
+                      </Text>
+                      <Text size="sm" fw={500}>
+                        {formatDate(event.startDate)} to{" "}
+                        {formatDate(event.endDate)}
+                      </Text>
                     </div>
                     <div>
-                      <Text size="xs" c="dimmed" className="mb-1">Total Enrollments</Text>
-                      <Text size="xl" fw={700} c="blue">{event.enrolments.length}</Text>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Your Payout
+                      </Text>
+                      <Text size="sm" fw={500}>
+                        {event.cut}%
+                      </Text>
+                    </div>
+                    <div>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Total Enrollments
+                      </Text>
+                      <Text size="xl" fw={700} c="blue">
+                        {event.enrolments.length}
+                      </Text>
                     </div>
                     <div className="pt-3 border-t border-gray-200">
-                      <Text size="xs" c="dimmed" className="mb-1">Potential Earnings</Text>
+                      <Text size="xs" c="dimmed" className="mb-1">
+                        Potential Earnings
+                      </Text>
                       <Text size="xl" fw={700} c="green">
                         {currencyFormatter.format(
                           event.enrolments.length *
                             Number(event.cost) *
-                            (Number(event.cut) / 100)
+                            (Number(event.cut) / 100),
                         )}
                       </Text>
                     </div>
@@ -334,10 +463,11 @@ export default function PartnerCourseDetails() {
                     Certificate Generation
                   </Text>
                   <Text size="sm" c="dimmed">
-                    Select students to generate certificates for course completion
+                    Select students to generate certificates for course
+                    completion
                   </Text>
                 </div>
-                
+
                 <div className="mb-4">
                   <Button
                     size="md"
@@ -380,7 +510,11 @@ export default function PartnerCourseDetails() {
                       id: enrolment.id,
                       cells: [
                         {
-                          render: <span className="text-gray-600 font-medium">{i + 1}</span>,
+                          render: (
+                            <span className="text-gray-600 font-medium">
+                              {i + 1}
+                            </span>
+                          ),
                           className: "text-left pl-4",
                         },
                         {
@@ -403,9 +537,13 @@ export default function PartnerCourseDetails() {
                         {
                           render: (
                             <div className="text-sm text-gray-700">
-                              {enrolment.paidOn
-                                ? formatDate(enrolment.paidOn)
-                                : <Badge color="gray" size="sm">Not Paid</Badge>}
+                              {enrolment.paidOn ? (
+                                formatDate(enrolment.paidOn)
+                              ) : (
+                                <Badge color="gray" size="sm">
+                                  Not Paid
+                                </Badge>
+                              )}
                             </div>
                           ),
                           className: "text-left",
@@ -413,7 +551,7 @@ export default function PartnerCourseDetails() {
                         {
                           render: (() => {
                             const fb = event.ratings?.find(
-                              (rt) => rt.userId === enrolment.user.id
+                              (rt) => rt.userId === enrolment.user.id,
                             );
                             if (!fb)
                               return (

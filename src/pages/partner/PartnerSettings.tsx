@@ -1,6 +1,6 @@
 
 
-import { Button, Paper, Text, TextInput } from "@mantine/core";
+import { Button, Checkbox, Paper, Text, TextInput } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
@@ -12,10 +12,17 @@ import { AxiosError } from "axios";
 import { api } from "../../lib/api";
 import { mutationErrorHandler } from "../../lib/utils";
 import { toast } from "react-toastify";
+import { 
+  isValidEmail, 
+  isValidPhoneProfile, 
+  isValidPincode, 
+  isValidGst 
+} from "../../lib/validation";
 
 type ProfileDefault = {
   companyName: string;
   email: string;
+  hasGst: boolean;
   cinOrGst: string;
   firstName: string;
   lastName?: string;
@@ -62,6 +69,7 @@ export default function PartnerSettings() {
   const [formData, setFormData] = useState<ProfileDefault>({
     companyName: "",
     email: "",
+    hasGst: true,
     cinOrGst: "",
     firstName: "",
     lastName: "",
@@ -86,6 +94,7 @@ export default function PartnerSettings() {
         ...prevData,
         state: partnerProfile.address?.state || "",
         addressLine1: partnerProfile.address?.addressLine1 || "",
+        hasGst: partnerProfile.hasGst ?? (!!partnerProfile.gst),
         cinOrGst: partnerProfile.gst || "",
         city: partnerProfile.address?.city || "",
         companyName: partnerProfile.institutionName || "",
@@ -142,6 +151,39 @@ export default function PartnerSettings() {
   };
 
   const handleSaveChanges = () => {
+    // Backend-matching validations
+    if (!formData.firstName) return toast.error("First name is required");
+    if (!formData.companyName) return toast.error("Institution name is required");
+    if (formData.companyName.length > 100) return toast.error("Institution name must be under 100 characters");
+    
+    // Regex for name: /^[a-zA-Z\s]{2,100}$/
+    const nameRegex = /^[a-zA-Z\s]{2,100}$/;
+    if (!nameRegex.test(formData.firstName)) {
+      return toast.error("First name must be 2-100 characters and contain only letters");
+    }
+    if (formData.lastName && !nameRegex.test(formData.lastName)) {
+      return toast.error("Last name must be 2-100 characters and contain only letters");
+    }
+
+    if (!formData.email) return toast.error("Email is required");
+    if (!isValidEmail(formData.email)) return toast.error("Invalid email format");
+
+    if (!formData.phone) return toast.error("Phone number is required");
+    if (!isValidPhoneProfile(formData.phone)) {
+      return toast.error("Phone must start with 6-9 and be 10 digits");
+    }
+
+    if (!formData.city) return toast.error("City is required");
+    if (!formData.state) return toast.error("State is required");
+
+    if (!formData.pincode) return toast.error("Pincode is required");
+    if (!isValidPincode(formData.pincode)) return toast.error("Invalid pincode (Exactly 6 digits)");
+
+    if (formData.hasGst) {
+      if (!formData.cinOrGst) return toast.error("GST number is required");
+      if (!isValidGst(formData.cinOrGst)) return toast.error("Invalid GST format (Example: 22AAAAA0000A1Z5)");
+    }
+
     const submitData = new FormData();
 
     // Always append all fields (old values if unchanged)
@@ -153,7 +195,8 @@ export default function PartnerSettings() {
     submitData.append("state", formData.state || "");
     submitData.append("pincode", formData.pincode || "");
     submitData.append("institutionName", formData.companyName || "");
-    submitData.append("gst", formData.cinOrGst || "");
+    submitData.append("hasGst", String(formData.hasGst));
+    submitData.append("gst", formData.hasGst ? (formData.cinOrGst || "") : "");
     submitData.append("addressLine1", formData.addressLine1 || "");
 
     // Files only if new selected
@@ -254,6 +297,46 @@ export default function PartnerSettings() {
                   input: "transition-all duration-200 focus:shadow-sm",
                 }}
               />
+            </div>
+          </div>
+
+          {/* Institution Information Section */}
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <Text size="sm" c="dimmed" className="uppercase tracking-wide font-medium">
+              Institution Information
+            </Text>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+              <TextInput
+                label="Company Name"
+                placeholder="Enter company name"
+                size="md"
+                required
+                name="companyName"
+                value={formData.companyName}
+                onChange={handleInputChange}
+                classNames={{
+                  input: "transition-all duration-200 focus:shadow-sm",
+                }}
+              />
+              <div className="flex flex-col gap-2">
+                <Checkbox
+                  label="Do you have GST?"
+                  checked={formData.hasGst}
+                  onChange={(e) => setFormData(prev => ({ ...prev, hasGst: e.currentTarget.checked }))}
+                />
+                {formData.hasGst && (
+                  <TextInput
+                    placeholder="Enter your GST"
+                    size="md"
+                    name="cinOrGst"
+                    value={formData.cinOrGst}
+                    onChange={handleInputChange}
+                    classNames={{
+                      input: "transition-all duration-200 focus:shadow-sm",
+                    }}
+                  />
+                )}
+              </div>
             </div>
           </div>
 

@@ -12,6 +12,11 @@ import { GenericError, GenericResponse, RazorpayOrderOptions } from '../lib/type
 import { AxiosError } from 'axios';
 import { api } from '../lib/api';
 import { toast } from 'react-toastify';
+import { 
+  isValidEmail, 
+  isValidPhone, 
+  isValidPincode 
+} from '../lib/validation';
 import { mutationErrorHandler, initializeRazorpay } from '../lib/utils';
 import { RZPY_KEYID } from '../Constants';
 import { useShare } from '@/hooks/useShare';
@@ -199,9 +204,25 @@ const InstitutionBookingFlow = () => {
         toast.error("Please fill all required fields");
         return;
       }
+      if (formData.schoolName.length < 5 || formData.schoolName.length > 100) {
+        toast.error("School name must be between 5 and 100 characters");
+        return;
+      }
+      if (!isValidPincode(formData.pincode)) {
+        toast.error("Invalid pincode (Exactly 6 digits)");
+        return;
+      }
     } else if (currentStep === 2) {
       if (!formData.contactName || !formData.contactEmail || !formData.contactMobile) {
         toast.error("Please fill all required fields");
+        return;
+      }
+      if (!isValidEmail(formData.contactEmail)) {
+        toast.error("Please enter a valid email address");
+        return;
+      }
+      if (!isValidPhone(formData.contactMobile)) {
+        toast.error("Invalid mobile number (Starts with 6-9, 10 digits)");
         return;
       }
       if (!formData.otpVerified) {
@@ -211,6 +232,11 @@ const InstitutionBookingFlow = () => {
     } else if (currentStep === 3) {
       if (!formData.numberOfStudents || !formData.plan) {
         toast.error("Please fill all required fields");
+        return;
+      }
+      const count = parseInt(formData.numberOfStudents);
+      if (isNaN(count) || count <= 0) {
+        toast.error("Number of students must be greater than 0");
         return;
       }
     } else if (currentStep === 4) {

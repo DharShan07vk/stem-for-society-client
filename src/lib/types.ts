@@ -157,6 +157,7 @@ export type PartnerProfileType = {
   institutionName: string | null;
   addressId: number | null;
   gst: string | null;
+  hasGst: boolean | null;
   address: AddressType | null;
   account: AccountType | null;
   logo : string | null;

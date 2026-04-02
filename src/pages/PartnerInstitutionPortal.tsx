@@ -12,11 +12,18 @@ import { Input } from "@/components1/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components1/ui/select";
 import { Checkbox } from "@/components1/ui/checkbox";
 import SignupLayout from "@/components1/ui/SignupLayout";
+import { 
+  isValidEmail, 
+  isValidPhone, 
+  isValidPincode, 
+  isValidGst 
+} from "@/lib/validation";
 
 // ===== UPDATED TYPES WITH NEW FIELDS =====
 type PartnerInstitutionForm = {
   companyName: string;
   email: string;
+  hasGst: boolean;
   gst: string;
   instructorName: string;
   phone: string;
@@ -93,6 +100,7 @@ const PartnerInstitutionPortal = () => {
   const [formData, setFormData] = useState<PartnerInstitutionForm>({
     companyName: "",
     email: "",
+    hasGst: true,
     gst: "",
     instructorName: "",
     phone: "",
@@ -173,6 +181,10 @@ const PartnerInstitutionPortal = () => {
     setFormData(prev => ({ ...prev, acceptTerms: checked }));
   };
 
+  const handleGSTToggle = (checked: boolean) => {
+    setFormData(prev => ({ ...prev, hasGst: checked, gst: checked ? prev.gst : "" }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -195,6 +207,29 @@ const PartnerInstitutionPortal = () => {
     
     if (!formData.email || !formData.password || !formData.phone || !formData.topic || !formData.sector) {
       return toast.error("Please fill in all required fields");
+    }
+
+    // Additional validations matching backend
+    if (!isValidEmail(formData.email)) {
+      return toast.error("Invalid email format");
+    }
+    if (!isValidPhone(formData.phone)) {
+      return toast.error("Invalid mobile number (Starts with 6-9, 10 digits)");
+    }
+    if (formData.companyName.length > 100) {
+      return toast.error("Company name must be under 100 characters");
+    }
+    if (formData.hasGst && !isValidGst(formData.gst)) {
+      return toast.error("Invalid GST format (Example: 22AAAAA0000A1Z5)");
+    }
+    if (formData.pincode && !isValidPincode(formData.pincode)) {
+      return toast.error("Invalid pincode (Exactly 6 digits)");
+    }
+    if (formData.password.length < 6) {
+      return toast.error("Password must be at least 6 characters");
+    }
+    if (formData.instructorName.length > 50) {
+      return toast.error("Instructor name must be under 50 characters");
     }
     
     // Create FormData object for file uploads
@@ -220,13 +255,29 @@ const PartnerInstitutionPortal = () => {
   const handleNext = () => {
     // Validate current step before proceeding
     if (currentStep === 1) {
-      if (!formData.companyName || !formData.gst || !formData.instructorName || !formData.logo || !formData.digitalSign) {
+      if (!formData.companyName || (formData.hasGst && !formData.gst) || !formData.instructorName || !formData.logo || !formData.digitalSign) {
         toast.error("Please fill in all required fields and upload both logo and digital signature");
+        return;
+      }
+      if (formData.companyName.length > 100) {
+        toast.error("Company name must be under 100 characters");
+        return;
+      }
+      if (formData.hasGst && !isValidGst(formData.gst)) {
+        toast.error("Invalid GST format (Example: 22AAAAA0000A1Z5)");
+        return;
+      }
+      if (formData.instructorName.length > 50) {
+        toast.error("Instructor name must be under 50 characters");
         return;
       }
     } else if (currentStep === 2) {
       if (!formData.country || !formData.state || !formData.city || !formData.pincode || !formData.addressLine1) {
         toast.error("Please fill in all required address fields");
+        return;
+      }
+      if (!isValidPincode(formData.pincode)) {
+        toast.error("Invalid pincode (Exactly 6 digits)");
         return;
       }
     }
@@ -324,16 +375,29 @@ const PartnerInstitutionPortal = () => {
               />
             </div>
             
-            <div>
-              <Input
-                placeholder="Enter your GST number"
-                name="gst"
-                value={formData.gst}
-                onChange={handleChange}
-                className="bg-white/80 rounded-xl"
-                required
+            <div className="flex items-center space-x-2 py-2">
+              <Checkbox
+                id="hasGst"
+                checked={formData.hasGst}
+                onCheckedChange={handleGSTToggle}
               />
+              <label htmlFor="hasGst" className="text-sm font-medium text-gray-700">
+                Do you have GST?
+              </label>
             </div>
+
+            {formData.hasGst && (
+              <div>
+                <Input
+                  placeholder="Enter your GST number"
+                  name="gst"
+                  value={formData.gst}
+                  onChange={handleChange}
+                  className="bg-white/80 rounded-xl"
+                  required
+                />
+              </div>
+            )}
             
             <div>
               <Input

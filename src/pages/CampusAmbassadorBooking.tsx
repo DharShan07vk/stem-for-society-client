@@ -11,6 +11,10 @@ import { toast } from "react-toastify";
 import { api } from "../lib/api";
 import { mutationErrorHandler } from "../lib/utils";
 import { GenericError, GenericResponse } from "../lib/types";
+import { 
+  isValidEmail, 
+  isValidPhone 
+} from '../lib/validation';
 
 // Backend types from CampusAmbassador.tsx
 type EduType = "UG" | "PG" | "PhD";
@@ -167,7 +171,19 @@ const CampusAmbassadorBooking = () => {
         }
         break;
       case 2:
-        if (!formData.email || !formData.mobileNumber || !emailVerified || !otpVerified) {
+        if (!formData.email || !formData.mobileNumber) {
+          toast.error("Please fill all required fields");
+          return false;
+        }
+        if (!isValidEmail(formData.email)) {
+          toast.error("Please enter a valid email address");
+          return false;
+        }
+        if (!isValidPhone(formData.mobileNumber)) {
+          toast.error("Invalid mobile number (Starts with 6-9, 10 digits)");
+          return false;
+        }
+        if (!emailVerified || !otpVerified) {
           toast.error("Please complete email verification and OTP verification");
           return false;
         }

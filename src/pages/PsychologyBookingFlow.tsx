@@ -12,6 +12,11 @@ import { GenericError, GenericResponse, RazorpayOrderOptions } from '../lib/type
 import { AxiosError } from 'axios';
 import { api } from '../lib/api';
 import { toast } from 'react-toastify';
+import { 
+  isValidEmail, 
+  isValidPhone, 
+  isValidPincode 
+} from '../lib/validation';
 import { mutationErrorHandler, initializeRazorpay } from '../lib/utils';
 import { useShare } from '../hooks/useShare';
 import { SharePopup } from '../components1/ui/SharePopup';
@@ -302,8 +307,7 @@ const PsychologyBookingFlow = () => {
       return;
     }
     
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!isValidEmail(formData.email)) {
       toast.error("Please enter a valid email address");
       return;
     }
@@ -453,8 +457,8 @@ const PsychologyBookingFlow = () => {
           toast.error("Please fill all required fields");
           return false;
         }
-        if (formData.pincode.length !== 6) {
-          toast.error("Please enter a valid 6-digit pincode");
+        if (!isValidPincode(formData.pincode)) {
+          toast.error("Invalid pincode (Exactly 6 digits)");
           return false;
         }
         return true;
@@ -464,8 +468,12 @@ const PsychologyBookingFlow = () => {
           toast.error("Please fill all required fields");
           return false;
         }
-        if (formData.mobile.length !== 10) {
-          toast.error("Please enter a valid 10-digit mobile number");
+        if (!isValidEmail(formData.email)) {
+          toast.error("Please enter a valid email address");
+          return false;
+        }
+        if (!isValidPhone(formData.mobile)) {
+          toast.error("Invalid mobile number (Starts with 6-9, 10 digits)");
           return false;
         }
         if (!formData.emailVerified) {

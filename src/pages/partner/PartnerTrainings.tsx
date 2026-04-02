@@ -1,9 +1,10 @@
-import { Badge, Button, Input } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
+import { Badge, Button, Input, Modal, Text } from "@mantine/core";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { Plus, Search } from "lucide-react";
+import { Edit2, Plus, Search, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Errorbox from "../../components/Errorbox";
 import Loading from "../../components/Loading";
 import Table from "../../components/Table";
@@ -73,10 +74,28 @@ function usePartnerTrainings() {
   });
 }
 
+function useDeleteTraining() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  return useMutation<GenericResponse, AxiosError<GenericError>, string>({
+    mutationFn: async (id) => {
+      return (await api("partnerAuth").delete(`/partner/trainings/${id}`)).data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message || "Training deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["partner", "trainings"] });
+    },
+    onError: (err) => mutationErrorHandler(err, navigate, "/partner/signin"),
+  });
+}
+
 export default function PartnerTrainings() {
   const navigate = useNavigate();
   const [search, setSearch] = useState<string | undefined>();
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  
   const { data, isPending, error } = usePartnerTrainings();
+  const { mutate: deleteTraining, isPending: isDeleting } = useDeleteTraining();
 
   const filteredTrainings = useMemo(() => {
     if (!data) return [];
@@ -99,13 +118,53 @@ export default function PartnerTrainings() {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [error]);
 
+  const handleDelete = () => {
+    if (deleteId) {
+      deleteTraining(deleteId, {
+        onSettled: () => setDeleteId(null),
+      });
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto p-6 space-y-6 animate-in fade-in duration-500">
+      {/* Delete Confirmation Modal */}
+      <Modal
+        opened={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        title="Delete Training Course"
+        centered
+        radius="md"
+      >
+        <div className="space-y-4">
+          <Text size="sm">
+            Are you sure you want to delete this training course? This action cannot be undone.
+          </Text>
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="subtle" onClick={() => setDeleteId(null)} radius="md">
+              Cancel
+            </Button>
+            <Button 
+              color="red" 
+              onClick={handleDelete} 
+              loading={isDeleting}
+              radius="md"
+            >
+              Delete Course
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="animate-in slide-in-from-left duration-500">
-          <h1 className="text-3xl font-semibold text-gray-900">Your Trainings</h1>
-          <p className="text-sm text-gray-600 mt-1">Manage and monitor your training courses</p>
+          <h1 className="text-3xl font-semibold text-gray-900">
+            Your Trainings
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage and monitor your training courses
+          </p>
         </div>
         <div className="flex items-center gap-3 animate-in slide-in-from-right duration-500">
           <Input
@@ -160,15 +219,22 @@ export default function PartnerTrainings() {
                   id: r.id,
                   cells: [
                     {
-                      render: <span className="text-gray-600 font-medium">{i + 1}</span>,
+                      render: (
+                        <span className="text-gray-600 font-medium">
+                          {i + 1}
+                        </span>
+                      ),
                       className: "text-left pl-4",
                     },
                     {
                       render: (
                         <div>
-                          <div className="font-medium text-gray-900">{r.title}</div>
+                          <div className="font-medium text-gray-900">
+                            {r.title}
+                          </div>
                           <div className="text-xs text-gray-500 mt-0.5">
-                            by {r.instructor.firstName} {r.instructor.lastName || ""}
+                            by {r.instructor.firstName}{" "}
+                            {r.instructor.lastName || ""}
                           </div>
                         </div>
                       ),
@@ -188,7 +254,9 @@ export default function PartnerTrainings() {
                       render: (
                         <div className="text-sm text-gray-700">
                           <div>{formatDate(r.startDate)}</div>
-                          <div className="text-xs text-gray-500">to {formatDate(r.endDate)}</div>
+                          <div className="text-xs text-gray-500">
+                            to {formatDate(r.endDate)}
+                          </div>
                         </div>
                       ),
                       className: "text-left",
@@ -211,17 +279,41 @@ export default function PartnerTrainings() {
                     },
                     {
                       render: (
-                        <div className="flex justify-center">
+                        <div className="flex justify-center items-center gap-2">
                           <Link to={`/partner/trainings/${r.id}`}>
                             <Button
-                              size="sm"
+                              size="xs"
                               radius="md"
                               variant="light"
                               className="hover:bg-blue-50 transition-colors duration-200"
                             >
-                              View Details
+                              View
                             </Button>
                           </Link>
+                          <Link to={`/partner/trainings/${r.id}/edit`}>
+                            <Button
+                              size="xs"
+                              radius="md"
+                              variant="light"
+                              color="blue"
+                              className="hover:bg-blue-50 transition-colors duration-200"
+                              leftSection={<Edit2 size={14} />}
+                            >
+                              Edit
+                            </Button>
+                          </Link>
+                          <Button
+                            size="xs"
+                            radius="md"
+                            variant="light"
+                            color="red"
+                            className="hover:bg-red-50 transition-colors duration-200"
+                            leftSection={<Trash2 size={14} />}
+                            onClick={() => setDeleteId(r.id)}
+                            disabled={isDeleting && deleteId === r.id}
+                          >
+                            Delete
+                          </Button>
                         </div>
                       ),
                       className: "text-center",

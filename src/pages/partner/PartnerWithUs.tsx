@@ -17,10 +17,17 @@ import { api } from "../../lib/api";
 import { usePartner } from "../../lib/hooks";
 import { GenericError, GenericResponse } from "../../lib/types";
 import { mutationErrorHandler } from "../../lib/utils";
+import { 
+  isValidEmail, 
+  isValidPhone, 
+  isValidPincode, 
+  isValidGst 
+} from "../../lib/validation";
 
 type PartnerSignUpForm = {
   companyName: string;
   email: string;
+  hasGst: boolean;
   cinOrGst: string;
   instructorName: string;
   phone: string;
@@ -61,6 +68,7 @@ function PartnerSignUp() {
   const [formData, setFormData] = useState<PartnerSignUpForm>({
     companyName: "",
     email: "",
+    hasGst: true,
     cinOrGst: "",
     instructorName: "",
     phone: "",
@@ -79,6 +87,34 @@ function PartnerSignUp() {
     if (!formData.acceptTerms) {
       return toast.error("Accept terms to continue!");
     }
+
+    // Backend-matching validations
+    if (formData.signUpAs === "institution") {
+      if (!formData.companyName) return toast.error("Company name is required");
+      if (formData.hasGst) {
+        if (!formData.cinOrGst) return toast.error("GST number is required");
+        if (!isValidGst(formData.cinOrGst)) return toast.error("Invalid GST format (Example: 22AAAAA0000A1Z5)");
+      }
+    }
+
+    if (!formData.instructorName) return toast.error("Instructor name is required");
+    if (formData.instructorName.length > 50) return toast.error("Instructor name must be under 50 characters");
+    
+    if (!formData.phone) return toast.error("Phone number is required");
+    if (!isValidPhone(formData.phone)) return toast.error("Invalid mobile number (Starts with 6-9, 10 digits)");
+
+    if (!formData.city) return toast.error("City is required");
+    if (!formData.state) return toast.error("State is required");
+    
+    if (!formData.pincode) return toast.error("Pincode is required");
+    if (!isValidPincode(formData.pincode)) return toast.error("Invalid pincode (Exactly 6 digits)");
+
+    if (!formData.email) return toast.error("Email is required");
+    if (!isValidEmail(formData.email)) return toast.error("Invalid email format");
+
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
+
     registerMutation.mutate(formData);
   };
 
@@ -130,16 +166,25 @@ function PartnerSignUp() {
               onChange={handleInputChange}
             />
 
-            <TextInput
-              label="GST No."
-              placeholder="Enter your GST"
-              size="md"
+            <Checkbox
+              label="Do you have GST?"
+              name="hasGst"
+              checked={formData.hasGst}
+              onChange={(e) => setFormData(prev => ({ ...prev, hasGst: e.currentTarget.checked }))}
               className="lg:w-2/3 w-full"
-              required
-              name="cinOrGst"
-              value={formData.cinOrGst}
-              onChange={handleInputChange}
             />
+            {formData.hasGst && (
+              <TextInput
+                label="GST No."
+                placeholder="Enter your GST"
+                size="md"
+                className="lg:w-2/3 w-full"
+                required
+                name="cinOrGst"
+                value={formData.cinOrGst}
+                onChange={handleInputChange}
+              />
+            )}
           </>
         )}
         <TextInput

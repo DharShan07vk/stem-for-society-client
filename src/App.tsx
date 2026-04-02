@@ -37,6 +37,7 @@ import PartnerAccounts from "./pages/partner/PartnerAccount";
 import PartnerCourseDetails from "./pages/partner/PartnerCourseDetails";
 import PartnerCreateCourse from "./pages/partner/PartnerCreateCourse";
 import PartnerHome from "./pages/partner/PartnerHome";
+import PartnerEditCourse from "./pages/partner/PartnerEditCourse";
 import PartnerSettings from "./pages/partner/PartnerSettings";
 import PartnerSignIn from "./pages/partner/PartnerSignIn";
 import PartnerStudents from "./pages/partner/PartnerStudents";
@@ -44,7 +45,7 @@ import PartnerTrainings from "./pages/partner/PartnerTrainings";
 import PartnerSignUp from "./pages/partner/PartnerWithUs";
 import StudentDetails from "./pages/partner/StudentDetails";
 // import PricingPage from "./pages/Pricing";
-import ForgotPassword from "./pages/forgotPassword"
+import ForgotPassword from "./pages/forgotPassword";
 // import PrivacyPolicy from "./pages/PrivacyPolicy";
 import PsychologyTraining from "./pages/PsychologyTraining";
 // import RefundPolicy from "./pages/RefundPolicy";
@@ -60,7 +61,7 @@ import CampusAmbassadorDash from "./pages/CampusAmbassadorDash";
 import CampusAmbassadorBooking from "./pages/CampusAmbassadorBooking";
 import PartnerRole from "./pages/PartnerRole";
 import CampusAmbassadorSignup from "./pages/CampusAmbassadorSignup";
-import InstitutionPortal from './pages/PartnerInstitutionPortal';
+import InstitutionPortal from "./pages/PartnerInstitutionPortal";
 import InstitutionLogin from "./pages/InstitutionLogin";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -106,7 +107,10 @@ function App() {
             <Routes>
               <Route path="/" element={<AppLayout />}>
                 <Route index element={<Home />} />
-                <Route path="/explore-program-dashboard" element={<ExploreProgramDashboard />} />
+                <Route
+                  path="/explore-program-dashboard"
+                  element={<ExploreProgramDashboard />}
+                />
                 <Route path="/training" element={<Training />} />
                 <Route path="/training/:id" element={<TrainingSpotlight />} />
                 <Route path="/blogs" element={<BlogListing />} />
@@ -120,38 +124,74 @@ function App() {
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/refund-policy" element={<RefundPolicy />} />
                 <Route path="/terms-condition" element={<TermsConditions />} />
-                <Route path = "/insituion-individual" element={<InstitutionOrIndividual />} />
+                <Route
+                  path="/insituion-individual"
+                  element={<InstitutionOrIndividual />}
+                />
                 <Route path="/partner-role" element={<PartnerRole />} />
-                <Route path="/campus-ambassador-signup" element={<CampusAmbassadorSignup />} />
-                <Route path="/partner-institution-signup" element={<InstitutionPortal />} />
+                <Route
+                  path="/campus-ambassador-signup"
+                  element={<CampusAmbassadorSignup />}
+                />
+                <Route
+                  path="/partner-institution-signup"
+                  element={<InstitutionPortal />}
+                />
                 <Route path="/partner-signin" element={<InstitutionLogin />} />
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/course-detail/:id" element={<CourseDetail />} />
-                <Route path="/skill-development" element={<SkillDevelopment />} />
+                <Route
+                  path="/skill-development"
+                  element={<SkillDevelopment />}
+                />
                 <Route path="/finishing-school" element={<FinishingSchool />} />
-                <Route path="/academy-detail/:courseId" element={<AcademyDetail />} />
+                <Route
+                  path="/academy-detail/:courseId"
+                  element={<AcademyDetail />}
+                />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog-article" element={<BlogArticle />} />
                 <Route path="/blog-post/:id" element={<BlogPost />} />
-                <Route path="/career-counselling-booking" element={<CareerCounsellingBookingFlow/>} />
-                <Route path="/mental-wellbeing" element={<PsychologyCounselling />} />
-                <Route path="/career-counselling" element={<CareerCounselling />} />
-                <Route path="/mental-wellbeing-counselling" element={<PsychologyBookingFlow />} />
-                <Route path="/institution-booking" element={<InstitutionBookingFlow />} />
-                <Route path = "/forgot-password" element = {<ForgotPassword />} />
+                <Route
+                  path="/career-counselling-booking"
+                  element={<CareerCounsellingBookingFlow />}
+                />
+                <Route
+                  path="/mental-wellbeing"
+                  element={<PsychologyCounselling />}
+                />
+                <Route
+                  path="/career-counselling"
+                  element={<CareerCounselling />}
+                />
+                <Route
+                  path="/mental-wellbeing-counselling"
+                  element={<PsychologyBookingFlow />}
+                />
+                <Route
+                  path="/institution-booking"
+                  element={<InstitutionBookingFlow />}
+                />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route
                   path="/institution-pricing"
                   element={<InstitutionPricing />}
                 />
-                <Route path="/campus-ambassador-booking" element={<CampusAmbassadorBooking/>} />
-                <Route path="/campus-ambassador" element={<CampusAmbassadorDash />} />
+                <Route
+                  path="/campus-ambassador-booking"
+                  element={<CampusAmbassadorBooking />}
+                />
+                <Route
+                  path="/campus-ambassador"
+                  element={<CampusAmbassadorDash />}
+                />
                 <Route path="/ca-program" element={<CampusAmbassador />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
               <Route path="/admin/signin" element={<AdminSignIn />} />
               <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminHome />} />   
+                <Route index element={<AdminHome />} />
                 <Route path="trainings" element={<AdminTrainings />} />
                 <Route
                   path="trainings/:id"
@@ -193,6 +233,10 @@ function App() {
                 <Route
                   path="trainings/:id"
                   element={<PartnerCourseDetails />}
+                />
+                <Route
+                  path="trainings/:id/edit"
+                  element={<PartnerEditCourse />}
                 />
                 <Route path="students" element={<PartnerStudents />} />
                 <Route path="students/:id" element={<StudentDetails />} />
