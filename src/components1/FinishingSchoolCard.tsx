@@ -36,11 +36,11 @@ const FinishingSchoolCard = ({
   return (
     <Card className="flex flex-col overflow-hidden rounded-xl sm:rounded-2xl bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 group">
       {/* Image Section */}
-      <div className="relative w-full h-[180px] sm:h-[220px] overflow-hidden">
+      <div className="relative w-full h-[180px] sm:h-[220px] overflow-hidden bg-gray-100 flex items-center justify-center">
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-auto max-h-full object-contain transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 

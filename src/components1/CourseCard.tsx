@@ -38,11 +38,11 @@ const CourseCard = ({
   return (
     <Card className="flex flex-col md:flex-row overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md transition-shadow duration-300">
       {/* Image Section */}
-      <div className="relative w-full md:w-[320px] h-[200px] md:h-[220px] flex-shrink-0 p-3">
+      <div className="relative w-full md:w-[320px] h-[200px] md:h-[220px] flex-shrink-0 p-3 bg-gray-100 flex items-center justify-center">
         <img
           src={image}
           alt={title}
-          className="w-full h-full object-cover rounded-xl"
+          className="w-full h-auto max-h-full object-contain rounded-xl"
         />
         {/* Category Badge */}
         <Badge className="absolute top-5 left-5 bg-[#0389FF] text-white text-xs px-2.5 py-1 rounded-lg font-medium flex items-center gap-1.5 whitespace-nowrap">

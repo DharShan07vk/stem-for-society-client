@@ -30,11 +30,11 @@ const EventCard: React.FC<EventCardProps> = ({
   return (
     <div className="flex lg:flex-row flex-col shadow-md p-4 mb-4 w-full lg:gap-0 gap-3 max-w-5xl rounded-lg border">
       {/* Left Section: Poster */}
-      <div className="flex-shrink-0 lg:w-[unset] w-full h-52 aspect-video mr-6">
+      <div className="flex-shrink-0 lg:w-[unset] w-full h-52 aspect-video mr-6 bg-gray-100 flex items-center justify-center">
         <img
           src={posterUrl}
           alt={title}
-          className="w-full h-full object-cover object-center rounded-lg"
+          className="w-full h-auto max-h-full object-contain object-center rounded-lg"
         />
       </div>
 
