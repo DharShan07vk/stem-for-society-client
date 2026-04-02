@@ -130,6 +130,7 @@ function RatingAndFeedback({
         className={disabled ? "opacity-80 pointer-events-none" : ""}
         onChange={(event) => setFeedback(event.currentTarget.value)}
         placeholder="Enter feedback to apply for certificate"
+        minLength={10}
       />
       <Button
         onClick={handleSubmit}
@@ -382,11 +383,11 @@ function RatingAndFeedback({
 
             {/* Image */}
             <div className="w-full lg:w-80 flex-shrink-0">
-              <div className="rounded-2xl overflow-hidden shadow-sm">
+              <div className="rounded-2xl overflow-hidden shadow-sm bg-gray-100 flex items-center justify-center h-40 sm:h-48 md:h-64 lg:h-72">
                 <img
                   src={training.coverImg || "/course-images/default.jpg"}
                   alt={training.title}
-                  className="w-full h-40 sm:h-48 md:h-64 lg:h-72 object-cover"
+                  className="w-full h-auto max-h-full object-contain"
                 />
               </div>
             </div>
